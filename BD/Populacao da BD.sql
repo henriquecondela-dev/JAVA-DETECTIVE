@@ -47,7 +47,44 @@ insert into suspeito(pessoa_id,caso_id,motivo) values
 (3,1,'Seu irmao foi preso trabalhando na Nexus Systems'),
 (5,1,null),
 (6,1,'Herdaria uma grande parte da fortuna, descobriu que belcio pretendia alterar o testamento'),
-(7,1,'Possui dividas e roubou dinheiro do Pai');
+(7,1,'Possui dividas e roubou dinheiro do Pai'),
+(8,1,'Envio uma menssagem ameacadara a vitima');
 
+/*insert into suspeito(pessoa_id,caso_id,motivo) values
+(8,1,'Envio uma menssagem ameacadara a vitima');
+*/
+
+insert into testemunho(testemunha_id, descricao,data_hora) values
+(9,'A governanta informa que Antonio deixou a cosinha por volta das 22:10','2026-09-26 08:13:00');
+
+insert into caso_testemunha(caso_id,testemunho_id)values
+(1,1);
+
+insert into localizacao(nome) values
+('Escritorio da nexus'),
+('Escritorio de Henrique'),
+('Cozinha'),
+('Biblioteca'),
+('Sala Principal'),
+('Jardim'),
+('Corredor Principal'),
+('Corredor de Servico'),
+('Sala de Seguranca'),
+('Garagem'),
+('Entrada Principal'),
+('Area de Servico'),
+('Quarto');
+
+insert into evento(descricao,data_hora,local_id)values
+('O computador de henrique e desligado durante a noite','2026-09-25 22:03:00',2),
+('Antonio deixa a cozinha','2026-09-25 22:10:00',3),
+('o sistem de segurnaca sofre um interrupcao','2026-09-25 22:17:00',9),
+('E regstrado um acesso ao escritorio sem entrada pelo corredor principal','2026-09-25 22:18:00',1),
+('Comeca o confronto entre o Asssasino e Belcio','2026-09-25 22:20:00',1),
+('Belcio E morto','2026-09-25 22:25:00',1),
+('O Assasino comeca a manipular os registrso para encobrir o crime','2026-09-25 22:28:00',1),
+('o antonio chega a cozinha','2026-09-25 22:40:00',3),
+('Corpo do Belcio e encontrado','2026-09-25 23:00:50',1),
+('Clarson realiza uma manutencao programada do sistema de seguranca','2026-09-24 08:00:00',9);
 
 
