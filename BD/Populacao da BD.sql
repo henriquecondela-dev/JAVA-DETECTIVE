@@ -76,9 +76,9 @@ insert into localizacao(nome) values
 ('Quarto');
 
 insert into evento(descricao,data_hora,local_id)values
-('O computador de henrique e desligado durante a noite','2026-09-25 22:03:00',2),
+('O computador de Junior e desligado durante a noite','2026-09-25 22:03:00',2),
 ('Antonio deixa a cozinha','2026-09-25 22:10:00',3),
-('o sistem de segurnaca sofre um interrupcao','2026-09-25 22:17:00',9),
+('o sistem de seguranca sofre uma interrupcao','2026-09-25 22:17:00',9),
 ('E regstrado um acesso ao escritorio sem entrada pelo corredor principal','2026-09-25 22:18:00',1),
 ('Comeca o confronto entre o Asssasino e Belcio','2026-09-25 22:20:00',1),
 ('Belcio E morto','2026-09-25 22:25:00',1),
@@ -86,5 +86,68 @@ insert into evento(descricao,data_hora,local_id)values
 ('o antonio chega a cozinha','2026-09-25 22:40:00',3),
 ('Corpo do Belcio e encontrado','2026-09-25 23:00:50',1),
 ('Clarson realiza uma manutencao programada do sistema de seguranca','2026-09-24 08:00:00',9);
+
+insert into evento_pessoa(evento_id, pessoa_id) values
+(1, 2),
+(2, 3),
+(3, 3),
+(4, 3),
+(5, 3),
+(5, 1),
+(6, 1),
+(6, 3),
+(7, 3),
+(8, 3),
+(9, 9),
+(10, 5);
+
+insert into registroDeAcesso(descricao, data_hora, tipo_acesso, local_id, pessoa_id) values
+('Entrada ao escritorio sem uso do corredor principal', '2026-09-25 22:17:00', 'ENTRADA', 1, 3),
+('Entrada ao escritorio', '2026-09-25 21:00:00', 'ENTRADA', 2, 2),
+('Saida ao escritorio', '2026-09-25 22:10:00', 'SAIDA', 2, 2),
+('Entrada a cozinha', '2026-09-25 21:00:00', 'ENTRADA', 3, 3),
+('Entrada na biblioteca', '2026-09-25 21:45_50', 'ENTRADA', 4, 8),
+('Aparicao no jardim', '2026-09-25 22:12:14', 'ENTRADA', 6, 7),
+('Saida da casa', '2026-09-2025 22:12:11', 'SAIDA', 5, 7),
+('Entrada no quarto', '2026-09-2025 21:45:00', 'ENTRADA', 13, 6),
+('Entrada no escritorio', '2026-09-25 23:00:50', 'ENTRADA', 1, 9),
+('Entrada cozinha','2026-09-25 22:40:00', 'ENTRADA', 3, 3);
+
+insert into documento(nome, tipo, conteudo, data_documento) values
+('Documentos financeiros', 'FISICO', 'Depois de uma auditoria houve uma confirmacao de desvio de  fundos da Nexus Systems da parte do Junior Gambue para uso pessoal, cerca de 300 Milhoes de Meticais foi registado que os valores foram enviados para uma conta bancaria nas maldivas sem nenhuma empresa relacionada.', '2026-09-24 15:03:17'),
+('Relatorio da Gercia', 'DIGITAL', 'O Relatorio da Jornalista indicou que o Eric Brabus preso no ano de 2019 trabalhou na Nexus Systems descobriu indicius de fraude. Depois de tentar descobrir o problema foi acusado de tentar roubar informacoes confidenciais e teve a carreira destruida. Tendo sido registado a sua morte de forma misteriosa pouco tempo depois de ter entrado na prisao.', '2021-05-26 13:15: 48');
+
+insert into evidencia(titulo, descricao, documento_id, importancia) values
+-- Etapa 1
+('Cena do crime','Fotografia e relatório do escritório. Revela: Corpo de Moreau; Cofre aberto; Computador; Ausência de arrombamento evidente.', null, 2),
+('Relatório preliminar da morte', 'Fornece uma estimativa inicial do horário da morte (22:14:00 - 22:50:00).', null, 3),
+('Lista de pessoas presentes', 'Apresenta as pessoas presentes [Ana, Clarson, Belcio, Gercia, Ivany, Junior, Antonio, Andrea].', null, 2),
+('Primeiros depoimentos', 'Cada suspeito apresenta a sua primeira versão sobre onde estava (Disponivel em alibes e testemunho).', null, 1),
+
+-- Etapa 2
+('Registos de acesso', 'Mostram entradas e saídas de determinadas áreas.(Disponivel em registro de acesso)', null, 3),
+('Depoimento da governanta', 'A governanta informa que: Antonio deixou a cozinha por volta das 22h10. Isso contradiz parcialmente o depoimento de Antonio.', null, 2),
+('Registo do jardim', 'Mostra Andrea no jardim a partir das 22h12.', null, 3),
+('Computador de Junior', 'O computador de Junior foi desligado às: 22h03 Isso também contradiz a afirmação de que ele permaneceu trabalhando durante todo o período.', null, 1),
+
+-- Etapa 3
+('Documentos financeiros', 'Demonstram a fraude de Junior.', 1, 3),
+('Empresas fictícias', 'Relacionam empresas suspeitas às movimentações financeiras.', 1, 2),
+('Anotações de Belcio', 'Demonstram que Belcio estava investigando uma fraude.', null, 2),
+('Relatório interno', 'Mostra que Belcio pretendia confrontar ou denunciar o responsável.', null, 2),
+('Registo de antigos funcionários', 'Apresenta: Eric Brabus E a sua antiga ligação com a empresa(Nexus Systems).', 2, 3),
+
+-- Etapa 4
+('Historico de Eric', 'Explica: Trabalho na Nexus Systems; Descoberta de irregularidades; Acusacao; Destruição da carreira.', 2, 3),
+('Credenciais de Antonio', 'Mostram que ela possuía acesso privilegiado.', null, 2),
+('Logs secundarios', 'Mostram que alguem tentou apagar ou modificar informações.', null, 1),
+('Comparacao dos alibis', 'Demonstra que Antonio não esteve na cozinha durante todo o período que declarou.', null, 3),
+
+-- Etapa 5
+('Credenciais', 'Relacionam Antonio às operações que poderiam ter sido realizadas.', null, 3),
+('Alibi de Antonio', 'Demonstra que a sua versao nao corresponde aos registos.', null, 2);
+
+
+
 
 
