@@ -171,13 +171,13 @@ insert into etapa_evidencia (etapa_id, evidencia_id) values
 (4, 16),
 (5, 17);
 
-inser into alibi (suspeito_id, descricao, inicio, fim) values
+insert into alibi (suspeito_id, descricao, inicio, fim) values
 (1, 'Afirma que passou a noite trabalhando no escritório.', '2026-09-25 21:00:00', '2026-09-25 23:00:00'),
 (2, ' Afirma que ficou na cozinha ajudando a governanta.', '2026-09-25 21:00:00', '2026-09-25 23:02:00'),
 (3, 'Afirma que esteve na garragem controlando os carros durante toda a festa.', '2026-09-25 19:00:00', '2026-09-25 23:01:43'),
 (4, 'Afirma que foi para o quarto depois do jantar.', '2026-09-25 21:45:00', '2026-09-25 23:01:10'),
-(5, 'Diz que esteve no jardim fazendo uma chamada.' '2026-09-25 22:12:14', '2026-09-25 23:01:10'),
-(6, 'Afirma que foi ao jantar para conversar com Moreau.', '2026-09-25 21:45_50', '2026-09-25 23:05:13');
+(5, 'Diz que esteve no jardim fazendo uma chamada.', '2026-09-25 22:12:14', '2026-09-25 23:01:10'),
+(6, 'Afirma que foi ao jantar para conversar com Moreau.', '2026-09-25 21:45:50', '2026-09-25 23:05:13');
 
 insert into mensagem(conteudo) values
 ('(Maputo, 25 de Dezembro 2026 - 23h00)
