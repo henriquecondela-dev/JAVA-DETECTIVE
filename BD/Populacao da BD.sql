@@ -45,7 +45,7 @@ Depois percebeu o que havia feito e tentou encobrir o crime, manipulando registr
 insert into suspeito(pessoa_id,caso_id,motivo) values
 (2,1,'E responsável por uma fraude financeira através de empresas fictícias.'),
 (3,1,'Seu irmao foi preso trabalhando na Nexus Systems'),
-(5,1,null),
+(5,1,'Afirma que a interrupção das câmaras foi uma falha automática.'),
 (6,1,'Herdaria uma grande parte da fortuna, descobriu que belcio pretendia alterar o testamento'),
 (7,1,'Possui dividas e roubou dinheiro do Pai'),
 (8,1,'Envio uma menssagem ameacadara a vitima');
@@ -106,7 +106,7 @@ insert into registroDeAcesso(descricao, data_hora, tipo_acesso, local_id, pessoa
 ('Entrada ao escritorio', '2026-09-25 21:00:00', 'ENTRADA', 2, 2),
 ('Saida ao escritorio', '2026-09-25 22:10:00', 'SAIDA', 2, 2),
 ('Entrada a cozinha', '2026-09-25 21:00:00', 'ENTRADA', 3, 3),
-('Entrada na biblioteca', '2026-09-25 21:45_50', 'ENTRADA', 4, 8),
+('Entrada na biblioteca', '2026-09-25 21:45:50', 'ENTRADA', 4, 8),
 ('Aparicao no jardim', '2026-09-25 22:12:14', 'ENTRADA', 6, 7),
 ('Saida da casa', '2026-09-25 22:12:11', 'SAIDA', 5, 7),
 ('Entrada no quarto', '2026-09-25 21:45:00', 'ENTRADA', 13, 6),
@@ -114,7 +114,13 @@ insert into registroDeAcesso(descricao, data_hora, tipo_acesso, local_id, pessoa
 ('Entrada cozinha','2026-09-25 22:40:00', 'ENTRADA', 3, 3);
 
 insert into documento(nome, tipo, conteudo, data_documento) values
-('Documentos financeiros', 'FISICO', 'Depois de uma auditoria houve uma confirmacao de desvio de  fundos da Nexus Systems da parte do Junior Gambue para uso pessoal, cerca de 300 Milhoes de Meticais foi registado que os valores foram enviados para uma conta bancaria nas maldivas sem nenhuma empresa relacionada.', '2026-09-24 15:03:17'),
+('Documentos financeiros', 'FISICO', 'Depois de uma auditoria houve uma confirmacao de desvio de fundos da Nexus Systems da parte do Junior Gambue para uso pessoal.
+Durante anos, grandes quantias de dinheiro saíram da Nexus Systems através de empresas aparentemente legítimas.
+Mas algumas dessas empresas praticamente não possuem atividade real.
+Os documentos apontam para uma operação organizada.
+O nome que aparece repetidamente nos registos é:
+Junior Guambe.
+Junior tinha acesso privilegiado às operações financeiras da empresa.', '2026-09-24 15:03:17'),
 ('Relatorio da Gercia', 'DIGITAL', 'O Relatorio da Jornalista indicou que o Eric Brabus preso no ano de 2019 trabalhou na Nexus Systems descobriu indicius de fraude. Depois de tentar descobrir o problema foi acusado de tentar roubar informacoes confidenciais e teve a carreira destruida. Tendo sido registado a sua morte de forma misteriosa pouco tempo depois de ter entrado na prisao.', '2021-05-26 13:15:48');
 
 insert into evidencia(titulo, descricao, documento_id, importancia) values
@@ -138,16 +144,81 @@ insert into evidencia(titulo, descricao, documento_id, importancia) values
 ('Registo de antigos funcionários', 'Apresenta: Eric Brabus E a sua antiga ligação com a empresa(Nexus Systems).', 2, 3),
 
 -- Etapa 4
-('Historico de Eric', 'Explica: Trabalho na Nexus Systems; Descoberta de irregularidades; Acusacao; Destruição da carreira.', 2, 3),
-('Credenciais de Antonio', 'Mostram que ela possuía acesso privilegiado.', null, 2),
+('Credenciais de Antonio', 'Mostram que ele possuía acesso privilegiado.', null, 2),
 ('Logs secundarios', 'Mostram que alguem tentou apagar ou modificar informações.', null, 1),
 ('Comparacao dos alibis', 'Demonstra que Antonio não esteve na cozinha durante todo o período que declarou.', null, 3),
 
 -- Etapa 5
-('Credenciais', 'Relacionam Antonio às operações que poderiam ter sido realizadas.', null, 3),
-('Alibi de Antonio', 'Demonstra que a sua versao nao corresponde aos registos.', null, 2);
+('Historico de Eric', 'Explica: Trabalho na Nexus Systems; Descoberta de irregularidades; Acusacao; Destruição da carreira.', 2, 3);
 
 
+insert into etapa_evidencia (etapa_id, evidencia_id) values 
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(2, 5),
+(2, 6),
+(2, 7),
+(2, 8),
+(3, 9),
+(3, 10),
+(3, 11),
+(3, 12),
+(3, 13),
+(4, 14),
+(4, 15),
+(4, 16),
+(5, 17);
 
+inser into alibi (suspeito_id, descricao, inicio, fim) values
+(1, 'Afirma que passou a noite trabalhando no escritório.', '2026-09-25 21:00:00', '2026-09-25 23:00:00'),
+(2, ' Afirma que ficou na cozinha ajudando a governanta.', '2026-09-25 21:00:00', '2026-09-25 23:02:00'),
+(3, 'Afirma que esteve na garragem controlando os carros durante toda a festa.', '2026-09-25 19:00:00', '2026-09-25 23:01:43'),
+(4, 'Afirma que foi para o quarto depois do jantar.', '2026-09-25 21:45:00', '2026-09-25 23:01:10'),
+(5, 'Diz que esteve no jardim fazendo uma chamada.' '2026-09-25 22:12:14', '2026-09-25 23:01:10'),
+(6, 'Afirma que foi ao jantar para conversar com Moreau.', '2026-09-25 21:45_50', '2026-09-25 23:05:13');
+
+insert into mensagem(conteudo) values
+('(Maputo, 25 de Dezembro 2026 - 23h00)
+
+A noite começou como um simples jantar privado na mansão de Belcio Nexus.
+Entre os convidados estavam familiares, funcionários, um sócio empresarial e uma jornalista. Todos tinham algum tipo de relação com Nexus, embora nem todos parecessem gostar dele.
+Durante o jantar, Belcio mostrou-se inquieto. Evitou falar diretamente sobre os negócios da empresa, mas deixou uma frase que chamou a atenção:
+
+>>Antes desta noite terminar, algumas pessoas vão ter de explicar certas coisas.<<
+Depois do jantar, os convidados começaram a dispersar pela casa.
+Às 23h00, uma funcionária encontrou Belcio Nexus morto no seu escritório.
+A porta não apresenta sinais evidentes de arrombamento.
+O cofre está aberto.
+O computador de Nexus apresenta sinais de que os dados foram apagados ou alterados.
+Ninguém sabe ainda exatamente quando Nexus morreu.
+O investigador é chamado para analisar a cena e determinar o que aconteceu.
+'),
+('A investigação inicial revelou que o crime não pode ser explicado apenas pela cena encontrada no escritório.
+As primeiras declarações começam a apresentar problemas.(Declaracoes apresentadas na tabela alibi).
+Quando os registos de acesso são comparados com os depoimentos, aparecem pequenas diferenças.(Registros apresentados na tabela registroDeAcesso).
+'),
+('Análise dos computadores e documentos financeiros. Veja os documentos'),
+('Analise os alibis abaixo'),
+('Anos antes, Eric trabalhava na Nexus Systems.
+Durante o seu trabalho, descobriu irregularidades dentro da empresa e tentou denunciar o problema.
+Pouco depois, Eric foi acusado de roubar informações confidenciais.
+A acusação destruiu a sua carreira.
+Ele deixou a empresa e desapareceu da vida profissional.
+Para a família Brabus, entretanto, a história era diferente.
+Antonio nunca acreditou que o irmão fosse culpado.
+Durante anos, ele acreditou que Belcio Nexus tinha sido responsável pela destruição da vida de Eric.
+Agora surge uma informação perturbadora.
+Os documentos recuperados mostram que Nexus não estava por trás da fraude.
+Na verdade, ele estava tentando descobrir quem realmente a cometia.
+Mais detalhes podes ver no Relatório abaixo.');
+
+insert into etapa_mensagem (etapa_id, mensagem_id) values
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5);
 
 
