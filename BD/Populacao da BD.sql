@@ -108,14 +108,14 @@ insert into registroDeAcesso(descricao, data_hora, tipo_acesso, local_id, pessoa
 ('Entrada a cozinha', '2026-09-25 21:00:00', 'ENTRADA', 3, 3),
 ('Entrada na biblioteca', '2026-09-25 21:45_50', 'ENTRADA', 4, 8),
 ('Aparicao no jardim', '2026-09-25 22:12:14', 'ENTRADA', 6, 7),
-('Saida da casa', '2026-09-2025 22:12:11', 'SAIDA', 5, 7),
-('Entrada no quarto', '2026-09-2025 21:45:00', 'ENTRADA', 13, 6),
+('Saida da casa', '2026-09-25 22:12:11', 'SAIDA', 5, 7),
+('Entrada no quarto', '2026-09-25 21:45:00', 'ENTRADA', 13, 6),
 ('Entrada no escritorio', '2026-09-25 23:00:50', 'ENTRADA', 1, 9),
 ('Entrada cozinha','2026-09-25 22:40:00', 'ENTRADA', 3, 3);
 
 insert into documento(nome, tipo, conteudo, data_documento) values
 ('Documentos financeiros', 'FISICO', 'Depois de uma auditoria houve uma confirmacao de desvio de  fundos da Nexus Systems da parte do Junior Gambue para uso pessoal, cerca de 300 Milhoes de Meticais foi registado que os valores foram enviados para uma conta bancaria nas maldivas sem nenhuma empresa relacionada.', '2026-09-24 15:03:17'),
-('Relatorio da Gercia', 'DIGITAL', 'O Relatorio da Jornalista indicou que o Eric Brabus preso no ano de 2019 trabalhou na Nexus Systems descobriu indicius de fraude. Depois de tentar descobrir o problema foi acusado de tentar roubar informacoes confidenciais e teve a carreira destruida. Tendo sido registado a sua morte de forma misteriosa pouco tempo depois de ter entrado na prisao.', '2021-05-26 13:15: 48');
+('Relatorio da Gercia', 'DIGITAL', 'O Relatorio da Jornalista indicou que o Eric Brabus preso no ano de 2019 trabalhou na Nexus Systems descobriu indicius de fraude. Depois de tentar descobrir o problema foi acusado de tentar roubar informacoes confidenciais e teve a carreira destruida. Tendo sido registado a sua morte de forma misteriosa pouco tempo depois de ter entrado na prisao.', '2021-05-26 13:15:48');
 
 insert into evidencia(titulo, descricao, documento_id, importancia) values
 -- Etapa 1
