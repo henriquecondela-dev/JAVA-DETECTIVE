@@ -1,8 +1,8 @@
 package testes; 
-
+import 
 public class Main {
     public static void main(String[] args){
-       Recursos.listarSuspeitos();
+       Suspeitos.listarSuspeitos();
 
     }
 }

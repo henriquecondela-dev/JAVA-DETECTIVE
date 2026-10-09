@@ -2,16 +2,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package testes;
-import db.*;
+package recursos;
 
+import db.*;
 import java.sql.*;
+
 /**
  *
  * @author henrique-dev
  */
-public class Recursos {
 
+public class Suspeitos {
     public static void  listarSuspeitos(){
         try(Connection conexao= ConexaoMySQL.getConnection();
             Statement statement=conexao.createStatement();
@@ -28,7 +29,5 @@ public class Recursos {
             System.out.println("erro ao se conectar com o mysql!");
         }
     }
-     
-    
     
 }
