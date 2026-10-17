@@ -336,6 +336,7 @@ CREATE TABLE evidencia (
     documento_id BIGINT,
 
     importancia ENUM ('1','2','3') DEFAULT '1' ,
+    coletado boolean default false,
 
     CONSTRAINT fk_evidencia_documento
         FOREIGN KEY (documento_id)
