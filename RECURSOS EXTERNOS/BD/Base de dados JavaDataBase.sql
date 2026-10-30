@@ -106,6 +106,8 @@ CREATE TABLE etapa (
 
     concluida BOOLEAN DEFAULT FALSE,
 
+    minimo_evidencias INT NOT NULL DEFAULT 1,
+
     CONSTRAINT fk_etapa_caso
         FOREIGN KEY (caso_id)
         REFERENCES caso(id)
@@ -594,16 +596,43 @@ CREATE TABLE acusacao_suspeito (
     acusacao_id BIGINT NOT NULL,
     suspeito_id BIGINT NOT NULL,
     PRIMARY KEY (
-        acusacao_id,
-        suspeito_id
+    acusacao_id,
+    suspeito_id
     ),
     CONSTRAINT fk_acusacao_suspeito_acusacao
-        FOREIGN KEY (acusacao_id)
-        REFERENCES acusacao(id)
-        ON DELETE CASCADE,
+    FOREIGN KEY (acusacao_id)
+    REFERENCES acusacao(id)
+    ON DELETE CASCADE,
 
     CONSTRAINT fk_acusacao_suspeito_suspeito
-        FOREIGN KEY (suspeito_id)
-        REFERENCES suspeito(id)
-        ON DELETE CASCADE
+    FOREIGN KEY (suspeito_id)
+    REFERENCES suspeito(id)
+    ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+-- =========================================================
+-- XXIV. PROGRESSO_DESAFIO
+-- Relação N:N
+-- Desafios concluídos pelo jogador
+-- =========================================================
+
+CREATE TABLE progresso_desafio (
+    progresso_caso_id BIGINT NOT NULL,
+    desafio_id BIGINT NOT NULL,
+    concluido BOOLEAN DEFAULT FALSE,
+    data_conclusao DATETIME NULL,
+
+    PRIMARY KEY (progresso_caso_id, desafio_id),
+
+    FOREIGN KEY (progresso_caso_id)
+    REFERENCES progressoCaso(id)
+    ON DELETE CASCADE,
+
+    FOREIGN KEY (desafio_id)
+    REFERENCES desafioDeProgramacao(id)
+    ON DELETE CASCADE,
+
+    CONSTRAINT uq_jogador_caso
+    UNIQUE (jogador_id, caso_id)
+
+)ENGINE=InnoDB;
