@@ -20,9 +20,9 @@ public class Evidencia {
     public static int adicionarEvidencia(String titulo,String descricao,int documento_id,int importancia) throws SQLException {
 
         String sql = """
-                INSERT INTO evidencia(titulo, descricao, documento_id,importancia)
-                VALUES (?, ?, ?,?)
-                """;
+                INSERT INTO evidencia(titulo, descricao, documento_id,importancia,coletado)
+                VALUES (?, ?, ?,?,?)
+                """;//adicionei coletado
 
         try (Connection conexao = ConexaoMySQL.getConnection();
             PreparedStatement statement = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS
@@ -32,13 +32,14 @@ public class Evidencia {
             statement.setString(2, descricao);
             statement.setInt(3, documento_id);
             statement.setInt(4,importancia);
+            statement.setBoolean(5,false);//adicionei coletado
 
             int linhasAfetadas = statement.executeUpdate();
             //tippo se por acaso  nao for um alinha afectada
             if (linhasAfetadas != 1) {
                 throw new SQLException("Não foi possível criar a evidencia.");
             }
-             try (ResultSet chaves = statement.getGeneratedKeys()) {
+            try (ResultSet chaves = statement.getGeneratedKeys()) {
                 if (chaves.next()) {
                     return chaves.getInt(1);
                 }
@@ -51,9 +52,9 @@ public class Evidencia {
     }
     
     public static void listarEvidencia() throws SQLException {
-
+            //adicionei coletado
         String sql = """
-                SELECT id, titulo, descricao, documento_id,importancia
+                SELECT id, titulo, descricao, documento_id,importancia,coletado
                 FROM evidencia
                 ORDER BY id
                 """;
@@ -81,10 +82,11 @@ public class Evidencia {
     public static boolean buscarPorId(int id)
             throws SQLException {
         String sql = """
-                SELECT id, titulo, descricao, documento_id,importancia
+                SELECT id, titulo, descricao, documento_id,importancia,coletado
                 FROM evidencia
                 WHERE id = ?
                 """;
+                //adicionei coletado
       
         try (
             Connection conexao = ConexaoMySQL.getConnection();
@@ -103,11 +105,11 @@ public class Evidencia {
         }
     }
     
-    public static boolean atualizarEvidencia(int id,String titulo,String descricao,int documento_id,int importancia) throws SQLException {
+    public static boolean atualizarEvidencia(int id,String titulo,String descricao,int documento_id,int importancia,boolean coletado) throws SQLException {
 
         String sql = """
                 UPDATE evidencia
-                SET titulo=?, descricao=?, documento_id=?, importancia=?
+                SET titulo=?, descricao=?, documento_id=?, importancia=?, coletado=?
                 WHERE id = ?
                 """;
 
@@ -115,11 +117,13 @@ public class Evidencia {
             Connection conexao = ConexaoMySQL.getConnection();
             PreparedStatement statement = conexao.prepareStatement(sql)
         ) {
+            
             statement.setString(1, titulo);
             statement.setString(2, descricao);
             statement.setInt(3, documento_id);
             statement.setInt(4,importancia);
             statement.setInt(5,id);
+            statement.setBoolean(6,coletado);
 
             return statement.executeUpdate() > 0;
         }
@@ -148,9 +152,37 @@ public class Evidencia {
                 + resposta.getString("titulo")+" | "
                 + resposta.getString("descricao")+" | "
                 + resposta.getInt("documento_id")+" | "
-                + resposta.getInt("importancia")
+                + resposta.getInt("importancia")+" | "
+                +resposta.getBoolean("coletado")
         );
     }
+    
+    
+    private static boolean estaColetada(int id) throws SQLException{
+        String sql = """
+                SELECT coletado
+                FROM evidencia
+                WHERE id = ?
+                """;
+                //adicionei coletado
+      
+        try (
+            Connection conexao = ConexaoMySQL.getConnection();
+            PreparedStatement statement = conexao.prepareStatement(sql)
+        ) {
+            statement.setInt(1, id);
+
+            try (ResultSet resposta = statement.executeQuery()) {
+                if (resposta.next()) {
+                    imprimirEvidencia(resposta);
+                    return true;
+                }
+
+                return false;
+            }
+        }
+    }
+
     
 }
             
