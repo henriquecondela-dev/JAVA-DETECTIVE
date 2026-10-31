@@ -631,4 +631,5 @@ CREATE TABLE progresso_desafio (
     FOREIGN KEY (desafio_id)
     REFERENCES desafioDeProgramacao(id)
     ON DELETE CASCADE
+    
 )ENGINE=InnoDB;
