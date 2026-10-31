@@ -630,9 +630,5 @@ CREATE TABLE progresso_desafio (
 
     FOREIGN KEY (desafio_id)
     REFERENCES desafioDeProgramacao(id)
-    ON DELETE CASCADE,
-
-    CONSTRAINT uq_jogador_caso
-    UNIQUE (jogador_id, caso_id)
-
+    ON DELETE CASCADE
 )ENGINE=InnoDB;
