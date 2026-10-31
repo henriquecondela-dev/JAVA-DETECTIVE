@@ -595,10 +595,7 @@ CREATE TABLE acusacao_evidencia (
 CREATE TABLE acusacao_suspeito (
     acusacao_id BIGINT NOT NULL,
     suspeito_id BIGINT NOT NULL,
-    PRIMARY KEY (
-    acusacao_id,
-    suspeito_id
-    ),
+    PRIMARY KEY (acusacao_id, suspeito_id),
     CONSTRAINT fk_acusacao_suspeito_acusacao
     FOREIGN KEY (acusacao_id)
     REFERENCES acusacao(id)
@@ -630,9 +627,6 @@ CREATE TABLE progresso_desafio (
 
     FOREIGN KEY (desafio_id)
     REFERENCES desafioDeProgramacao(id)
-    ON DELETE CASCADE,
-
-    CONSTRAINT uq_jogador_caso
-    UNIQUE (jogador_id, caso_id)
-
+    ON DELETE CASCADE
+    
 )ENGINE=InnoDB;

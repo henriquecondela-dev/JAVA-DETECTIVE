@@ -122,15 +122,14 @@ public class Evidencia {
             statement.setString(2, descricao);
             statement.setInt(3, documento_id);
             statement.setInt(4,importancia);
-            statement.setInt(5,id);
-            statement.setBoolean(6,coletado);
+            statement.setBoolean(5,coletado);
+            statement.setInt(6,id);
 
             return statement.executeUpdate() > 0;
         }
     }
     
-    public static boolean eliminarEvidencia(int id)
-            throws SQLException {
+    public static boolean eliminarEvidencia(int id)throws SQLException {
 
         String sql = "DELETE FROM evidencia WHERE id = ?";
 
