@@ -7,7 +7,7 @@ package utils;
 
 /**
  *
- * @author clarson
+ * @author andrea
  */
 public class Pessoa {
     
