@@ -129,8 +129,7 @@ public class Evidencia {
         }
     }
     
-    public static boolean eliminarEvidencia(int id)
-            throws SQLException {
+    public static boolean eliminarEvidencia(int id)throws SQLException {
 
         String sql = "DELETE FROM evidencia WHERE id = ?";
 
