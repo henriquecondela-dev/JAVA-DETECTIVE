@@ -19,15 +19,15 @@ public class Local {
         
     }
     
-    public boolean obterEvento(String id){
-        try{   
-            int num=Integer.parseInt(id);
-            
-        }catch(NumberFormatException e){
-        
-        }
-        
-    }
+//    public boolean obterEvento(String id){
+//        try{   
+//            int num=Integer.parseInt(id);
+//            
+//        }catch(NumberFormatException e){
+//        
+//        }
+//        
+//    }
 
     
 
