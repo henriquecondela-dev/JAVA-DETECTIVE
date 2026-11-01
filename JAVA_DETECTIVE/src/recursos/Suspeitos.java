@@ -6,7 +6,7 @@ import java.sql.*;
 public class Suspeitos {
 
     // esse e o um create
-    public static long criarSuspeito(int pessoaId,int casoId,String motivo
+    public static long criarSuspeito(long pessoaId, long casoId,String motivo
     ) throws SQLException {
 
         String sql = """

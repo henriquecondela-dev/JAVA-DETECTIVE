@@ -17,7 +17,7 @@ import java.sql.Statement;
  */
 public class Evidencia {
     
-    public static int adicionarEvidencia(String titulo,String descricao,int documento_id,int importancia) throws SQLException {
+    public static int adicionarEvidencia(String titulo, String descricao, long documento_id,int importancia) throws SQLException {
 
         String sql = """
                 INSERT INTO evidencia(titulo, descricao, documento_id,importancia,coletado)
@@ -30,7 +30,7 @@ public class Evidencia {
         ) {
             statement.setString(1, titulo);
             statement.setString(2, descricao);
-            statement.setInt(3, documento_id);
+            statement.setLong(3, documento_id);
             statement.setInt(4,importancia);
             statement.setBoolean(5,false);//adicionei coletado
 
@@ -79,7 +79,7 @@ public class Evidencia {
     
     
     
-    public static boolean buscarPorId(int id)
+    public static boolean buscarPorId(long id)
             throws SQLException {
         String sql = """
                 SELECT id, titulo, descricao, documento_id,importancia,coletado
@@ -105,7 +105,7 @@ public class Evidencia {
         }
     }
     
-    public static boolean atualizarEvidencia(int id,String titulo,String descricao,int documento_id,int importancia,boolean coletado) throws SQLException {
+    public static boolean atualizarEvidencia(long id,String titulo,String descricao,long documento_id,int importancia,boolean coletado) throws SQLException {
 
         String sql = """
                 UPDATE evidencia
@@ -120,16 +120,16 @@ public class Evidencia {
             
             statement.setString(1, titulo);
             statement.setString(2, descricao);
-            statement.setInt(3, documento_id);
+            statement.setLong(3, documento_id);
             statement.setInt(4,importancia);
             statement.setBoolean(5,coletado);
-            statement.setInt(6,id);
+            statement.setLong(6,id);
 
             return statement.executeUpdate() > 0;
         }
     }
     
-    public static boolean eliminarEvidencia(int id)throws SQLException {
+    public static boolean eliminarEvidencia(long id)throws SQLException {
 
         String sql = "DELETE FROM evidencia WHERE id = ?";
 
@@ -137,7 +137,7 @@ public class Evidencia {
             Connection conexao = ConexaoMySQL.getConnection();
             PreparedStatement statement = conexao.prepareStatement(sql)
         ) {
-            statement.setInt(1, id);
+            statement.setLong(1, id);
 
             return statement.executeUpdate() > 0;
         }
@@ -147,17 +147,17 @@ public class Evidencia {
             throws SQLException {
 
         System.out.println(
-                resposta.getInt("id")+" | "
+                resposta.getLong("id")+" | "
                 + resposta.getString("titulo")+" | "
                 + resposta.getString("descricao")+" | "
-                + resposta.getInt("documento_id")+" | "
+                + resposta.getLong("documento_id")+" | "
                 + resposta.getInt("importancia")+" | "
                 +resposta.getBoolean("coletado")
         );
     }
     
     
-    private static boolean estaColetada(int id) throws SQLException{
+    private static boolean estaColetada(long id) throws SQLException{
         String sql = """
                 SELECT coletado
                 FROM evidencia
@@ -169,7 +169,7 @@ public class Evidencia {
             Connection conexao = ConexaoMySQL.getConnection();
             PreparedStatement statement = conexao.prepareStatement(sql)
         ) {
-            statement.setInt(1, id);
+            statement.setLong(1, id);
 
             try (ResultSet resposta = statement.executeQuery()) {
                 if (resposta.next()) {

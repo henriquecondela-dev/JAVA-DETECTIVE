@@ -12,16 +12,16 @@ import db.*;
  * @author antonio-nuvunga
  */
 public class Acusacao {
-    public static int adicionarAcusacao(int jogador_id, int caso_id, int suspeito_acusado_id, int resultado) throws SQLException{
+    public static int adicionarAcusacao(long jogador_id, long caso_id, long suspeito_acusado_id, boolean resultado) throws SQLException{
         String sql = "Insert into acusacao (jogador_id, caso_id, suspeito_acusado_id, resultado) values(?, ?, ?, ?)";
         
         try(Connection conexao = ConexaoMySQL.getConnection();
             PreparedStatement statement = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS))
         {
-            statement.setInt(1, jogador_id);
-            statement.setInt(2, caso_id);
-            statement.setInt(3, suspeito_acusado_id);
-            statement.setInt(4, resultado);
+            statement.setLong(1, jogador_id);
+            statement.setLong(2, caso_id);
+            statement.setLong(3, suspeito_acusado_id);
+            statement.setBoolean(4, resultado);
             
             int linhasAfetadas = statement.executeUpdate();
             if(linhasAfetadas!=1){
@@ -64,7 +64,7 @@ public class Acusacao {
     
     
     
-    public static boolean buscarPorId(int id)
+    public static boolean buscarPorId(long id)
             throws SQLException {
         String sql = """
                 SELECT id, jogador_id, caso_id, suspeito_acusado_id, resultado, data_acusacao
@@ -76,7 +76,7 @@ public class Acusacao {
             Connection conexao = ConexaoMySQL.getConnection();
             PreparedStatement statement = conexao.prepareStatement(sql)
         ) {
-            statement.setInt(1, id);
+            statement.setLong(1, id);
 
             try (ResultSet resposta = statement.executeQuery()) {
                 if (resposta.next()) {
@@ -89,7 +89,7 @@ public class Acusacao {
         }
     }
     
-    public static boolean atualizarAcusacao(int id, int jogador_id, int caso_id, int suspeito_acusado_id,int resultado) throws SQLException {
+    public static boolean atualizarAcusacao(long id, long jogador_id, long caso_id, long suspeito_acusado_id, boolean resultado) throws SQLException {
 
         String sql = """
                 UPDATE acusacao
@@ -101,17 +101,17 @@ public class Acusacao {
             Connection conexao = ConexaoMySQL.getConnection();
             PreparedStatement statement = conexao.prepareStatement(sql)
         ) {
-            statement.setInt(1, jogador_id);
-            statement.setInt(2, caso_id);
-            statement.setInt(3, suspeito_acusado_id);
-            statement.setInt(4,resultado);
-            statement.setInt(5,id);
+            statement.setLong(1, jogador_id);
+            statement.setLong(2, caso_id);
+            statement.setLong(3, suspeito_acusado_id);
+            statement.setBoolean(4,resultado);
+            statement.setLong(5,id);
 
             return statement.executeUpdate() > 0;
         }
     }
     
-    public static boolean eliminarAcusacao(int id) throws SQLException {
+    public static boolean eliminarAcusacao(long id) throws SQLException {
 
         String sql = "DELETE FROM acusacao WHERE id = ?";
 
@@ -119,7 +119,7 @@ public class Acusacao {
             Connection conexao = ConexaoMySQL.getConnection();
             PreparedStatement statement = conexao.prepareStatement(sql)
         ) {
-            statement.setInt(1, id);
+            statement.setLong(1, id);
 
             return statement.executeUpdate() > 0;
         }

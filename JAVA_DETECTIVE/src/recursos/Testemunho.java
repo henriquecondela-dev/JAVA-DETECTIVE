@@ -21,7 +21,7 @@ import java.sql.Statement;
  */
 public class Testemunho {
     
-    public static int adicionarTestemunho(int testemunha_id, String descricao, String data_hora
+    public static int adicionarTestemunho(long testemunha_id, String descricao, String data_hora
     ) throws SQLException {
 
         String sql = """
@@ -33,7 +33,7 @@ public class Testemunho {
             PreparedStatement statement = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS
             )
         ) {
-            statement.setInt(1, testemunha_id);
+            statement.setLong(1, testemunha_id);
             statement.setString(2, descricao);
             statement.setString(3, data_hora);
 
@@ -83,7 +83,7 @@ public class Testemunho {
     }
 
     // READ — procura pelo ID da tabela testemunho., mas depois imprime o tal suspeito
-    public static boolean buscarTestemunhoPorId(int id)
+    public static boolean buscarTestemunhoPorId(long id)
             throws SQLException {
         String sql = """
                 SELECT id, testemunha_id, descricao, data_hora
@@ -95,7 +95,7 @@ public class Testemunho {
             Connection conexao = ConexaoMySQL.getConnection();
             PreparedStatement statement = conexao.prepareStatement(sql)
         ) {
-            statement.setInt(1, id);
+            statement.setLong(1, id);
 
             try (ResultSet resposta = statement.executeQuery()) {
                 if (resposta.next()) {
@@ -109,7 +109,7 @@ public class Testemunho {
     }
 
     // UPDATE — altera os dados do testemunho identificado pelo ID.
-    public static boolean atualizarTestemunho( int id, int testemunha_id, String descricao, String data_hora) throws SQLException {
+    public static boolean atualizarTestemunho(long id, long testemunha_id, String descricao, String data_hora) throws SQLException {
         String sql = """
                 UPDATE testemunho
                 SET id = ?, testemunha_id = ?, descricao = ?, data_hota = ?
@@ -119,8 +119,8 @@ public class Testemunho {
             Connection conexao = ConexaoMySQL.getConnection();
             PreparedStatement statement = conexao.prepareStatement(sql)
         ) {
-            statement.setInt(1, id);
-            statement.setInt(2, testemunha_id);
+            statement.setLong(1, id);
+            statement.setLong(2, testemunha_id);
             statement.setString(3, descricao);
             statement.setString(4, data_hora);
 
@@ -129,7 +129,7 @@ public class Testemunho {
     }
 
     // DELETE — elimina o registo da tabela testemunho.
-    public static boolean eliminarTestemunho(int id)
+    public static boolean eliminarTestemunho(long id)
             throws SQLException {
 
         String sql = "DELETE FROM testemunho WHERE id = ?";
@@ -138,7 +138,7 @@ public class Testemunho {
             Connection conexao = ConexaoMySQL.getConnection();
             PreparedStatement statement = conexao.prepareStatement(sql)
         ) {
-            statement.setInt(1, id);
+            statement.setLong(1, id);
 
             return statement.executeUpdate() > 0;
         }
@@ -149,7 +149,7 @@ public class Testemunho {
             throws SQLException {
 
         System.out.println(
-                resposta.getInt("id") + " | "
+                resposta.getLong("id") + " | "
                 + resposta.getInt("testemunha_id") + " | "
                 + resposta.getString("descricao") + " | "
                 + resposta.getString("data_hora")

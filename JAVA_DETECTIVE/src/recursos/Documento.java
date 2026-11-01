@@ -60,13 +60,13 @@ public class Documento {
         }
     }
     
-    public static void eliminarDocumento(int id){
+    public static void eliminarDocumento(long id){
         String codigo ="Delete from documento where id=?";
         try(
                 Connection conexao = ConexaoMySQL.getConnection();
                 PreparedStatement statement = conexao.prepareStatement(codigo);
                 ){
-            statement.setInt(1,id);
+            statement.setLong(1,id);
             int linhas = statement.executeUpdate();
             if(linhas>0){
                 System.out.println("Documento removido com sucesso.");
@@ -77,7 +77,7 @@ public class Documento {
             System.out.println("ERRO AO ELIMINAR OS REGISTROS DE ACESSO");
         }
     }
-    public static void atualizarDocumento( int id, String nome, String tipo, String conteudo, String dataDocumento){
+    public static void atualizarDocumento(long id, String nome, String tipo, String conteudo, String dataDocumento){
         String codigo = "update pessoa set nome=?, tipo=?, conteudo=?, data_documento=? where id=?";
         
         try(
@@ -88,6 +88,7 @@ public class Documento {
             statement.setString(2, tipo);
             statement.setString(3,conteudo);
             statement.setString(4, dataDocumento);
+            statement.setLong(5, id);
             
             int linhas = statement.executeUpdate();
             if(linhas>0){

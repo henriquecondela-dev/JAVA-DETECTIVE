@@ -10,7 +10,7 @@ import java.sql.*;
  * @author antonio-nuvunga
  */
 public class Evento {
-    public static int adicionarEvento(String descricao,String data_hora,int local_id) throws SQLException {
+    public static int adicionarEvento(String descricao,String data_hora,long local_id) throws SQLException {
 
         String sql = """
                 INSERT INTO evento(descricao, data_hora, local_id)
@@ -23,7 +23,7 @@ public class Evento {
         ) {
             statement.setString(1, descricao);
             statement.setString(2, data_hora);
-            statement.setInt(3, local_id);
+            statement.setLong(3, local_id);
 
             int linhasAfetadas = statement.executeUpdate();
             //tippo se por acaso  nao for um alinha afectada
@@ -69,10 +69,10 @@ public class Evento {
     }
     
     
-    public static boolean buscarPorId(int id)
+    public static boolean buscarPorId(long id)
             throws SQLException {
         String sql = """
-                SõELECT id, titulo, descricao, data_hora,local_id
+                SELECT id, titulo, descricao, data_hora,local_id
                 FROM evidencia
                 WHERE id = ?
                 """;
@@ -97,7 +97,7 @@ public class Evento {
     //burcarPorLocalizacao
     //buscarPorPessoa
     
-     public static boolean atualizarEvento(int id,String descricao,String data_hora,int local_id) throws SQLException {
+     public static boolean atualizarEvento(long id,String descricao,String data_hora,long local_id) throws SQLException {
 
         String sql = """
                 UPDATE evidencia
@@ -111,20 +111,20 @@ public class Evento {
         ) {
             statement.setString(1, descricao);
             statement.setString(2, data_hora);
-            statement.setInt(3, local_id);
-            statement.setInt(4,id);
+            statement.setLong(3, local_id);
+            statement.setLong(4,id);
 
             return statement.executeUpdate() > 0;
         }
     }
      
-    public static boolean eliminarEvento(int id) throws SQLException{
+    public static boolean eliminarEvento(long id) throws SQLException{
         boolean eliminado = false;
         String sql = "Delete from evento where id=?";
         try(Connection conexao = ConexaoMySQL.getConnection();
                 PreparedStatement statement = conexao.prepareStatement(sql))
         {
-            statement.setInt(1, id);
+            statement.setLong(1, id);
             int linhasAfetadas = statement.executeUpdate();
             if(linhasAfetadas==1) eliminado= true;
         }catch(SQLException e){
@@ -137,10 +137,10 @@ public class Evento {
             throws SQLException {
 
         System.out.println(
-                resposta.getInt("id")+" | "
+                resposta.getLong("id")+" | "
                 + resposta.getString("descricao")+" | "
                 + resposta.getString("data_hora")+" | "
-                + resposta.getInt("local_id")+" | "
+                + resposta.getLong("local_id")+" | "
         );
     }
     

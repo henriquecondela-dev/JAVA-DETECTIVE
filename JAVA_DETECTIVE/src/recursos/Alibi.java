@@ -11,7 +11,7 @@ import java.sql.*;
  */
 public class Alibi {
    
-  public static void adicionarAlibi(int id_suspeito ,String descricao, String inicio, String fim){
+  public static void adicionarAlibi(long id_suspeito ,String descricao, String inicio, String fim){
         
         String codigo = "insert into alibi (id_suspeito, descricao, inicio, fim) values(?, ?, ?, ?)";
         
@@ -19,7 +19,7 @@ public class Alibi {
                 Connection conexao = ConexaoMySQL.getConnection();
                 PreparedStatement statement = conexao.prepareStatement(codigo);
                 ){
-            statement.setInt(1, id_suspeito);
+            statement.setLong(1, id_suspeito);
             statement.setString(2, descricao);
             statement.setString(3,inicio);
             statement.setString(4, fim);
@@ -43,7 +43,7 @@ public class Alibi {
                 ResultSet resultado = statement.executeQuery()
                 ){
                 while(resultado.next()){
-                int suspeito = resultado.getInt("suspeito_id");
+                long suspeito = resultado.getInt("suspeito_id");
                 String descricao = resultado.getString("descricao");
                 String inicio= resultado.getString("inicio");
                 String fim= resultado.getString("fim");
@@ -57,13 +57,13 @@ public class Alibi {
             System.out.println("ERRO AO LISTAR os alibis"+ e.getMessage());
         }
     }
-  public static void eliminarAlibi(int id){
+  public static void eliminarAlibi(long id){
         String codigo ="Delete from alibi where id=?";
         try(
                 Connection conexao = ConexaoMySQL.getConnection();
                 PreparedStatement statement = conexao.prepareStatement(codigo);
                 ){
-            statement.setInt(1,id);
+            statement.setLong(1,id);
             int linhas = statement.executeUpdate();
             if(linhas>0){
                 System.out.println("alibi removido com sucesso.");
@@ -75,17 +75,18 @@ public class Alibi {
         }
     }
   
-  public static void atualizar( int id, int id_suspeito ,String descricao, String inicio, String fim){
+  public static void atualizar(long id, long id_suspeito ,String descricao, String inicio, String fim){
         String codigo = "update alibi set id_suspeito=?, descricao=?, inicio=?, fim=? where id=?";
         
         try(
                 Connection conexao = ConexaoMySQL.getConnection();
                 PreparedStatement statement = conexao.prepareStatement(codigo);
                 ){
-            statement.setInt(1, id_suspeito);
+            statement.setLong(1, id_suspeito);
             statement.setString(2, descricao);
             statement.setString(3,inicio);
             statement.setString(4, fim);
+            statement.setLong(5, id);
             
             int linhas = statement.executeUpdate();
             if(linhas>0){

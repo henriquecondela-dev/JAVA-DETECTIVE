@@ -69,7 +69,7 @@ public class Localizacao {
         }
     }
     
-    public static boolean buscarPorId(int id)
+    public static boolean buscarPorId(long id)
             throws SQLException {
         String sql = """
                 SELECT id, nome
@@ -81,7 +81,7 @@ public class Localizacao {
             Connection conexao = ConexaoMySQL.getConnection();
             PreparedStatement statement = conexao.prepareStatement(sql)
         ) {
-            statement.setInt(1, id);
+            statement.setLong(1, id);
 
             try (ResultSet resposta = statement.executeQuery()) {
                 if (resposta.next()) {
@@ -94,7 +94,7 @@ public class Localizacao {
         }
     }
     
-     public static boolean atualizarLocalizacao(int id,String nome) throws SQLException {
+     public static boolean atualizarLocalizacao(long id,String nome) throws SQLException {
 
         String sql = """
                 UPDATE localizacao
@@ -107,13 +107,13 @@ public class Localizacao {
             PreparedStatement statement = conexao.prepareStatement(sql)
         ) {
             statement.setString(1, nome);
-            statement.setInt(2, id);
+            statement.setLong(2, id);
             
             return statement.executeUpdate() > 0;
         }
     }
      
-     public static boolean eliminarLocalizacao(int id)
+    public static boolean eliminarLocalizacao(long id)
             throws SQLException {
 
         String sql = "DELETE FROM localizacao WHERE id = ?";
@@ -122,7 +122,7 @@ public class Localizacao {
             Connection conexao = ConexaoMySQL.getConnection();
             PreparedStatement statement = conexao.prepareStatement(sql)
         ) {
-            statement.setInt(1, id);
+            statement.setLong(1, id);
 
             return statement.executeUpdate() > 0;
         }
@@ -132,7 +132,7 @@ public class Localizacao {
             throws SQLException {
 
         System.out.println(
-                resposta.getInt("id")+" | "
+                resposta.getLong("id")+" | "
                 + resposta.getString("nome")
         );
     }
