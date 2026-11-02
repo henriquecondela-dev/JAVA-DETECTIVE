@@ -98,23 +98,23 @@ public class Pessoa {
         }
     }
 
-    public static void eliminarPessoas(int id) {
+    public static void eliminarPessoas(long id) {
         String codigo = "Delete from pessoa where id=?";
         try (
                 Connection conexao = ConexaoMySQL.getConnection(); PreparedStatement statement = conexao.prepareStatement(codigo);) {
-            statement.setInt(1, id);
+            statement.setLong(1, id);
             int linhas = statement.executeUpdate();
             if (linhas == 1) {
                 System.out.println("Pessoa removida com sucesso.");
             } else {
-                System.out.println("Pessoa removida com sucesso.");
+                System.out.println("Pessoa não removida.");
             }
         } catch (SQLException e) {
-            System.out.println("ERRO AO LISTAR AS PESSOAS");
+            System.out.println("ERRO AO ELIMINAR A PESSOA");
         }
     }
 
-    public static void atualizar(int id, String nome, int idade, String genero, String descricao) {
+    public static void atualizar(long id, String nome, int idade, String genero, String descricao) {
         String codigo = "update pessoa set nome=?, idade=?, genero=?, descricao=? where id=?";
 
         try (
@@ -123,6 +123,7 @@ public class Pessoa {
             statement.setInt(2, idade);
             statement.setString(3, genero);
             statement.setString(4, descricao);
+            statement.setLong(5, id);
 
             int linhas = statement.executeUpdate();
             if (linhas > 0) {

@@ -15,7 +15,7 @@ import java.sql.*;
 public class RegistoAcesso {
   
     
-    public static void adicionarRegistroAcesso(String descricao, String dataHora, String tipoAcesso, int local_id, int pessoa_id){
+    public static void adicionarRegistroAcesso(String descricao, String dataHora, String tipoAcesso, long local_id, long pessoa_id){
        String codigo = "Insert into registrodeacesso ( descricao, data_hora, tipo_acesso, local_id, pessoa_id) values(?, ?, ?, ?, ?)";
         try(
                 Connection conexao = ConexaoMySQL.getConnection();
@@ -24,8 +24,8 @@ public class RegistoAcesso {
             statement.setString(1, descricao);
             statement.setString(2, dataHora);
             statement.setString(3,tipoAcesso);
-            statement.setInt(4, local_id);
-            statement.setInt(5, pessoa_id);
+            statement.setLong(4, local_id);
+            statement.setLong(5, pessoa_id);
             
             int linhas = statement.executeUpdate();
             if(linhas>0){
@@ -49,8 +49,8 @@ public class RegistoAcesso {
                 String descricao= resultado.getString("descricao");
                 String dataHora = resultado.getString("data_hora");
                 String tipoAcesso = resultado.getString("tipo_acesso");
-                int local_id = resultado.getInt("local_id");
-                int pessoa_id = resultado.getInt("pessoa_id");
+                long local_id = resultado.getInt("local_id");
+                long pessoa_id = resultado.getInt("pessoa_id");
                 
                 System.out.print("Nome: " +descricao+" ");
                 System.out.print("Idade: " +dataHora+" ");
@@ -63,13 +63,13 @@ public class RegistoAcesso {
         }
     }
     
-    public static void eliminarRegistroAcesso(int id){
+    public static void eliminarRegistroAcesso(long id){
         String codigo ="Delete from registrodeacesso where id=?";
         try(
                 Connection conexao = ConexaoMySQL.getConnection();
                 PreparedStatement statement = conexao.prepareStatement(codigo);
                 ){
-            statement.setInt(1,id);
+            statement.setLong(1,id);
             int linhas = statement.executeUpdate();
             if(linhas>0){
                 System.out.println("Registro de acesso removido com sucesso.");
@@ -80,7 +80,7 @@ public class RegistoAcesso {
             System.out.println("ERRO AO ELIMINAR OS REGISTROS DE ACESSO");
         }
     }
-    public static void atualizarRegistroAcesso(int id, String descricao, String dataHora, String tipoAcesso, int local_id, int pessoa_id){
+    public static void atualizarRegistroAcesso(long id, String descricao, String dataHora, String tipoAcesso, long local_id, long pessoa_id){
         String codigo = "update pessoa set descricao=?, data_hora=?, tipo_acesso=?, local_id=?, pessoa_id=? where id=?";
         
         try(
@@ -90,8 +90,8 @@ public class RegistoAcesso {
             statement.setString(1, descricao);
             statement.setString(2, dataHora);
             statement.setString(3,tipoAcesso);
-            statement.setInt(4, local_id);
-            statement.setInt(5, pessoa_id);
+            statement.setLong(4, local_id);
+            statement.setLong(5, pessoa_id);
             
             int linhas = statement.executeUpdate();
             if(linhas>0){

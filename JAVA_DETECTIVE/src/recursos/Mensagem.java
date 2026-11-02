@@ -58,14 +58,14 @@ public class Mensagem {
         }
     }
     
-    public static boolean eliminarMensagem(int id) throws SQLException{
+    public static boolean eliminarMensagem(long id) throws SQLException{
         boolean eliminada = false;
         String sql = "Delete from mensagem where id=?";
         
         try(Connection conexao = ConexaoMySQL.getConnection();
             PreparedStatement statement = conexao.prepareStatement(sql))
         {
-            statement.setInt(1, id);
+            statement.setLong(1, id);
             
             int linhasAfetadas = statement.executeUpdate();
             if(linhasAfetadas != 1){
@@ -78,7 +78,7 @@ public class Mensagem {
         
     }
     
-    public static boolean atualizarMensagem(int id, String conteudo) throws SQLException{
+    public static boolean atualizarMensagem(long id, String conteudo) throws SQLException{
         boolean atualizou = false;
         String sql = "Update mensagem set conteudo=? where id=?";
         
@@ -86,7 +86,7 @@ public class Mensagem {
             PreparedStatement statement = conexao.prepareStatement(sql))
         {
             statement.setString(1, conteudo);
-            statement.setInt(2, id);
+            statement.setLong(2, id);
             
             int linhasAfetadas = statement.executeUpdate();
             
@@ -100,14 +100,14 @@ public class Mensagem {
         return atualizou;
     }
     
-    public static boolean buscarPorId(int id) throws SQLException {
+    public static boolean buscarPorId(long id) throws SQLException {
         String sql = " SELECT id, conteudo FROM mensagem WHERE id = ? ";
       
         try (
             Connection conexao = ConexaoMySQL.getConnection();
             PreparedStatement statement = conexao.prepareStatement(sql)
         ) {
-            statement.setInt(1, id);
+            statement.setLong(1, id);
 
             try (ResultSet resposta = statement.executeQuery()) {
                 if (resposta.next()) {
@@ -120,7 +120,7 @@ public class Mensagem {
     }
     
     public static void imprimirMensagens(ResultSet result) throws SQLException{
-        System.out.println("ID: " + result.getInt("id") + "|" 
+        System.out.println("ID: " + result.getLong("id") + "|" 
         + "Conteudo: " + result.getString("conteudo"));
     }
     

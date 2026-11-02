@@ -132,8 +132,7 @@ public class DesafiosDeProgramacao {
             String descricao,
             long etapaId,
             String classeEsperada,
-            String metodoEsperado,
-            boolean concluido
+            String metodoEsperado
     ) throws SQLException {
 
         String sql = """
@@ -144,7 +143,6 @@ public class DesafiosDeProgramacao {
                     etapa_id = ?,
                     classe_esperada = ?,
                     metodo_esperado = ?,
-                    concluido = ?
                 WHERE id = ?
                 """;
 
@@ -158,8 +156,7 @@ public class DesafiosDeProgramacao {
             statement.setLong(4, etapaId);
             statement.setString(5, classeEsperada);
             statement.setString(6, metodoEsperado);
-            statement.setBoolean(7, concluido);
-            statement.setLong(8, id);
+            statement.setLong(7, id);
 
             return statement.executeUpdate() > 0;
         }
@@ -191,12 +188,9 @@ public class DesafiosDeProgramacao {
                 + "\nCaso ID: " + resposta.getLong("caso_id")
                 + "\nDescrição: " + resposta.getString("descricao")
                 + "\nEtapa ID: " + resposta.getLong("etapa_id")
-                + "\nClasse esperada: "
-                + resposta.getString("classe_esperada")
-                + "\nMétodo esperado: "
-                + resposta.getString("metodo_esperado")
-                + "\nConcluído: "
-                + resposta.getObject("concluido")
+                + "\nClasse esperada: " + resposta.getString("classe_esperada")
+                + "\nMétodo esperado: " + resposta.getString("metodo_esperado")
+                + "\nConcluído: " + resposta.getObject("concluido")
                 + "\n--------------------------------"
         );
     }
