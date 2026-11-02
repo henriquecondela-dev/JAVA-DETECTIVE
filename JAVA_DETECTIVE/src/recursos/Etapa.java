@@ -147,7 +147,7 @@ public class Etapa {
 
         System.out.println(
                 resposta.getLong("id")+" | "
-                + resposta.getInt("caso_id")+" | "
+                + resposta.getLong("caso_id")+" | "
                 + resposta.getInt("numero")+" | "
                 + resposta.getString("titulo")+" | "
                 + resposta.getString("descricao")+" | "
