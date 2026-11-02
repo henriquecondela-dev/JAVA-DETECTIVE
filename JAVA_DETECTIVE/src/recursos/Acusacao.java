@@ -12,7 +12,7 @@ import db.*;
  * @author antonio-nuvunga
  */
 public class Acusacao {
-    public static int adicionarAcusacao(long jogador_id, long caso_id, long suspeito_acusado_id, boolean resultado) throws SQLException{
+    public static int adicionarAcusacao(long jogador_id, long caso_id, Long suspeito_acusado_id, boolean resultado) throws SQLException{
         String sql = "Insert into acusacao (jogador_id, caso_id, suspeito_acusado_id, resultado) values(?, ?, ?, ?)";
         
         try(Connection conexao = ConexaoMySQL.getConnection();
@@ -89,7 +89,7 @@ public class Acusacao {
         }
     }
     
-    public static boolean atualizarAcusacao(long id, long jogador_id, long caso_id, long suspeito_acusado_id, boolean resultado) throws SQLException {
+    public static boolean atualizarAcusacao(long id, long jogador_id, long caso_id, Long suspeito_acusado_id, boolean resultado) throws SQLException {
 
         String sql = """
                 UPDATE acusacao
@@ -128,10 +128,10 @@ public class Acusacao {
     private static void imprimirAcusacao(ResultSet resposta) throws SQLException {
 
         System.out.println(
-                resposta.getInt("id")+" | "
-                + resposta.getInt("jogador_id")+" | "
-                + resposta.getInt("caso_id")+" | "
-                + resposta.getInt("suspeito_acusado_id")+" | "
+                resposta.getLong("id")+" | "
+                + resposta.getLong("jogador_id")+" | "
+                + resposta.getLong("caso_id")+" | "
+                + resposta.getLong("suspeito_acusado_id")+" | "
                 + resposta.getInt("resultado")+" | "
                 + resposta.getString("data_acusacao")
         );

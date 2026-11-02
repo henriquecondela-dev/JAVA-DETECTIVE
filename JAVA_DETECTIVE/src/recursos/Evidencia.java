@@ -17,7 +17,7 @@ import java.sql.Statement;
  */
 public class Evidencia {
     
-    public static int adicionarEvidencia(String titulo, String descricao, long documento_id,int importancia) throws SQLException {
+    public static int adicionarEvidencia(String titulo, String descricao, Long documento_id,int importancia) throws SQLException {
 
         String sql = """
                 INSERT INTO evidencia(titulo, descricao, documento_id,importancia,coletado)
@@ -105,7 +105,7 @@ public class Evidencia {
         }
     }
     
-    public static boolean atualizarEvidencia(long id,String titulo,String descricao,long documento_id,int importancia,boolean coletado) throws SQLException {
+    public static boolean atualizarEvidencia(long id,String titulo,String descricao,Long documento_id,int importancia,boolean coletado) throws SQLException {
 
         String sql = """
                 UPDATE evidencia
