@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * @author Maunze
  */
 public class Etapa {
-    private int id;
+    private long id;
     private int numero;
     private int quantidadeMinimaEnvidencias;
     private String titulo;
@@ -21,7 +21,7 @@ public class Etapa {
     private ArrayList<String> evidencias;
     private ArrayList<String> desafios;
     
-    public Etapa(int id,int numero, int quantidadeMinimaEnvidencias, String titulo, String descricao, String objectivo, boolean desbloqueada, boolean concluida ){
+    public Etapa(long id,int numero, int quantidadeMinimaEnvidencias, String titulo, String descricao, String objectivo, boolean desbloqueada, boolean concluida ){
       this.id=id;
       this.numero= numero;
       this.quantidadeMinimaEnvidencias= quantidadeMinimaEnvidencias;
@@ -33,6 +33,7 @@ public class Etapa {
       this.evidencias = new ArrayList<>();
       this.desafios = new ArrayList<>();
     }
+    
     
     public void desbloquear(){
         setDesbloqueada(true);
@@ -51,15 +52,8 @@ public class Etapa {
     /**
      * @return the id
      */
-    public int getId() {
+    public long getId() {
         return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(int id) {
-        this.id = id;
     }
 
     /**
@@ -69,12 +63,6 @@ public class Etapa {
         return numero;
     }
 
-    /**
-     * @param numero the numero to set
-     */
-    public void setNumero(int numero) {
-        this.numero = numero;
-    }
 
     /**
      * @return the quantidadeMinimaEnvidencias
