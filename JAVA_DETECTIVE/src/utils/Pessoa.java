@@ -3,20 +3,23 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package utils;
+
 import java.util.ArrayList;
+
 /**
  *
  * @author Maunze
  */
 public class Pessoa {
-    private int id;
+
+    private long id;
     private int idade;
     private String descricao;
     private String nome;
     private ArrayList<String> eventos;
-    
-    public Pessoa(int id, int idade, String descricao, String nome){
-        this.id=id;
+
+    public Pessoa(long id, int idade, String descricao, String nome) {
+        this.id = id;
         this.idade = idade;
         this.descricao=descricao;
         if(nome==null || nome.isBlank()){
@@ -25,24 +28,16 @@ public class Pessoa {
         this.nome=nome;
         this.eventos= new ArrayList<>();
     }
-    public String obterIdentificao(){
-        return getNome();
-    }
+
     public void adicionarEventos(String evento){
         getEventos().add(evento);
     }
 
-    /**
-     * @return the id
-     */
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -65,6 +60,10 @@ public class Pessoa {
      */
     public String getDescricao() {
         return descricao;
+    }
+
+    public String obterIdentificao() {
+        return getNome();
     }
 
     /**
@@ -98,10 +97,4 @@ public class Pessoa {
         return eventos;
     }
 
-    /**
-     * @param eventos the eventos to set
-     */
-    public void setEventos(ArrayList<String> eventos) {
-        this.eventos = eventos;
-    }
 }
