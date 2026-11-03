@@ -4,63 +4,96 @@
  */
 package utils;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author Maunze
  */
 public class Etapa {
-    private int id;
+    private long id;
+    private long caso_id;
     private int numero;
-    private int quantidadeMinimaEnvidencias;
+    private int minimoEvidencias;
     private String titulo;
     private String descricao;
     private String objectivo;
-    private boolean desbloqueada;
-    private boolean concluida;
-    private ArrayList<String> evidencias;
-    private ArrayList<String> desafios;
+    private List<Evidencia> evidencias;
+    private List<DesafioDeProgramacao> desafios;
     
-    public Etapa(int id,int numero, int quantidadeMinimaEnvidencias, String titulo, String descricao, String objectivo, boolean desbloqueada, boolean concluida ){
-      this.id=id;
-      this.numero= numero;
-      this.quantidadeMinimaEnvidencias= quantidadeMinimaEnvidencias;
-      this.titulo=titulo;
-      this.objectivo=objectivo;
-      this.descricao=descricao;
-      this.concluida= false;
-      this.desbloqueada= false;
-      this.evidencias = new ArrayList<>();
-      this.desafios = new ArrayList<>();
-    }
+    public Etapa(){ }
     
-    public void desbloquear(){
-        setDesbloqueada(true);
-    }
-    
-    public void concluir(){
-        if(isDesbloqueada() && getEvidencias().size()>= getQuantidadeMinimaEnvidencias()){
-            setConcluida(true);
+    /**
+     *
+     * @param id
+     * @param caso_id
+     * @param numero
+     * @param minimoEvidencias
+     * @param titulo
+     * @param descricao
+     * @param objectivo
+     * @param evidencias
+     * @param desafios
+     */
+    public Etapa(long id, long caso_id, int numero, int minimoEvidencias, String titulo, String descricao, String objectivo, List<Evidencia> evidencias, List<DesafioDeProgramacao> desafios){
+        this.id=id;
+        this.caso_id = caso_id;
+        this.numero= numero;
+        this.minimoEvidencias= minimoEvidencias;
+        if(titulo==null || titulo.isBlank()){
+            throw new IllegalArgumentException("Título de etapa obrigatório!");
         }
+        this.titulo=titulo;
+        this.objectivo=objectivo;
+        this.descricao=descricao;
+        this.evidencias = new ArrayList<>();
+        this.desafios = new ArrayList<>();
     }
     
-    public boolean podeAvancar(){
-        return isConcluida();
+    public Etapa(long id, long caso_id, int numero, int minimoEvidencias, String titulo, String descricao, String objectivo){
+        this.id=id;
+        this.caso_id = caso_id;
+        this.numero= numero;
+        this.minimoEvidencias= minimoEvidencias;
+        if(titulo==null || titulo.isBlank()){
+            throw new IllegalArgumentException("Título de etapa obrigatório!");
+        }
+        this.titulo=titulo;
+        this.objectivo=objectivo;
+        this.descricao=descricao;
+        this.evidencias = new ArrayList<>();
+        this.desafios = new ArrayList<>();
     }
 
     /**
      * @return the id
      */
-    public int getId() {
+    public long getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
+    
+    /**
+     * @return the caso_id
+     */
+    public long getCasoId() {
+        return caso_id;
+    }
+
+    /**
+     * @param caso_id the id to set
+     */
+    public void setCasoId(long caso_id) {
+        this.caso_id = caso_id;
+    }
+    
+    
 
     /**
      * @return the numero
@@ -79,15 +112,15 @@ public class Etapa {
     /**
      * @return the quantidadeMinimaEnvidencias
      */
-    public int getQuantidadeMinimaEnvidencias() {
-        return quantidadeMinimaEnvidencias;
+    public int getMinimoEvidencias() {
+        return minimoEvidencias;
     }
 
     /**
-     * @param quantidadeMinimaEnvidencias the quantidadeMinimaEnvidencias to set
+     * @param minimoEvidencias the minimoEvidencias to set
      */
-    public void setQuantidadeMinimaEnvidencias(int quantidadeMinimaEnvidencias) {
-        this.quantidadeMinimaEnvidencias = quantidadeMinimaEnvidencias;
+    public void setMinimoEvidencias(int minimoEvidencias) {
+        this.minimoEvidencias = minimoEvidencias;
     }
 
     /**
@@ -101,6 +134,9 @@ public class Etapa {
      * @param titulo the titulo to set
      */
     public void setTitulo(String titulo) {
+        if(titulo==null || titulo.isBlank()){
+          throw new IllegalArgumentException("Título de etapa obrigatório!");
+        }
         this.titulo = titulo;
     }
 
@@ -130,62 +166,48 @@ public class Etapa {
      */
     public void setObjectivo(String objectivo) {
         this.objectivo = objectivo;
-    }
-
-    /**
-     * @return the desbloqueada
-     */
-    public boolean isDesbloqueada() {
-        return desbloqueada;
-    }
-
-    /**
-     * @param desbloqueada the desbloqueada to set
-     */
-    public void setDesbloqueada(boolean desbloqueada) {
-        this.desbloqueada = desbloqueada;
-    }
-
-    /**
-     * @return the concluida
-     */
-    public boolean isConcluida() {
-        return concluida;
-    }
-
-    /**
-     * @param concluida the concluida to set
-     */
-    public void setConcluida(boolean concluida) {
-        this.concluida = concluida;
-    }
+    } 
 
     /**
      * @return the evidencias
      */
-    public ArrayList<String> getEvidencias() {
+    public List<Evidencia> getEvidencias() {
         return evidencias;
     }
 
     /**
      * @param evidencias the evidencias to set
      */
-    public void setEvidencias(ArrayList<String> evidencias) {
+    public void setEvidencias(List<Evidencia> evidencias) {
         this.evidencias = evidencias;
     }
 
     /**
      * @return the desafios
      */
-    public ArrayList<String> getDesafios() {
+    public List<DesafioDeProgramacao> getDesafios() {
         return desafios;
     }
 
     /**
      * @param desafios the desafios to set
      */
-    public void setDesafios(ArrayList<String> desafios) {
+    public void setDesafios(List<DesafioDeProgramacao> desafios) {
         this.desafios = desafios;
+    }
+    
+    public void adicionarEvidencia(Evidencia evidencia){
+        if(evidencia==null){
+            throw new IllegalArgumentException("Evidência inválida!");
+        }
+        this.evidencias.add(evidencia);
+    }
+    
+    public void adicionarDesafio(DesafioDeProgramacao desafio){
+        if(desafio==null){
+            throw new IllegalArgumentException("Desafio inválido!");
+        }
+        this.desafios.add(desafio);
     }
     
 }

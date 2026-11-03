@@ -10,6 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import utils.Etapa;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -50,7 +53,7 @@ public class Etapa {
         }
     }
     
-    public static void listarEtapas() throws SQLException {
+    public List<utils.Etapa> listarEtapas() throws SQLException {
 
         String sql = """
                 SELECT id, caso_id, numero , titulo, descricao, desbloqueada, concluida, minimo_evidencias
@@ -58,29 +61,29 @@ public class Etapa {
                 ORDER BY id
                 """;
 
-        try (
-            Connection conexao = ConexaoMySQL.getConnection();
+        try (Connection conexao = ConexaoMySQL.getConnection();
             PreparedStatement statement = conexao.prepareStatement(sql);
-            ResultSet resposta = statement.executeQuery()
-        ) {
+            ResultSet resposta = statement.executeQuery()) {
             boolean encontrou = false;
-
-            while (resposta.next()) {
-                imprimirEtapa(resposta);
-                encontrou = true;
+            List<utils.Etapa> etapas = new ArrayList<>();
+            while (resposta.next()) {                
+                utils.Etapa etapa = new utils.Etapa(resposta.getLong("id"), resposta.getLong("caso_id"), resposta.getInt("numero"), resposta.getInt("minimo_evidencias"), resposta.getString("titulo"), resposta.getString("descricao"), resposta.getString("objectivo"));
+                 etapas.add(etapa);
+                //imprimirEtapa(resposta);
             }
 
             if (!encontrou) {
-                System.out.println("Nenhuma etapa registada.");
+                throw new SQLException("Nenhuma etapa registada.");
             }
+            return etapas;
         }
     }
     
     
-    public static boolean buscarPorId(long id)throws SQLException {
+    public static utils.Etapa buscarPorId(long id)throws SQLException {
         String sql = """
-                SõELECT id, caso_id, numero , titulo, descricao, desbloqueada, concluida, minimo_evidencias
-                FROM evidencia
+                SELECT id, caso_id, numero , titulo, descricao, desbloqueada, concluida, minimo_evidencias
+                FROM etapa
                 WHERE id = ?
                 """;
       
@@ -92,11 +95,12 @@ public class Etapa {
 
             try (ResultSet resposta = statement.executeQuery()) {
                 if (resposta.next()) {
-                    imprimirEtapa(resposta);
-                    return true;
+                    utils.Etapa etapa = new utils.Etapa(resposta.getLong("id"), resposta.getLong("caso_id"), resposta.getInt("numero"), resposta.getInt("minimo_evidencias"), resposta.getString("titulo"), resposta.getString("descricao"), resposta.getString("objectivo"));
+                    return etapa;
+                    //imprimirEtapa(resposta);
                 }
 
-                return false;
+                return null;
             }
         }
     }
@@ -108,7 +112,7 @@ public class Etapa {
 
         String sql = """
                 UPDATE etapa
-                SET caso_id=?, numero=?, titulo=? descricao=?, minimo_evidencias=?
+                SET caso_id=?, numero=?, titulo=?, descricao=?, minimo_evidencias=?
                 WHERE id = ?
                 """;
 
@@ -137,7 +141,7 @@ public class Etapa {
             int linhasAfetadas = statement.executeUpdate();
             if(linhasAfetadas==1) eliminado= true;
         }catch(SQLException e){
-            System.out.println("Erro: " + e.getMessage());
+            throw new SQLException("Erro: " + e.getMessage());
         }
         return eliminado;
     }

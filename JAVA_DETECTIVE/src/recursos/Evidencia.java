@@ -10,6 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import utils.Evidencia;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -65,14 +68,18 @@ public class Evidencia {
             ResultSet resposta = statement.executeQuery()
         ) {
             boolean encontrou = false;
-
+            List <utils.Evidencia> evidencias = new ArrayList<>();
             while (resposta.next()) {
-                imprimirEvidencia(resposta);
+                Importancia impor = new Importancia();
+                utils.Evidencia ev = new utils.Evidencia(resposta.getLong("id"), resposta.getString("titulo"), resposta.getString("descricao"), resposta.getLong("documento_id"), impo);
+                evidencias.add(ev);
+                //imprimirEvidencia(resposta);
                 encontrou = true;
             }
 
             if (!encontrou) {
                 System.out.println("Nenhuma evidencia registada.");
+                return evidencias;
             }
         }
     }

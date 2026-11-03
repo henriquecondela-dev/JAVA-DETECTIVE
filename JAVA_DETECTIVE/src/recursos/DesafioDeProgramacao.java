@@ -11,7 +11,7 @@ package recursos;
 import db.ConexaoMySQL;
 import java.sql.*;
 
-public class DesafiosDeProgramacao {
+public class DesafioDeProgramacao {
 
     // CREATE 
     public static long criarDesafio(
@@ -39,7 +39,7 @@ public class DesafiosDeProgramacao {
         try (
             Connection conexao = ConexaoMySQL.getConnection();
             PreparedStatement statement = conexao.prepareStatement(
-                    sql, Statement.RETURN_GENERATED_KEYS
+            sql, Statement.RETURN_GENERATED_KEYS
             )
         ) {
             statement.setString(1, titulo);

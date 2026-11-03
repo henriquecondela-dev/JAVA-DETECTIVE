@@ -22,6 +22,9 @@ public class Evidencia {
     // Construtor com todos os atributos
     public Evidencia(long id, String titulo, String descricao, Long documento_id, Importancia importancia) {
         this.id = id;
+        if(titulo==null || titulo.isBlank()){
+          throw new IllegalArgumentException("Título de etapa obrigatório!");
+        }
         this.titulo = titulo;
         this.descricao = descricao;
         this.documento_id = documento_id;
@@ -29,6 +32,9 @@ public class Evidencia {
     }
     
     public Evidencia(String titulo, String descricao, Long documento_id, Importancia importancia) {
+        if(titulo==null || titulo.isBlank()){
+          throw new IllegalArgumentException("Título de etapa obrigatório!");
+        }
         this.titulo = titulo;
         this.descricao = descricao;
         this.documento_id = documento_id;
@@ -50,6 +56,9 @@ public class Evidencia {
     }
 
     public void setTitulo(String titulo) {
+        if(titulo==null || titulo.isBlank()){
+          throw new IllegalArgumentException("Título de etapa obrigatório!");
+        }
         this.titulo = titulo;
     }
 

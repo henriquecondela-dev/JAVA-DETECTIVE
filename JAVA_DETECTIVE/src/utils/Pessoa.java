@@ -19,6 +19,9 @@ public class Pessoa {
         this.id=id;
         this.idade = idade;
         this.descricao=descricao;
+        if(nome==null || nome.isBlank()){
+          throw new IllegalArgumentException("Título de etapa obrigatório!");
+        }
         this.nome=nome;
         this.eventos= new ArrayList<>();
     }
@@ -82,6 +85,9 @@ public class Pessoa {
      * @param nome the nome to set
      */
     public void setNome(String nome) {
+        if(nome==null || nome.isBlank()){
+          throw new IllegalArgumentException("Título de etapa obrigatório!");
+        }
         this.nome = nome;
     }
 
