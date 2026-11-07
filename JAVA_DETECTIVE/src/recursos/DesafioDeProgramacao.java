@@ -9,7 +9,13 @@
 package recursos;
 
 import db.ConexaoMySQL;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DesafioDeProgramacao {
 
@@ -69,7 +75,7 @@ public class DesafioDeProgramacao {
     }
 
     // READ 
-    public static void listarDesafios() throws SQLException {
+    public static List<utils.DesafioDeProgramacao> listarDesafios() throws SQLException {
 
         String sql = """
                 SELECT id, titulo, caso_id, descricao, etapa_id,
@@ -83,26 +89,23 @@ public class DesafioDeProgramacao {
             PreparedStatement statement = conexao.prepareStatement(sql);
             ResultSet resposta = statement.executeQuery()
         ) {
-            boolean encontrou = false;
-
+            List<utils.DesafioDeProgramacao> desafios = new ArrayList<>();
             while (resposta.next()) {
-                imprimirDesafio(resposta);
-                encontrou = true;
+                utils.DesafioDeProgramacao desafio = new utils.DesafioDeProgramacao(resposta.getLong("id"), resposta.getLong("caso_id"), resposta.getLong("etapa_id"), resposta.getString("titulo"), resposta.getString("descricao"), resposta.getString("classe_esperada"), resposta.getString("metodo_esperado"));
+                desafios.add(desafio);
+                //imprimirDesafio(resposta);
             }
-
-            if (!encontrou) {
-                System.out.println("Nenhum desafio registado.");
-            }
+            return desafios;
         }
     }
 
     // READ 
-    public static boolean buscarDesafioPorId(long id)
+    public static utils.DesafioDeProgramacao buscarDesafioPorId(long id)
             throws SQLException {
 
         String sql = """
                 SELECT id, titulo, caso_id, descricao, etapa_id,
-                       classe_esperada, metodo_esperado, concluido
+                       classe_esperada, metodo_esperado
                 FROM desafioDeProgramacao
                 WHERE id = ?
                 """;
@@ -115,11 +118,31 @@ public class DesafioDeProgramacao {
 
             try (ResultSet resposta = statement.executeQuery()) {
                 if (resposta.next()) {
-                    imprimirDesafio(resposta);
-                    return true;
+                    utils.DesafioDeProgramacao desafio = new utils.DesafioDeProgramacao(resposta.getLong("id"), resposta.getLong("caso_id"), resposta.getLong("etapa_id"), resposta.getString("titulo"), resposta.getString("descricao"), resposta.getString("classe_esperada"), resposta.getString("metodo_esperado"));
+                    return desafio;
                 }
+                return null;
+            }
+        }
+    }
+    
+    // READ 
+    public static List<utils.DesafioDeProgramacao> buscarDesafiosPorEtapa(long etapa_id)throws SQLException {
+        String sql = "SELECT id, titulo, caso_id, descricao, etapa_id, classe_esperada, metodo_esperado FROM desafioDeProgramacao WHERE etapa_id = ? ";
 
-                return false;
+        try (
+            Connection conexao = ConexaoMySQL.getConnection();
+            PreparedStatement statement = conexao.prepareStatement(sql)
+        ) {
+            statement.setLong(1, etapa_id);
+            List<utils.DesafioDeProgramacao> desafios = new ArrayList<>();
+            try (ResultSet resposta = statement.executeQuery()) {
+                while (resposta.next()) {
+                utils.DesafioDeProgramacao desafio = new utils.DesafioDeProgramacao(resposta.getLong("id"), resposta.getLong("caso_id"), resposta.getLong("etapa_id"), resposta.getString("titulo"), resposta.getString("descricao"), resposta.getString("classe_esperada"), resposta.getString("metodo_esperado"));
+                desafios.add(desafio);
+                //imprimirDesafio(resposta);
+                }
+                return desafios;
             }
         }
     }
@@ -142,7 +165,7 @@ public class DesafioDeProgramacao {
                     descricao = ?,
                     etapa_id = ?,
                     classe_esperada = ?,
-                    metodo_esperado = ?,
+                    metodo_esperado = ?
                 WHERE id = ?
                 """;
 

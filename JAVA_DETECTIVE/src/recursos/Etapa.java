@@ -62,16 +62,11 @@ public class Etapa {
         try (Connection conexao = ConexaoMySQL.getConnection();
             PreparedStatement statement = conexao.prepareStatement(sql);
             ResultSet resposta = statement.executeQuery()) {
-            boolean encontrou = false;
             List<utils.Etapa> etapas = new ArrayList<>();
             while (resposta.next()) {                
-                utils.Etapa etapa = new utils.Etapa(resposta.getLong("id"), resposta.getLong("caso_id"), resposta.getInt("numero"), resposta.getInt("minimo_evidencias"), resposta.getString("titulo"), resposta.getString("descricao"), resposta.getString("objectivo"));
+                utils.Etapa etapa = new utils.Etapa(resposta.getLong("id"), resposta.getLong("caso_id"), resposta.getInt("numero"), resposta.getInt("minimo_evidencias"), resposta.getString("titulo"), resposta.getString("descricao"));
                  etapas.add(etapa);
                 //imprimirEtapa(resposta);
-            }
-
-            if (!encontrou) {
-                throw new SQLException("Nenhuma etapa registada.");
             }
             return etapas;
         }
@@ -91,7 +86,7 @@ public class Etapa {
 
             try (ResultSet resposta = statement.executeQuery()) {
                 if (resposta.next()) {
-                    utils.Etapa etapa = new utils.Etapa(resposta.getLong("id"), resposta.getLong("caso_id"), resposta.getInt("numero"), resposta.getInt("minimo_evidencias"), resposta.getString("titulo"), resposta.getString("descricao"), resposta.getString("objectivo"));
+                    utils.Etapa etapa = new utils.Etapa(resposta.getLong("id"), resposta.getLong("caso_id"), resposta.getInt("numero"), resposta.getInt("minimo_evidencias"), resposta.getString("titulo"), resposta.getString("descricao"));
                     return etapa;
                     //imprimirEtapa(resposta);
                 }
@@ -132,7 +127,7 @@ public class Etapa {
             int linhasAfetadas = statement.executeUpdate();
             if(linhasAfetadas==1) eliminado= true;
         } catch (SQLException e) {
-            System.out.println("Erro: " + e.getMessage());
+            throw new SQLException("Erro: " + e.getMessage());
         }
         return eliminado;
     }
@@ -181,6 +176,7 @@ public class Etapa {
         String sql = """
             SELECT
                 id,
+                caso_id,
                 numero,
                 titulo,
                 descricao,
@@ -202,14 +198,12 @@ public class Etapa {
                 }
 
                 return new utils.Etapa(
-                        Math.toIntExact(resultado.getLong("id")),
+                        resultado.getLong("id"),
+                        resultado.getLong("caso_id"),
                         resultado.getInt("numero"),
                         resultado.getInt("minimo_evidencias"),
                         resultado.getString("titulo"),
-                        resultado.getString("descricao"),
-                        null,
-                        resultado.getBoolean("desbloqueada"),
-                        resultado.getBoolean("concluida")
+                        resultado.getString("descricao")
                 );
             }
         }
