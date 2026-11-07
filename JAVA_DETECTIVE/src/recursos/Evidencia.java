@@ -10,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import utils.Evidencia;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +32,11 @@ public class Evidencia {
         ) {
             statement.setString(1, titulo);
             statement.setString(2, descricao);
-            statement.setLong(3, documento_id);
+            if(null==documento_id){
+                statement.setNull(3, java.sql.Types.BIGINT);
+            }else{
+                statement.setLong(3, documento_id);
+            }
             statement.setInt(4,importancia);
             statement.setBoolean(5,false);//adicionei coletado
 
@@ -54,10 +57,10 @@ public class Evidencia {
         }
     }
     
-    public static void listarEvidencia() throws SQLException {
+    public static List<utils.Evidencia> listarEvidencia() throws SQLException {
             //adicionei coletado
         String sql = """
-                SELECT id, titulo, descricao, documento_id,importancia,coletado
+                SELECT id, titulo, descricao, documento_id, importancia
                 FROM evidencia
                 ORDER BY id
                 """;
@@ -67,26 +70,29 @@ public class Evidencia {
             PreparedStatement statement = conexao.prepareStatement(sql);
             ResultSet resposta = statement.executeQuery()
         ) {
-            boolean encontrou = false;
             List <utils.Evidencia> evidencias = new ArrayList<>();
             while (resposta.next()) {
-                Importancia impor = new Importancia();
-                utils.Evidencia ev = new utils.Evidencia(resposta.getLong("id"), resposta.getString("titulo"), resposta.getString("descricao"), resposta.getLong("documento_id"), impo);
+                int num = resposta.getInt("importancia");
+                utils.Evidencia ev = new utils.Evidencia(resposta.getLong("id"), resposta.getString("titulo"), resposta.getString("descricao"), resposta.getObject("documento_id", Long.class), obterImportancia(num));
                 evidencias.add(ev);
                 //imprimirEvidencia(resposta);
-                encontrou = true;
             }
-
-            if (!encontrou) {
-                System.out.println("Nenhuma evidencia registada.");
-                return evidencias;
-            }
+            return evidencias;
         }
     }
     
+    public static utils.Importancia obterImportancia(int num){
+        if(num==1){
+            return utils.Importancia.BAIXA;
+        }else if(num==2){
+            return utils.Importancia.MEDIA;
+        }else if(num==3){
+            return utils.Importancia.ALTA;
+        }
+        return null;
+    }
     
-    
-    public static boolean buscarPorId(long id)
+    public static utils.Evidencia buscarPorId(long id)
             throws SQLException {
         String sql = """
                 SELECT id, titulo, descricao, documento_id,importancia,coletado
@@ -103,20 +109,22 @@ public class Evidencia {
 
             try (ResultSet resposta = statement.executeQuery()) {
                 if (resposta.next()) {
-                    imprimirEvidencia(resposta);
-                    return true;
+                    int num = resposta.getInt("importancia");
+                    utils.Evidencia evidencia = new utils.Evidencia(resposta.getLong("id"), resposta.getString("titulo"), resposta.getString("descricao"), resposta.getObject("documento_id", Long.class), obterImportancia(num));
+                    return evidencia;
+                    //imprimirEvidencia(resposta);
                 }
-
-                return false;
+                return null;
             }
+            
         }
     }
     
-    public static boolean atualizarEvidencia(long id,String titulo,String descricao,Long documento_id,int importancia,boolean coletado) throws SQLException {
+    public static boolean atualizarEvidencia(long id,String titulo,String descricao,Long documento_id,int importancia) throws SQLException {
 
         String sql = """
                 UPDATE evidencia
-                SET titulo=?, descricao=?, documento_id=?, importancia=?, coletado=?
+                SET titulo=?, descricao=?, documento_id=?, importancia=?
                 WHERE id = ?
                 """;
 
@@ -127,10 +135,13 @@ public class Evidencia {
             
             statement.setString(1, titulo);
             statement.setString(2, descricao);
-            statement.setLong(3, documento_id);
+            if(documento_id!=null){
+                statement.setLong(3, documento_id);
+            }else{
+                statement.setNull(3, java.sql.Types.BIGINT);
+            }
             statement.setInt(4,importancia);
-            statement.setBoolean(5,coletado);
-            statement.setLong(6,id);
+            statement.setLong(5,id);
 
             return statement.executeUpdate() > 0;
         }
@@ -188,8 +199,5 @@ public class Evidencia {
             }
         }
     }
-
     
 }
-            
-

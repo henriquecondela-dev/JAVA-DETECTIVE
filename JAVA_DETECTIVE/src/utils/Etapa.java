@@ -17,7 +17,6 @@ public class Etapa {
     private int minimoEvidencias;
     private String titulo;
     private String descricao;
-    private String objectivo;
     private List<Evidencia> evidencias;
     private List<DesafioDeProgramacao> desafios;
     
@@ -31,11 +30,10 @@ public class Etapa {
      * @param minimoEvidencias
      * @param titulo
      * @param descricao
-     * @param objectivo
      * @param evidencias
      * @param desafios
      */
-    public Etapa(long id, long caso_id, int numero, int minimoEvidencias, String titulo, String descricao, String objectivo, List<Evidencia> evidencias, List<DesafioDeProgramacao> desafios){
+    public Etapa(long id, long caso_id, int numero, int minimoEvidencias, String titulo, String descricao,List<Evidencia> evidencias, List<DesafioDeProgramacao> desafios){
         this.id=id;
         this.caso_id = caso_id;
         this.numero= numero;
@@ -44,13 +42,12 @@ public class Etapa {
             throw new IllegalArgumentException("Título de etapa obrigatório!");
         }
         this.titulo=titulo;
-        this.objectivo=objectivo;
         this.descricao=descricao;
         this.evidencias = new ArrayList<>();
         this.desafios = new ArrayList<>();
     }
     
-    public Etapa(long id, long caso_id, int numero, int minimoEvidencias, String titulo, String descricao, String objectivo){
+    public Etapa(long id, long caso_id, int numero, int minimoEvidencias, String titulo, String descricao){
         this.id=id;
         this.caso_id = caso_id;
         this.numero= numero;
@@ -59,7 +56,6 @@ public class Etapa {
             throw new IllegalArgumentException("Título de etapa obrigatório!");
         }
         this.titulo=titulo;
-        this.objectivo=objectivo;
         this.descricao=descricao;
         this.evidencias = new ArrayList<>();
         this.desafios = new ArrayList<>();
@@ -147,21 +143,7 @@ public class Etapa {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
-
-    /**
-     * @return the objectivo
-     */
-    public String getObjectivo() {
-        return objectivo;
-    }
-
-    /**
-     * @param objectivo the objectivo to set
-     */
-    public void setObjectivo(String objectivo) {
-        this.objectivo = objectivo;
-    } 
-
+    
     /**
      * @return the evidencias
      */
