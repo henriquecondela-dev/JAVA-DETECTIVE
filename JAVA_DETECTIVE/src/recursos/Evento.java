@@ -10,7 +10,7 @@ import java.sql.*;
  * @author antonio-nuvunga
  */
 public class Evento {
-    public static int adicionarEvento(String descricao,String data_hora,long local_id) throws SQLException {
+    public static int adicionarEvento(String descricao,String data_hora,Long local_id) throws SQLException {
 
         String sql = """
                 INSERT INTO evento(descricao, data_hora, local_id)
@@ -97,7 +97,7 @@ public class Evento {
     //burcarPorLocalizacao
     //buscarPorPessoa
     
-     public static boolean atualizarEvento(long id,String descricao,String data_hora,long local_id) throws SQLException {
+     public static boolean atualizarEvento(long id,String descricao,String data_hora,Long local_id) throws SQLException {
 
         String sql = """
                 UPDATE evidencia

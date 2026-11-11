@@ -9,33 +9,80 @@ package utils;
  * @author antonio-nuvunga
  */
 public class Evidencia {
-    private int id;
+    private long id;
     private String titulo;
     private String descricao;
-    private Documento documento;
+    private Long documento_id;
     private Importancia importancia;
-    private boolean coletada=false;
     
-    public void marcarComoColetada(int id){
-        if(this.coletada==false){
-            this.coletada=true;
-        }
-        else{
-            System.out.println("Essa evidencia já foi coletada");
-        }    
-    }
-    
-    public boolean estaColetada(){
-        if(this.coletada==true){
-            return true;
-        }
-        return false;
+    // Construtor vazio
+    public Evidencia() {
     }
 
-    public String estadoColeta(){
-        if(this.estaColetada()==true){
-            return "Evidencia já colectada";
+    // Construtor com todos os atributos
+    public Evidencia(long id, String titulo, String descricao, Long documento_id, Importancia importancia) {
+        this.id = id;
+        if(titulo==null || titulo.isBlank()){
+          throw new IllegalArgumentException("Título de etapa obrigatório!");
         }
-        return "Evidência não colectada";
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.documento_id = documento_id;
+        this.importancia = importancia;
+    }
+    
+    public Evidencia(String titulo, String descricao, Long documento_id, Importancia importancia) {
+        if(titulo==null || titulo.isBlank()){
+          throw new IllegalArgumentException("Título de etapa obrigatório!");
+        }
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.documento_id = documento_id;
+        this.importancia = importancia;
+    }
+
+    // Getters e Setters
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        if(titulo==null || titulo.isBlank()){
+          throw new IllegalArgumentException("Título de etapa obrigatório!");
+        }
+        this.titulo = titulo;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public Long getDocumentoId() {
+        return documento_id;
+    }
+
+    public void setDocumentoId(Long documento_id) {
+        this.documento_id = documento_id;
+    }
+
+    public Importancia getImportancia() {
+        return importancia;
+    }
+
+    public void setImportancia(Importancia importancia) {
+        this.importancia = importancia;
     }
 }

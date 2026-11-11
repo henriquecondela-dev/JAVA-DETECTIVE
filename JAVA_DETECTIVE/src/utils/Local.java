@@ -1,51 +1,32 @@
-package utils;
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
+package utils;
+import java.util.ArrayList;
 /**
  *
- * @author andrea
+ * @author Maunze
  */
 public class Local {
-    private int id;
-    private String nome;
-    
-    
-    
-    //public boolean adicionarEvento(){
-       //return true; 
-    //}
-    
-//    public boolean obterEvento(String id){
-//        try{   
-//            int num=Integer.parseInt(id);
-//            
-//        }catch(NumberFormatException e){
-//        
-//        }
-//        
-//    }
-
-    
-
-    /**
-     * @return the id
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * @return the nome
-     */
-    public String getNome() {
-        return nome;
-    }
-    
-    
-    
-    
+   private int id;
+   private String nome;
+   private String descricao;
+   private String tipo;
+   ArrayList<String> eventos;
+   
+   public Local(int id, String nome, String descricao, String tipo){
+       this.id= id;
+       this.nome= nome;
+       this.descricao = descricao;
+       this.tipo= tipo;
+       eventos = new ArrayList<>();
+   }
+   
+   public void adicionarEvento(String evento){
+       eventos.add(evento);
+   }
+   public ArrayList<String> obterEventos(){
+       return eventos;
+   }
 }
