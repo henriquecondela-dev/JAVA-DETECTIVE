@@ -15,9 +15,9 @@ public class Local {
     
     
     
-    public boolean adicionarEvento(){
-        
-    }
+    //public boolean adicionarEvento(){
+       //return true; 
+    //}
     
 //    public boolean obterEvento(String id){
 //        try{   
