@@ -4,6 +4,23 @@
  */
 package interfaces;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import java.awt.Image;
+import java.awt.Insets;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+
 
 /**
  *
@@ -14,7 +31,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaPrincipal.class.getName());
 
     /**
-     * Creates new form TelaPrincipal
+     * Cria new form TelaPrincipal
      */
     public TelaPrincipal() {
         initComponents();
@@ -27,10 +44,293 @@ public class TelaPrincipal extends javax.swing.JFrame {
         modelo.addElement("Relatório preliminar da morte");
         lstEvidencias.setModel(modelo);
        
+        PainelFundo fundo = new PainelFundo("/imagens/fundoPrincipal.jpg");
+        fundo.setLayout(new BorderLayout(0, 0));
+
+        fundo.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+//        topo
+        pnlTopo.setLayout(new BorderLayout(20, 0));
+
+        lblPessoa.setFont(new Font("Serif", Font.BOLD, 18));
+
+        lblPessoa.setForeground(Color.WHITE);
+        lblCaso.setFont(new Font("Serif", Font.BOLD, 22));
+        lblCaso.setForeground(Color.WHITE);
+        lblCaso.setHorizontalAlignment(SwingConstants.CENTER);
+
+        barraProgresso.setPreferredSize(new Dimension(250, 25));
+        btnMenu.setPreferredSize(new Dimension(130, 40));
+
+        JPanel topoDireita = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 5));
+        topoDireita.setOpaque(false);
+        topoDireita.add(barraProgresso);
+        topoDireita.add(btnMenu);
+
+        pnlTopo.add(lblPessoa, BorderLayout.WEST);
+        pnlTopo.add(lblCaso, BorderLayout.CENTER);
+        pnlTopo.add(topoDireita, BorderLayout.EAST);
+
+                // menu
+         pnlMenu.setOpaque(false);
+         pnlMenu.removeAll();
+         pnlMenu.setLayout(new BoxLayout(pnlMenu, BoxLayout.Y_AXIS));
+         pnlMenu.setMinimumSize(new Dimension(380, 0));
+         pnlMenu.setMaximumSize(new Dimension(380, Integer.MAX_VALUE));
+         pnlMenu.setPreferredSize(new Dimension(380, 0));
+
+         Dimension tam = new Dimension(380, 104);   // l a
+         ImageIcon fundoBtn = new ImageIcon(
+                 new ImageIcon(getClass().getResource("/imagens/fundoBotao.jpg"))
+                         .getImage().getScaledInstance(tam.width, tam.height, Image.SCALE_SMOOTH));
+
+         JButton[] botoes = {btnCenario, btnEvidencia, btnBD, btnEditorCodigo, btnObjectivos};
+         String[] textos = {"Cenário", "Evidências", "Base de Dados", "Editor de Código", "Objectivos"};
+//voltar mais uma vez
+
+        pnlMenu.add(Box.createVerticalGlue());
+         for (int i = 0; i < botoes.length; i++) {
+             JButton b = botoes[i];
+             b.setText(textos[i]);
+             b.setIcon(fundoBtn);
+             b.setHorizontalTextPosition(SwingConstants.CENTER); 
+             b.setVerticalTextPosition(SwingConstants.CENTER);
+             b.setFont(new Font("Serif", Font.BOLD, 20));
+             b.setForeground(new Color(36, 23, 14));
+             b.setBorderPainted(false);
+             b.setContentAreaFilled(false);
+             b.setFocusPainted(false);
+             b.setMargin(new Insets(0, 0, 0, 0));
+             b.setPreferredSize(tam);
+             b.setMinimumSize(tam);
+             b.setMaximumSize(tam);
+             b.setAlignmentX(Component.CENTER_ALIGNMENT);
+             pnlMenu.add(b);
+             pnlMenu.add(Box.createVerticalStrut(12));
+         }
+         pnlMenu.add(Box.createVerticalGlue());
+
+                 // centro 
+        pnlCentro.setOpaque(false);
+        pnlCentro.setLayout(new BorderLayout(0, 0));                     
+        lblCenario.setHorizontalAlignment(SwingConstants.CENTER);
+        jScrollPane2.setPreferredSize(new Dimension(0, 110));
+        pnlCentro.add(lblCenario, BorderLayout.CENTER);
+        pnlCentro.add(jScrollPane2, BorderLayout.SOUTH);
+
+        //  direita 
+      /*  pnlDireita.setOpaque(false);
+        pnlDireita.removeAll();
+        pnlDireita.setLayout(new BorderLayout(0, 15));
+        pnlDireita.setPreferredSize(new Dimension(420, 0));
+
+        lblobjectivoTitulo.setFont(new Font("Serif", Font.BOLD, 22));
+        lblEvidenciasTitulo.setFont(new Font("Serif", Font.BOLD, 22));
+        lblObjectivo.setFont(new Font("Serif", Font.PLAIN, 17));
+        lblObjectivo.setForeground(Color.WHITE);
+        lblObjectivo.setText("<html>Descobre quem esteve no local<br>na noite do desaparecimento.</html>");
+
+        JPanel objetivo = new JPanel(new BorderLayout(0, 8));
+        objetivo.setOpaque(false);
+        objetivo.add(lblobjectivoTitulo, BorderLayout.NORTH);
+        objetivo.add(lblObjectivo, BorderLayout.CENTER);
+        
+        
+
+        JPanel evidencias = new JPanel(new BorderLayout(0, 8));
+        evidencias.setOpaque(false);
+        evidencias.add(lblEvidenciasTitulo, BorderLayout.NORTH);
+        evidencias.add(jScrollPane3, BorderLayout.CENTER);   
+        pnlDireita.add(objetivo, BorderLayout.NORTH);
+        pnlDireita.add(evidencias, BorderLayout.CENTER);
+*/
+      
+              //  direita
+       /* Color dourado      = new Color(216, 189, 145);
+        Color textoClaro   = new Color(240, 220, 180);
+        Color caixa        = new Color(42, 29, 18);
+        Color bordaDourada = new Color(140, 106, 58);
+
+        pnlDireita.setOpaque(true);
+        pnlDireita.setBackground(new Color(20, 14, 9));
+        pnlDireita.removeAll();
+        pnlDireita.setLayout(new BorderLayout(0, 15));
+        pnlDireita.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        pnlDireita.setPreferredSize(new Dimension(420, 0));
+
+        // títulos e texto
+        lblobjectivoTitulo.setFont(new Font("Serif", Font.BOLD, 22));
+        lblobjectivoTitulo.setForeground(dourado);
+        lblEvidenciasTitulo.setFont(new Font("Serif", Font.BOLD, 22));
+        lblEvidenciasTitulo.setForeground(dourado);
+        lblEvidenciasTitulo.setText("Evidências Coletadas (" + modelo.getSize() + ")");
+        lblObjectivo.setFont(new Font("Serif", Font.PLAIN, 17));
+        lblObjectivo.setForeground(textoClaro);
+        lblObjectivo.setText("<html><body style='width:320px'>Descobre quem esteve no local na noite do desaparecimento.</body></html>");
+
+        // lista de evidências
+        lstEvidencias.setLayoutOrientation(javax.swing.JList.VERTICAL);
+        lstEvidencias.setVisibleRowCount(-1);
+        lstEvidencias.setFont(new Font("Serif", Font.PLAIN, 18));
+        lstEvidencias.setFixedCellHeight(40);
+        lstEvidencias.setBackground(caixa);
+        lstEvidencias.setForeground(textoClaro);
+        lstEvidencias.setSelectionBackground(new Color(90, 62, 34));
+        lstEvidencias.setSelectionForeground(Color.WHITE);
+        lstEvidencias.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        jScrollPane3.setBorder(BorderFactory.createEmptyBorder());
+        jScrollPane3.getViewport().setBackground(caixa);
+
+        // caixa 1: objectivo
+        JPanel objetivo = new JPanel(new BorderLayout(0, 8));
+        objetivo.setOpaque(true);
+        objetivo.setBackground(caixa);
+        objetivo.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(bordaDourada, 1),
+                BorderFactory.createEmptyBorder(12, 15, 12, 15)));
+        objetivo.add(lblobjectivoTitulo, BorderLayout.NORTH);
+        objetivo.add(lblObjectivo, BorderLayout.CENTER);
+
+        // caixa 2: evidências
+        JPanel evidencias = new JPanel(new BorderLayout(0, 8));
+        evidencias.setOpaque(true);
+        evidencias.setBackground(caixa);
+        evidencias.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(bordaDourada, 1),
+                BorderFactory.createEmptyBorder(12, 15, 12, 15)));
+        evidencias.add(lblEvidenciasTitulo, BorderLayout.NORTH);
+        evidencias.add(jScrollPane3, BorderLayout.CENTER);
+
+        pnlDireita.add(objetivo, BorderLayout.NORTH);
+        pnlDireita.add(evidencias, BorderLayout.CENTER);*/
+       
+       
+               //  direita
+        Color dourado    = new Color(216, 189, 145);
+        Color textoClaro = new Color(240, 220, 180);
+        Color bordaLeve  = new Color(140, 106, 58, 90);   // dourado com transparência (mais leve)
+
+        pnlDireita.setOpaque(false);
+        pnlDireita.setBackground(new Color(20, 14, 9));
+        pnlDireita.removeAll();
+        pnlDireita.setLayout(new BorderLayout(0, 15));
+        pnlDireita.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        pnlDireita.setPreferredSize(new Dimension(420, 0));
+
+        // caixa com imagem de fundo (se a imagem não existir, usa castanho semitransparente)
+        class CaixaImagem extends JPanel {
+            private final Image img;
+            CaixaImagem(String caminho) {
+                super(new BorderLayout(0, 8));
+                java.net.URL url = getClass().getResource(caminho);
+                img = (url != null) ? new ImageIcon(url).getImage() : null;
+                setOpaque(false);
+                setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(bordaLeve, 1),
+                        BorderFactory.createEmptyBorder(12, 15, 12, 15)));
+            }
+            @Override protected void paintComponent(java.awt.Graphics g) {
+                if (img != null) {
+                    g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
+                    g.setColor(new Color(0, 0, 0, 90));          // escurece para o texto ler bem
+                } else {
+                    g.setColor(new Color(42, 29, 18, 200));
+                }
+                if (img != null) g.fillRect(0, 0, getWidth(), getHeight());
+                else g.fillRect(0, 0, getWidth(), getHeight());
+                super.paintComponent(g);
+            }
+        }
+
+        // textos
+        lblobjectivoTitulo.setFont(new Font("Serif", Font.BOLD, 22));
+        lblobjectivoTitulo.setForeground(dourado);
+        lblEvidenciasTitulo.setFont(new Font("Serif", Font.BOLD, 22));
+        lblEvidenciasTitulo.setForeground(dourado);
+        lblObjectivo.setFont(new Font("Serif", Font.PLAIN, 17));
+        lblObjectivo.setForeground(textoClaro);
+        lblObjectivo.setText("<html><body style='width:320px'>Descobre quem esteve no local na noite do desaparecimento.</body></html>");
+
+        // lista de evidências em grelha: ícone em cima, nome por baixo
+        lstEvidencias.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
+        lstEvidencias.setVisibleRowCount(-1);
+        lstEvidencias.setFixedCellWidth(100);
+        lstEvidencias.setFixedCellHeight(120);
+        lstEvidencias.setOpaque(false);
+        lstEvidencias.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        jScrollPane3.setOpaque(false);
+        jScrollPane3.getViewport().setOpaque(false);
+        jScrollPane3.setBorder(BorderFactory.createEmptyBorder());
+
+        lstEvidencias.setCellRenderer(new javax.swing.ListCellRenderer<String>() {
+            private final java.util.Map<String, javax.swing.Icon> cache = new java.util.HashMap<>();
+
+            // procura /imagens/evidencia_<nome sem espaços>.png; se não existir, usa um quadrado vazio
+            private javax.swing.Icon icone(String nome) {
+                return cache.computeIfAbsent(nome, n -> {
+                    String chave = n.toLowerCase().replaceAll("[^a-z0-9]", "");
+                    java.net.URL url = TelaPrincipal.class.getResource("/imagens/evidencia_" + chave + ".png");
+                    if (url != null) {
+                        return new ImageIcon(new ImageIcon(url).getImage()
+                                .getScaledInstance(64, 64, Image.SCALE_SMOOTH));
+                    }
+                    return new javax.swing.Icon() {            // espaço reservado
+                        public void paintIcon(Component c, java.awt.Graphics g, int x, int y) {
+                            g.setColor(new Color(0, 0, 0, 80));
+                            g.fillRoundRect(x, y, 64, 64, 8, 8);
+                            g.setColor(bordaLeve);
+                            g.drawRoundRect(x, y, 63, 63, 8, 8);
+                        }
+                        public int getIconWidth()  { return 64; }
+                        public int getIconHeight() { return 64; }
+                    };
+                });
+            }
+
+            @Override
+            public Component getListCellRendererComponent(javax.swing.JList<? extends String> list,
+                    String value, int index, boolean selecionado, boolean foco) {
+                javax.swing.JLabel l = new javax.swing.JLabel(
+                        "<html><div style='text-align:center;width:84px'>" + value + "</div></html>",
+                        icone(value), SwingConstants.CENTER);
+                l.setVerticalTextPosition(SwingConstants.BOTTOM);
+                l.setHorizontalTextPosition(SwingConstants.CENTER);
+                l.setIconTextGap(6);
+                l.setFont(new Font("Serif", Font.PLAIN, 12));
+                l.setForeground(textoClaro);
+                l.setToolTipText(value);
+                l.setOpaque(selecionado);
+                l.setBackground(new Color(90, 62, 34, 160));
+                return l;
+            }
+        });
+
+        // caixa 1: objectivo
+        CaixaImagem objetivo = new CaixaImagem("/imagens/fundoCaixa.jpg");
+        objetivo.add(lblobjectivoTitulo, BorderLayout.NORTH);
+        objetivo.add(lblObjectivo, BorderLayout.CENTER);
+
+        // caixa 2: evidências
+        CaixaImagem evidencias = new CaixaImagem("/imagens/fundoCaixa.jpg");
+        evidencias.add(lblEvidenciasTitulo, BorderLayout.NORTH);
+        evidencias.add(jScrollPane3, BorderLayout.CENTER);
+
+        pnlDireita.add(objetivo, BorderLayout.NORTH);
+        pnlDireita.add(evidencias, BorderLayout.CENTER);
+       
+       
+        //  junção
+        fundo.add(pnlTopo, BorderLayout.NORTH);
+        fundo.add(pnlMenu, BorderLayout.WEST);
+        fundo.add(pnlCentro, BorderLayout.CENTER);
+        fundo.add(pnlDireita, BorderLayout.EAST);
+        setContentPane(fundo);
+
+       
     }
     public TelaPrincipal(String nome, String idade){
         this();
-        lblJogador.setText(nome +"| Idade: "+idade);
+        lblPessoa.setText(nome +"| Idade: "+idade);
     }
 
     /**
@@ -45,16 +345,16 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         pnlTopo = new javax.swing.JPanel();
-        lblJogador = new javax.swing.JLabel();
+        lblPessoa = new javax.swing.JLabel();
         lblCaso = new javax.swing.JLabel();
         barraProgresso = new javax.swing.JProgressBar();
         btnMenu = new javax.swing.JButton();
         pnlMenu = new javax.swing.JPanel();
         btnCenario = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        btnEvidencia = new javax.swing.JButton();
+        btnBD = new javax.swing.JButton();
+        btnEditorCodigo = new javax.swing.JButton();
+        btnObjectivos = new javax.swing.JButton();
         pnlDireita = new javax.swing.JPanel();
         lblobjectivoTitulo = new javax.swing.JLabel();
         lblObjectivo = new javax.swing.JLabel();
@@ -66,6 +366,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         lblCenario = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtDescricao = new javax.swing.JTextArea();
+        jLabel1 = new javax.swing.JLabel();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -73,13 +374,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        pnlTopo.setBackground(new java.awt.Color(20, 14, 9));
         pnlTopo.setPreferredSize(new java.awt.Dimension(100, 70));
         pnlTopo.setLayout(new java.awt.GridLayout(1, 4));
 
-        lblJogador.setText("jLabel1");
-        pnlTopo.add(lblJogador);
+        lblPessoa.setText("Nome|Idade:");
+        pnlTopo.add(lblPessoa);
 
-        lblCaso.setText("jLabel2");
+        lblCaso.setText("O CASO NEXUS");
         pnlTopo.add(lblCaso);
         pnlTopo.add(barraProgresso);
 
@@ -88,39 +390,64 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         getContentPane().add(pnlTopo, java.awt.BorderLayout.PAGE_START);
 
-        pnlMenu.setPreferredSize(new java.awt.Dimension(220, 100));
-        pnlMenu.setLayout(new java.awt.GridLayout(5, 1, 0, 10));
+        pnlMenu.setBackground(new java.awt.Color(20, 14, 9));
+        pnlMenu.setToolTipText("");
+        pnlMenu.setMaximumSize(new java.awt.Dimension(260, 150));
+        pnlMenu.setMinimumSize(new java.awt.Dimension(260, 150));
+        pnlMenu.setName(""); // NOI18N
+        pnlMenu.setPreferredSize(new java.awt.Dimension(260, 150));
+        pnlMenu.setLayout(new javax.swing.BoxLayout(pnlMenu, javax.swing.BoxLayout.LINE_AXIS));
 
         btnCenario.setBackground(new java.awt.Color(216, 189, 145));
         btnCenario.setFont(new java.awt.Font("Serif", 0, 16)); // NOI18N
         btnCenario.setForeground(new java.awt.Color(36, 23, 14));
+        btnCenario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/fundoBotao.jpg"))); // NOI18N
         btnCenario.setText("Cenário");
+        btnCenario.setMaximumSize(new java.awt.Dimension(500, 150));
+        btnCenario.setMinimumSize(new java.awt.Dimension(500, 150));
+        btnCenario.setPreferredSize(new java.awt.Dimension(500, 150));
         pnlMenu.add(btnCenario);
 
-        jButton2.setBackground(new java.awt.Color(216, 189, 145));
-        jButton2.setFont(new java.awt.Font("Serif", 0, 16)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(36, 23, 14));
-        jButton2.setText("Evidências");
-        pnlMenu.add(jButton2);
+        btnEvidencia.setBackground(new java.awt.Color(216, 189, 145));
+        btnEvidencia.setFont(new java.awt.Font("Serif", 0, 16)); // NOI18N
+        btnEvidencia.setForeground(new java.awt.Color(36, 23, 14));
+        btnEvidencia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/fundoBotao.jpg"))); // NOI18N
+        btnEvidencia.setText("Evidências");
+        btnEvidencia.setMaximumSize(new java.awt.Dimension(300, 150));
+        btnEvidencia.setMinimumSize(new java.awt.Dimension(300, 150));
+        btnEvidencia.setPreferredSize(new java.awt.Dimension(300, 150));
+        pnlMenu.add(btnEvidencia);
 
-        jButton3.setBackground(new java.awt.Color(216, 189, 145));
-        jButton3.setFont(new java.awt.Font("Serif", 0, 16)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(36, 23, 14));
-        jButton3.setText("Base de dados");
-        jButton3.addActionListener(this::jButton3ActionPerformed);
-        pnlMenu.add(jButton3);
+        btnBD.setBackground(new java.awt.Color(216, 189, 145));
+        btnBD.setFont(new java.awt.Font("Serif", 0, 16)); // NOI18N
+        btnBD.setForeground(new java.awt.Color(36, 23, 14));
+        btnBD.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/fundoBotao.jpg"))); // NOI18N
+        btnBD.setText("Base de dados");
+        btnBD.setMaximumSize(new java.awt.Dimension(280, 80));
+        btnBD.setMinimumSize(new java.awt.Dimension(230, 60));
+        btnBD.setPreferredSize(new java.awt.Dimension(230, 60));
+        btnBD.addActionListener(this::btnBDActionPerformed);
+        pnlMenu.add(btnBD);
 
-        jButton4.setBackground(new java.awt.Color(216, 189, 145));
-        jButton4.setFont(new java.awt.Font("Serif", 0, 16)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(36, 23, 14));
-        jButton4.setText("</>    Editor de Código");
-        jButton4.addActionListener(this::jButton4ActionPerformed);
-        pnlMenu.add(jButton4);
+        btnEditorCodigo.setBackground(new java.awt.Color(216, 189, 145));
+        btnEditorCodigo.setFont(new java.awt.Font("Serif", 0, 16)); // NOI18N
+        btnEditorCodigo.setForeground(new java.awt.Color(36, 23, 14));
+        btnEditorCodigo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/fundoBotao.jpg"))); // NOI18N
+        btnEditorCodigo.setText("</>    Editor de Código");
+        btnEditorCodigo.setMaximumSize(new java.awt.Dimension(280, 80));
+        btnEditorCodigo.setMinimumSize(new java.awt.Dimension(230, 60));
+        btnEditorCodigo.setPreferredSize(new java.awt.Dimension(230, 60));
+        btnEditorCodigo.addActionListener(this::btnEditorCodigoActionPerformed);
+        pnlMenu.add(btnEditorCodigo);
 
-        jButton5.setBackground(new java.awt.Color(216, 189, 145));
-        jButton5.setFont(new java.awt.Font("Serif", 0, 16)); // NOI18N
-        jButton5.setText("Objectivos");
-        pnlMenu.add(jButton5);
+        btnObjectivos.setBackground(new java.awt.Color(216, 189, 145));
+        btnObjectivos.setFont(new java.awt.Font("Serif", 0, 16)); // NOI18N
+        btnObjectivos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/fundoBotao.jpg"))); // NOI18N
+        btnObjectivos.setText("Objectivos");
+        btnObjectivos.setMaximumSize(new java.awt.Dimension(280, 80));
+        btnObjectivos.setMinimumSize(new java.awt.Dimension(230, 60));
+        btnObjectivos.setPreferredSize(new java.awt.Dimension(230, 60));
+        pnlMenu.add(btnObjectivos);
 
         getContentPane().add(pnlMenu, java.awt.BorderLayout.LINE_START);
 
@@ -140,6 +467,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
         lblEvidenciasTitulo.setFont(new java.awt.Font("Serif", 0, 18)); // NOI18N
         lblEvidenciasTitulo.setForeground(new java.awt.Color(216, 189, 145));
         lblEvidenciasTitulo.setText("Evidências Coletadas");
+        lblEvidenciasTitulo.setPreferredSize(new java.awt.Dimension(80, 26));
+        lblEvidenciasTitulo.setVerifyInputWhenFocusTarget(false);
         pnlDireita.add(lblEvidenciasTitulo);
 
         lstEvidencias.setModel(new javax.swing.AbstractListModel<String>() {
@@ -147,6 +476,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        lstEvidencias.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
+        lstEvidencias.setVisibleRowCount(1);
         jScrollPane3.setViewportView(lstEvidencias);
 
         scrollPane1.add(jScrollPane3);
@@ -156,28 +487,31 @@ public class TelaPrincipal extends javax.swing.JFrame {
         getContentPane().add(pnlDireita, java.awt.BorderLayout.LINE_END);
 
         pnlCentro.setLayout(new java.awt.BorderLayout());
-
-        lblCenario.setText("jLabel1");
         pnlCentro.add(lblCenario, java.awt.BorderLayout.CENTER);
 
+        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane2.setVerifyInputWhenFocusTarget(false);
+
         txtDescricao.setColumns(20);
+        txtDescricao.setLineWrap(true);
         txtDescricao.setRows(5);
         jScrollPane2.setViewportView(txtDescricao);
 
         pnlCentro.add(jScrollPane2, java.awt.BorderLayout.PAGE_END);
+        pnlCentro.add(jLabel1, java.awt.BorderLayout.PAGE_START);
 
         getContentPane().add(pnlCentro, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void btnEditorCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditorCodigoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_btnEditorCodigoActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void btnBDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBDActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_btnBDActionPerformed
 
     /**
      * @param args the command line arguments
@@ -206,12 +540,13 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JProgressBar barraProgresso;
+    private javax.swing.JButton btnBD;
     private javax.swing.JButton btnCenario;
+    private javax.swing.JButton btnEditorCodigo;
+    private javax.swing.JButton btnEvidencia;
     private javax.swing.JButton btnMenu;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton btnObjectivos;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -219,8 +554,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel lblCaso;
     private javax.swing.JLabel lblCenario;
     private javax.swing.JLabel lblEvidenciasTitulo;
-    private javax.swing.JLabel lblJogador;
     private javax.swing.JLabel lblObjectivo;
+    private javax.swing.JLabel lblPessoa;
     private javax.swing.JLabel lblobjectivoTitulo;
     private javax.swing.JList<String> lstEvidencias;
     private javax.swing.JPanel pnlCentro;
