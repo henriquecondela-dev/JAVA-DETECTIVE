@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package utils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * @author Maunze
  */
 public class Etapa {
+
     private long id;
     private long caso_id;
     private int numero;
@@ -19,9 +21,16 @@ public class Etapa {
     private String descricao;
     private List<Evidencia> evidencias;
     private List<DesafioDeProgramacao> desafios;
-    
-    public Etapa(){ }
-    
+    private List<Objetivo> objetivos;
+    private List<Documento> documentos;
+    private Mensagem mensagem;
+
+    public Etapa() {
+        this.documentos = new ArrayList<>();
+        this.mensagem = new Mensagem();
+        this.objetivos = new ArrayList<>();
+    }
+
     /**
      *
      * @param id
@@ -33,32 +42,88 @@ public class Etapa {
      * @param evidencias
      * @param desafios
      */
-    public Etapa(long id, long caso_id, int numero, int minimoEvidencias, String titulo, String descricao,List<Evidencia> evidencias, List<DesafioDeProgramacao> desafios){
-        this.id=id;
+    public Etapa(
+            long id,
+            long caso_id,
+            int numero,
+            int minimoEvidencias,
+            String titulo,
+            String descricao,
+            List<Evidencia> evidencias,
+            List<DesafioDeProgramacao> desafios,
+            List<Objetivo> objetivos
+    ) {
+        this(id, caso_id, numero, minimoEvidencias,
+                titulo, descricao, evidencias, desafios);
+
+        this.objetivos = objetivos != null ? new ArrayList<>(objetivos) : new ArrayList<>();
+    }
+
+    public Etapa(long id, long caso_id, int numero, int minimoEvidencias, String titulo, String descricao,
+            List<Evidencia> evidencias,
+            List<DesafioDeProgramacao> desafios) {
+        this.id = id;
         this.caso_id = caso_id;
-        this.numero= numero;
-        this.minimoEvidencias= minimoEvidencias;
-        if(titulo==null || titulo.isBlank()){
+        this.numero = numero;
+        this.minimoEvidencias = minimoEvidencias;
+
+        if (titulo == null || titulo.isBlank()) {
             throw new IllegalArgumentException("Título de etapa obrigatório!");
         }
-        this.titulo=titulo;
-        this.descricao=descricao;
+
+        this.titulo = titulo;
+        this.descricao = descricao;
+
+        this.evidencias = evidencias != null ? new ArrayList<>(evidencias) : new ArrayList<>();
+
+        this.desafios = desafios != null ? new ArrayList<>(desafios) : new ArrayList<>();
+        this.objetivos = new ArrayList<>();
+        this.documentos = new ArrayList<>();
+        this.mensagem = new Mensagem();
+
+    }
+
+    public Etapa(long id, long caso_id, int numero, int minimoEvidencias, String titulo, String descricao) {
+        this.id = id;
+        this.caso_id = caso_id;
+        this.numero = numero;
+        this.minimoEvidencias = minimoEvidencias;
+        if (titulo == null || titulo.isBlank()) {
+            throw new IllegalArgumentException("Título de etapa obrigatório!");
+        }
+        this.titulo = titulo;
+        this.descricao = descricao;
         this.evidencias = new ArrayList<>();
         this.desafios = new ArrayList<>();
+        this.objetivos = new ArrayList<>();
+        this.documentos = new ArrayList<>();
+        this.mensagem = new Mensagem();
+    }
+
+    public List<Objetivo> getObjetivos() {
+        return objetivos;
+    }
+
+    public void setObjetivos(List<Objetivo> objetivos) {
+        this.objetivos = objetivos != null
+                ? new ArrayList<>(objetivos)
+                : new ArrayList<>();
+    }
+
+    public List<Documento> getDocumentos() {
+        return documentos;
     }
     
-    public Etapa(long id, long caso_id, int numero, int minimoEvidencias, String titulo, String descricao){
-        this.id=id;
-        this.caso_id = caso_id;
-        this.numero= numero;
-        this.minimoEvidencias= minimoEvidencias;
-        if(titulo==null || titulo.isBlank()){
-            throw new IllegalArgumentException("Título de etapa obrigatório!");
-        }
-        this.titulo=titulo;
-        this.descricao=descricao;
-        this.evidencias = new ArrayList<>();
-        this.desafios = new ArrayList<>();
+    public void setDocumentos(List<Documento> documentos) {
+        this.documentos = documentos != null ? new ArrayList<>(documentos) : new ArrayList<>();
+    }
+
+    public Mensagem getMensagem() {
+        return mensagem;
+    }
+
+    public void setMensagem(Mensagem mensagem) {
+        this.mensagem = mensagem;
     }
 
     /**
@@ -74,7 +139,7 @@ public class Etapa {
     public void setId(long id) {
         this.id = id;
     }
-    
+
     /**
      * @return the caso_id
      */
@@ -88,8 +153,6 @@ public class Etapa {
     public void setCasoId(long caso_id) {
         this.caso_id = caso_id;
     }
-    
-    
 
     /**
      * @return the numero
@@ -97,7 +160,6 @@ public class Etapa {
     public int getNumero() {
         return numero;
     }
-
 
     /**
      * @return the quantidadeMinimaEnvidencias
@@ -124,8 +186,8 @@ public class Etapa {
      * @param titulo the titulo to set
      */
     public void setTitulo(String titulo) {
-        if(titulo==null || titulo.isBlank()){
-          throw new IllegalArgumentException("Título de etapa obrigatório!");
+        if (titulo == null || titulo.isBlank()) {
+            throw new IllegalArgumentException("Título de etapa obrigatório!");
         }
         this.titulo = titulo;
     }
@@ -143,7 +205,7 @@ public class Etapa {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
-    
+
     /**
      * @return the evidencias
      */
@@ -171,19 +233,19 @@ public class Etapa {
     public void setDesafios(List<DesafioDeProgramacao> desafios) {
         this.desafios = desafios;
     }
-    
-    public void adicionarEvidencia(Evidencia evidencia){
-        if(evidencia==null){
+
+    public void adicionarEvidencia(Evidencia evidencia) {
+        if (evidencia == null) {
             throw new IllegalArgumentException("Evidência inválida!");
         }
         this.evidencias.add(evidencia);
     }
-    
-    public void adicionarDesafio(DesafioDeProgramacao desafio){
-        if(desafio==null){
+
+    public void adicionarDesafio(DesafioDeProgramacao desafio) {
+        if (desafio == null) {
             throw new IllegalArgumentException("Desafio inválido!");
         }
         this.desafios.add(desafio);
     }
-    
+
 }
