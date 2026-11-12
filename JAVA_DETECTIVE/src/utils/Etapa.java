@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author Maunze
  */
-public class Etapa {
+public class Etapa{
     private long id;
     private long caso_id;
     private int numero;
@@ -33,7 +33,7 @@ public class Etapa {
      * @param evidencias
      * @param desafios
      */
-    public Etapa(long id, long caso_id, int numero, int minimoEvidencias, String titulo, String descricao,List<Evidencia> evidencias, List<DesafioDeProgramacao> desafios){
+    public Etapa(long id, long caso_id, int numero, int minimoEvidencias, String titulo, String descricao, List<Evidencia> evidencias, List<DesafioDeProgramacao> desafios){
         this.id=id;
         this.caso_id = caso_id;
         this.numero= numero;

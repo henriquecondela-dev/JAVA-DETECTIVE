@@ -22,14 +22,26 @@ import static recursos.Evidencia.obterImportancia;
 
 public class ProgressoDesafio {
     
-    public static boolean criarProgressoDesafio(long progressoCasoId, long evidenciaId, boolean concluido) throws SQLException{
+    public static boolean criarProgressoDesafio(Connection conexao, long progressoCasoId, long desafioId, boolean concluido) throws SQLException{
+        // 1. Verificar se o progresso já existe
+        String sqlVerificar ="select id from progresso_desafio where progresso_caso_id = ? and desafio_id = ?";
+
+        try (PreparedStatement stmt = conexao.prepareStatement(sqlVerificar)) {
+
+            stmt.setLong(1, progressoCasoId);
+            stmt.setLong(2, desafioId);
+
+            try (ResultSet resultado = stmt.executeQuery()) {
+                if (resultado.next()) {
+                    return true;
+                }
+            }
+        }
+        
         String codigo = "Insert into progresso_desafio (progresso_caso_id, desafio_id, concluido, data_conclusao) values(?, ?, ?, ?)";
-        try(
-                Connection conexao = ConexaoMySQL.getConnection();
-                PreparedStatement statement = conexao.prepareStatement(codigo);
-                ){
+        try(PreparedStatement statement = conexao.prepareStatement(codigo)){
             statement.setLong(1, progressoCasoId);
-            statement.setLong(2, evidenciaId);
+            statement.setLong(2, desafioId);
             statement.setBoolean(3,concluido);
             if(concluido==false){
                 statement.setTimestamp(4, null);
@@ -81,36 +93,80 @@ public class ProgressoDesafio {
         }
     }
     
-    public static List<String> buscarDesafiosPorEtapaId(long id) throws SQLException {
+    public static List<utils.DesafioDeProgramacao> buscarDesafiosPorEtapaId(Connection conexao, long id) throws SQLException {
         String sql = """
-                select etapa.id as 'Etapa ID', etapa.caso_id as 
-                'Caso ID', desafioDeProgramacao.id as 
-                'Desafio de Programacao ID', etapa.numero as 'Numero', 
-                etapa.titulo as 'Titulo da Etapa', etapa.descricao as 
-                'Descricao da Etapa', desafioDeProgramacao.titulo as 
-                'Titulo do desafio de programacao', 
+                select etapa.id as 'Etapa ID', 
+                etapa.caso_id as 'Caso ID', 
+                desafioDeProgramacao.id as 'Desafio de Programacao ID', 
+                desafioDeProgramacao.titulo as 'Titulo do desafio de programacao', 
                 desafioDeProgramacao.descricao as 'Descricao do desafio de programacao',
                 desafioDeProgramacao.classe_esperada as 'Classe Esperada',
-                desafioDeProgramacao.metodo_esperado as 'Metodo Esperado',
+                desafioDeProgramacao.metodo_esperado as 'Metodo Esperado'
                 from desafioDeProgramacao inner join etapa 
                 on etapa.id = desafioDeProgramacao.etapa_id where etapa.id = ?;
                 """;
-        try (
-            Connection conexao = ConexaoMySQL.getConnection();
-            PreparedStatement statement = conexao.prepareStatement(sql)
+        try (PreparedStatement statement = conexao.prepareStatement(sql)
         ) {
             statement.setLong(1, id);
             try (ResultSet resposta = statement.executeQuery()) {
-                List<String> desafioDeProgramacao = new ArrayList<>();
+                List<utils.DesafioDeProgramacao> desafioDeProgramacao = new ArrayList<>();
                 while (resposta.next()) {
-                    String desafio = resposta.getLong("Etapa ID") + "|" + resposta.getLong("Desafio de Programacao ID") + "|" 
-                            + resposta.getString("Titulo do desafio de programacao") + "|" + resposta.getString("Descricao do desafio de programacao") + "|" 
-                            + resposta.getString("Classe Esperada") + "|"                   + resposta.getString("Metodo Esperado");
+                    utils.DesafioDeProgramacao desafio = new utils.DesafioDeProgramacao(resposta.getLong("Desafio de Programacao ID"), resposta.getLong("Caso ID"), resposta.getLong("Etapa ID") , resposta.getString("Titulo do desafio de programacao"), resposta.getString("'Descricao do desafio de programacao"), resposta.getString("Classe Esperada"), resposta.getString("Metodo Esperado"));
                     desafioDeProgramacao.add(desafio);
-                    
                 }
                 return desafioDeProgramacao;
             }            
+        }
+    }
+    
+    public static List<Long> buscarIdsDesafiosPorEtapaId(Connection conexao, long id) throws SQLException {
+        String sql = """
+                select etapa.id as 'Etapa ID', etapa.caso_id as 
+                'Caso ID', desafioDeProgramacao.id as 
+                'Desafio de Programacao ID'
+                from desafioDeProgramacao inner join etapa 
+                on etapa.id = desafioDeProgramacao.etapa_id where etapa.id = ?;
+                """;
+        try (PreparedStatement statement = conexao.prepareStatement(sql)){
+            statement.setLong(1, id);
+            try (ResultSet resposta = statement.executeQuery()) {
+                List<Long> ids = new ArrayList<>();
+                while (resposta.next()) {
+                    ids.add(resposta.getLong("Desafio de Programacao ID"));
+                    
+                }
+                return ids;
+            }            
+        }
+    }
+    
+    public static utils.ProgressoDesafio buscarProgressoDesafioPorEtapaId(Connection conexao, long etapaId, long progressoId) throws SQLException {
+        String sql = """
+                SELECT pd.progresso_caso_id,
+                       pd.desafio_id,
+                       pd.concluido,
+                       pd.data_conclusao
+                FROM progresso_desafio pd
+                JOIN desafioDeProgramacao d
+                    ON d.id = pd.desafio_id
+                WHERE d.etapa_id = ?
+                  AND pd.progresso_caso_id = ?
+                """;
+        try (PreparedStatement statement = conexao.prepareStatement(sql)) {
+            statement.setLong(1, etapaId);
+            try (ResultSet resposta = statement.executeQuery()) {
+                if (resposta.next()) {
+                    Timestamp ts = resposta.getTimestamp("data_conclusao");
+                    LocalDateTime dataConclusao = (ts != null) ? ts.toLocalDateTime() : null;
+                    return new utils.ProgressoDesafio(
+                            resposta.getLong("progresso_caso_id"),
+                            resposta.getLong("desafio_id"),
+                            resposta.getBoolean("concluido"),
+                            dataConclusao
+                    );
+                }
+                return null;
+            }
         }
     }
     

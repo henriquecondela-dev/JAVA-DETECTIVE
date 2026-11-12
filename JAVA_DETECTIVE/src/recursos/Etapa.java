@@ -19,14 +19,14 @@ import java.util.List;
  */
 public class Etapa {
 
-    public static int criarEtapa(long caso_id, int numero, String titulo, String descricao, int minimo_evidencias) throws SQLException {
+    public static int criarEtapa(Connection conexao, long caso_id, int numero, String titulo, String descricao, int minimo_evidencias) throws SQLException {
 
         String sql = """
                 INSERT INTO etapa(caso_id, numero, titulo, descricao, minimo_evidencias)
                 VALUES (?, ?, ?,?,?)
                 """;
 
-        try (Connection conexao = ConexaoMySQL.getConnection(); PreparedStatement statement = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS
+        try (PreparedStatement statement = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS
         )) {
             statement.setLong(1, caso_id);
             statement.setInt(2, numero);
@@ -205,6 +205,35 @@ public class Etapa {
                         resultado.getString("titulo"),
                         resultado.getString("descricao")
                 );
+            }
+        }
+    }
+    
+    public static utils.Etapa identificarEtapaSeguinte(Connection conexao, long casoId, int numeroEtapaAtual) throws SQLException {
+        String sql = """
+                SELECT id, caso_id, numero, minimo_evidencias, titulo, descricao FROM etapa
+                WHERE caso_id = ? AND numero = ?
+                """;
+
+        try (PreparedStatement statement = conexao.prepareStatement(sql)
+        ) {
+            statement.setLong(1, casoId);
+            statement.setInt(2, numeroEtapaAtual + 1);
+
+            try (ResultSet resposta = statement.executeQuery()) {
+
+                if (resposta.next()) {
+                    return new utils.Etapa(
+                        resposta.getLong("id"),
+                        resposta.getLong("caso_id"),
+                        resposta.getInt("numero"),
+                        resposta.getInt("minimo_evidencias"),
+                        resposta.getString("titulo"),
+                        resposta.getString("descricao")
+                    );
+                }
+
+                return null;
             }
         }
     }

@@ -21,26 +21,49 @@ import static recursos.Evidencia.obterImportancia;
  */
 public class ProgressoEvidencia {
     
-    public static boolean criarProgressoEvidencia(long progressoCasoId, long evidenciaId, boolean coletada) throws SQLException{
-        String codigo = "Insert into progresso_evidencia (progresso_caso_id, evidencia_id, coletada, data_coleta) values(?, ?, ?, ?)";
-        try(
-                Connection conexao = ConexaoMySQL.getConnection();
-                PreparedStatement statement = conexao.prepareStatement(codigo);
-                ){
-            statement.setLong(1, progressoCasoId);
-            statement.setLong(2, evidenciaId);
-            statement.setBoolean(3,coletada);
+    public static boolean criarProgressoEvidencia(Connection conexao, long progressoCasoId, long evidenciaId, boolean coletada) throws SQLException {
+
+        // 1. Verificar se o progresso já existe
+        String sqlVerificar = """
+                        SELECT id
+                        FROM progresso_evidencia
+                        WHERE progresso_caso_id = ?
+                          AND evidencia_id = ?
+                        """;
+
+        try (PreparedStatement stmtVerificar = conexao.prepareStatement(sqlVerificar)) {
+
+            stmtVerificar.setLong(1, progressoCasoId);
+            stmtVerificar.setLong(2, evidenciaId);
+
+            try (ResultSet resultado = stmtVerificar.executeQuery()) {
+
+                if (resultado.next()) {
+                    return true;
+                }
+            }
+        }
+
+        //if nao existe progresso caso evidencia associado aqueles id evidencia e progresso
+        String sql = """
+                INSERT INTO progresso_evidencia
+                    (progresso_caso_id, evidencia_id, coletada, data_coleta)
+                VALUES (?, ?, ?, ?)
+                """;
+
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
+            stmt.setLong(1, progressoCasoId);
+            stmt.setLong(2, evidenciaId);
+            stmt.setBoolean(3, coletada);
+
             if(coletada==false){
-                statement.setTimestamp(4, null);
+                stmt.setTimestamp(4, null);
             }else{
-                statement.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+                stmt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
             }
-            int linhas = statement.executeUpdate();
-            if(linhas>0){
-                return true;
-            }else{
-                return false;
-            }
+
+            return stmt.executeUpdate() == 1;
         }
     }
     
@@ -109,14 +132,61 @@ public class ProgressoEvidencia {
         }
     }
     
-    public static int buscarNumeroEvidenciasColectadasPorEtapa(long id, long progresso_caso_id) throws SQLException {
+    public static List<utils.Evidencia> buscarEvidenciasPorEtapa(Connection conexao, long etapaId) throws SQLException {
+        String sql = """
+                select evidencia.id as 'Evidencia ID', 
+                evidencia.titulo as 'Titulo da Evidencia',
+                evidencia.descricao as 'Descricao da Evidencia', 
+                evidencia.documento_id as 'Documento ID', 
+                evidencia.importancia as 'Importancia'
+                from etapa_evidencia 
+                inner join etapa on etapa.id = etapa_evidencia.etapa_id
+                inner join evidencia on evidencia.id = etapa_evidencia.evidencia_id where etapa.id = ?;
+                """;
+        try (PreparedStatement statement = conexao.prepareStatement(sql)) {
+            statement.setLong(1, etapaId);
+            try (ResultSet resposta = statement.executeQuery()) {
+                List<utils.Evidencia> evidenciasPorEtapa = new ArrayList<>();
+                while (resposta.next()) {
+                    int num = resposta.getInt("Importancia");
+                    long idEvidencia = resposta.getLong("Evidencia ID");
+                    String titulo = resposta.getString("Titulo da Evidencia");
+                    String descricao = resposta.getString("Descricao da Evidencia");
+                    Long documentoId = resposta.getObject("Documento ID", Long.class);
+                     utils.Importancia importa = obterImportancia(num);
+                     utils.Evidencia evidencia = new utils.Evidencia(idEvidencia, titulo, descricao, documentoId, importa);
+                    evidenciasPorEtapa.add(evidencia);
+                    
+                }
+                return evidenciasPorEtapa;
+            }            
+        }
+    }
+    
+    public static List<Long> buscarIdsEvidenciasPorEtapaId(Connection conexao, long id) throws SQLException {
+        String sql = """
+                select etapa.id as 'Etapa ID', etapa.caso_id as 'Caso ID', evidencia.id as 'Evidencia ID'
+                from etapa_evidencia inner join etapa on etapa.id = etapa_evidencia.etapa_id
+                inner join evidencia on evidencia.id = etapa_evidencia.evidencia_id where etapa.id = ?;
+                """;
+        try (PreparedStatement statement = conexao.prepareStatement(sql)){
+            statement.setLong(1, id);
+            try (ResultSet resposta = statement.executeQuery()) {
+                List<Long> ids = new ArrayList<>();
+                while (resposta.next()) {
+                    long idEvidencia = resposta.getLong("Evidencia ID");
+                    ids.add(idEvidencia);
+                }
+                return ids;
+            }            
+        }
+    }
+    
+    public static int buscarNumeroEvidenciasColectadasPorEtapa(Connection conexao, long id, long progresso_caso_id) throws SQLException {
         String sql = "select progresso_evidencia.coletada from evidencia inner join "
                 + "progresso_evidencia on evidencia.id=progresso_evidencia.evidencia_id and coletada=true "
                 + "inner join etapa_evidencia on etapa_evidencia.evidencia_id = evidencia.id where etapa_evidencia.etapa_id=? and progresso_evidencia.progresso_caso_id=?;";
-        try (
-            Connection conexao = ConexaoMySQL.getConnection();
-            PreparedStatement statement = conexao.prepareStatement(sql)
-        ) {
+        try (PreparedStatement statement = conexao.prepareStatement(sql)){
             statement.setLong(1, id);
             statement.setLong(2, progresso_caso_id);
             try (ResultSet resposta = statement.executeQuery()) {
