@@ -24,8 +24,8 @@ public class Evidencia {
     // Construtor com todos os atributos
     public Evidencia(long id, String titulo, String descricao, Long documento_id, Importancia importancia) {
         this.id = id;
-        if (titulo == null || titulo.isBlank()) {
-            throw new IllegalArgumentException("Título de etapa obrigatório!");
+        if(titulo==null || titulo.isBlank()){
+          throw new IllegalArgumentException("Título de evidencia obrigatório!");
         }
         this.titulo = titulo;
         this.descricao = descricao;

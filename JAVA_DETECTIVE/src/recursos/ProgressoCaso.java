@@ -80,4 +80,50 @@ public class ProgressoCaso {
 
         throw new SQLException( "ID do progresso não encontrado.");
     }
+    
+    public static void atualizarEtapaAtual(Connection conexao, long progressoId, long etapaId) throws SQLException {
+        String sql = """
+                update progressoCaso
+                     set etapa_atual_id =?
+                     where id=?
+                """;
+
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
+            stmt.setLong(1, etapaId);
+            stmt.setLong(2, progressoId);
+
+            if (stmt.executeUpdate() != 1) {
+                throw new SQLException( "Não foi possível atualizar a etapa.");
+            }
+        }
+    }
+    
+    public static utils.ProgressoCaso procurarProgressoPorId(Connection conexao, long progressoId) throws SQLException {
+        String sql = """
+                SELECT id, jogador_id, caso_id, etapa_atual_id, pontuacao
+                FROM progressoCaso
+                WHERE id = ?;
+                """;
+
+        try (PreparedStatement statement = conexao.prepareStatement(sql)) {
+
+            statement.setLong(1, progressoId);
+
+            try (ResultSet resposta = statement.executeQuery()) {
+
+                if (resposta.next()) {
+                    return new utils.ProgressoCaso(
+                        resposta.getLong("id"),
+                        resposta.getLong("jogador_id"),
+                        resposta.getLong("caso_id"),
+                        resposta.getLong("etapa_atual_id"),
+                        resposta.getInt("pontuacao")
+                );
+                }
+                return null;
+            }
+        }
+    }
+    
 }

@@ -55,7 +55,7 @@ public class TelaInicial2 extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         lblTitulo.setFont(new java.awt.Font("Serif", 1, 65)); // NOI18N
-        lblTitulo.setForeground(new java.awt.Color(238, 213, 189));
+        lblTitulo.setForeground(new java.awt.Color(245, 208, 118));
         lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTitulo.setText("DATABASE DETECTIVE");
         lblTitulo.setBorder(javax.swing.BorderFactory.createEmptyBorder(40, 1, 1, 1));
@@ -63,11 +63,12 @@ public class TelaInicial2 extends javax.swing.JFrame {
 
         jPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jPanel1.setPreferredSize(new java.awt.Dimension(400, 350));
+        jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 150, 1));
+        jPanel1.setPreferredSize(new java.awt.Dimension(500, 600));
         jPanel1.setLayout(new java.awt.GridLayout(4, 1, 0, 25));
 
-        btnIniciar.setFont(new java.awt.Font("Serif", 0, 22)); // NOI18N
-        btnIniciar.setForeground(new java.awt.Color(30, 25, 20));
+        btnIniciar.setFont(new java.awt.Font("Serif", 0, 28)); // NOI18N
+        btnIniciar.setForeground(new java.awt.Color(45, 25, 12));
         btnIniciar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/fundoBotao3.jpg"))); // NOI18N
         btnIniciar.setText("Iniciar");
         btnIniciar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -75,8 +76,8 @@ public class TelaInicial2 extends javax.swing.JFrame {
         btnIniciar.addActionListener(this::btnIniciarActionPerformed);
         jPanel1.add(btnIniciar);
 
-        btnTutorial.setFont(new java.awt.Font("Serif", 0, 22)); // NOI18N
-        btnTutorial.setForeground(new java.awt.Color(30, 25, 20));
+        btnTutorial.setFont(new java.awt.Font("Serif", 0, 28)); // NOI18N
+        btnTutorial.setForeground(new java.awt.Color(45, 25, 12));
         btnTutorial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/fundoBotao3.jpg"))); // NOI18N
         btnTutorial.setText("Tutorial");
         btnTutorial.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -84,8 +85,8 @@ public class TelaInicial2 extends javax.swing.JFrame {
         btnTutorial.addActionListener(this::btnTutorialActionPerformed);
         jPanel1.add(btnTutorial);
 
-        btnContinuar.setFont(new java.awt.Font("Serif", 0, 22)); // NOI18N
-        btnContinuar.setForeground(new java.awt.Color(30, 25, 20));
+        btnContinuar.setFont(new java.awt.Font("Serif", 0, 28)); // NOI18N
+        btnContinuar.setForeground(new java.awt.Color(45, 25, 12));
         btnContinuar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/fundoBotao3.jpg"))); // NOI18N
         btnContinuar.setText("Continuar");
         btnContinuar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -93,8 +94,8 @@ public class TelaInicial2 extends javax.swing.JFrame {
         btnContinuar.addActionListener(this::btnContinuarActionPerformed);
         jPanel1.add(btnContinuar);
 
-        btnSair.setFont(new java.awt.Font("Serif", 0, 22)); // NOI18N
-        btnSair.setForeground(new java.awt.Color(30, 25, 20));
+        btnSair.setFont(new java.awt.Font("Serif", 0, 28)); // NOI18N
+        btnSair.setForeground(new java.awt.Color(45, 25, 12));
         btnSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/fundoBotao3.jpg"))); // NOI18N
         btnSair.setText("Sair");
         btnSair.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
