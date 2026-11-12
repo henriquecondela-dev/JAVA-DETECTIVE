@@ -58,10 +58,10 @@ public class Etapa{
         this.objetivos = objetivos != null ? new ArrayList<>(objetivos) : new ArrayList<>();
     }
 
-    public Etapa(long id, long caso_id, int numero, int minimoEvidencias, String titulo, String descricao,
-            List<Evidencia> evidencias,
-            List<DesafioDeProgramacao> desafios) {
-        this.id = id;
+//    public Etapa(long id, long caso_id, int numero, int minimoEvidencias, String titulo, String descricao,
+//            List<Evidencia> evidencias,
+//            List<DesafioDeProgramacao> desafios) {
+//        this.id = id;
     public Etapa(long id, long caso_id, int numero, int minimoEvidencias, String titulo, String descricao, List<Evidencia> evidencias, List<DesafioDeProgramacao> desafios){
         this.id=id;
         this.caso_id = caso_id;
