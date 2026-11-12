@@ -1,5 +1,3 @@
-
-
 /**
  *
  * @author henrique-dev
@@ -25,11 +23,9 @@ public class Objetivos {
                 """;
 
         try (
-            Connection conexao = ConexaoMySQL.getConnection();
-            PreparedStatement statement = conexao.prepareStatement(
-                    sql, Statement.RETURN_GENERATED_KEYS
-            )
-        ) {
+                Connection conexao = ConexaoMySQL.getConnection(); PreparedStatement statement = conexao.prepareStatement(
+                sql, Statement.RETURN_GENERATED_KEYS
+        )) {
             statement.setLong(1, etapaId);
             statement.setString(2, descricao);
 
@@ -64,10 +60,7 @@ public class Objetivos {
                 """;
 
         try (
-            Connection conexao = ConexaoMySQL.getConnection();
-            PreparedStatement statement = conexao.prepareStatement(sql);
-            ResultSet resposta = statement.executeQuery()
-        ) {
+                Connection conexao = ConexaoMySQL.getConnection(); PreparedStatement statement = conexao.prepareStatement(sql); ResultSet resposta = statement.executeQuery()) {
             boolean encontrou = false;
 
             while (resposta.next()) {
@@ -93,9 +86,7 @@ public class Objetivos {
                 """;
 
         try (
-            Connection conexao = ConexaoMySQL.getConnection();
-            PreparedStatement statement = conexao.prepareStatement(sql)
-        ) {
+                Connection conexao = ConexaoMySQL.getConnection(); PreparedStatement statement = conexao.prepareStatement(sql)) {
             statement.setLong(1, id);
 
             try (ResultSet resposta = statement.executeQuery()) {
@@ -128,9 +119,7 @@ public class Objetivos {
                 """;
 
         try (
-            Connection conexao = ConexaoMySQL.getConnection();
-            PreparedStatement statement = conexao.prepareStatement(sql)
-        ) {
+                Connection conexao = ConexaoMySQL.getConnection(); PreparedStatement statement = conexao.prepareStatement(sql)) {
             statement.setLong(1, etapaId);
             statement.setString(2, descricao);
             statement.setInt(3, minimoRelacoesCodigo);
@@ -148,13 +137,51 @@ public class Objetivos {
         String sql = "DELETE FROM objetivo WHERE id = ?";
 
         try (
-            Connection conexao = ConexaoMySQL.getConnection();
-            PreparedStatement statement = conexao.prepareStatement(sql)
-        ) {
+                Connection conexao = ConexaoMySQL.getConnection(); PreparedStatement statement = conexao.prepareStatement(sql)) {
             statement.setLong(1, id);
 
             return statement.executeUpdate() > 0;
         }
+    }
+
+    public static java.util.List<utils.Objetivo> listarObjetivosPorEtapa(
+            Connection conexao,
+            long etapaId
+    ) throws SQLException {
+
+        String sql = """
+        SELECT id, etapa_id, descricao,
+               minimo_relacoes_codigo, concluido
+        FROM objetivo
+        WHERE etapa_id = ?
+        ORDER BY id
+        """;
+
+        java.util.List<utils.Objetivo> objetivos
+                = new java.util.ArrayList<>();
+
+        try (PreparedStatement statement = conexao.prepareStatement(sql)) {
+
+            statement.setLong(1, etapaId);
+
+            try (ResultSet resposta = statement.executeQuery()) {
+
+                while (resposta.next()) {
+
+                    utils.Objetivo objetivo = new utils.Objetivo(
+                            resposta.getLong("id"),
+                            resposta.getLong("etapa_id"),
+                            resposta.getString("descricao"),
+                            resposta.getInt("minimo_relacoes_codigo"),
+                            resposta.getBoolean("concluido")
+                    );
+
+                    objetivos.add(objetivo);
+                }
+            }
+        }
+
+        return objetivos;
     }
 
     // Auxiliar 

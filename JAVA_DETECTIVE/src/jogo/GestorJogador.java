@@ -9,6 +9,7 @@ import java.sql.*;
 import utils.Genero;
 import java.util.List;
 import java.util.ArrayList;
+
 public class GestorJogador {
 
     public long criarJogador(String nome, int idade, Genero genero) throws SQLException {
@@ -57,6 +58,25 @@ public class GestorJogador {
 
                 throw erro;
             }
+        }
+    }
+
+    public utils.Etapa obterEtapaCompletaAtual( long jogadorId,long casoId ) throws SQLException {
+
+        utils.ProgressoCaso progresso
+                = continuarInvestigacao(jogadorId, casoId);
+
+        try (Connection conexao = ConexaoMySQL.getConnection()) {
+
+            utils.Etapa etapa= recursos.Etapa.procurarEtapaCompletaPorId(conexao,progresso.getEtapaAtualId());
+
+            if (etapa == null) {
+                throw new IllegalStateException(
+                        "Etapa actual não encontrada."
+                );
+            }
+
+            return etapa;
         }
     }
 
@@ -206,8 +226,8 @@ public class GestorJogador {
         );
     }
 
-    public List<utils.Jogador> listarJogadores()throws SQLException {
-        try (Connection conexao= ConexaoMySQL.getConnection()) {
+    public List<utils.Jogador> listarJogadores() throws SQLException {
+        try (Connection conexao = ConexaoMySQL.getConnection()) {
             return recursos.Jogador.listarJogadores(conexao);
         }
     }
