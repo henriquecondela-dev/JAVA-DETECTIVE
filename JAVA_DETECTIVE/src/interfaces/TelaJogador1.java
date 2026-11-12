@@ -10,14 +10,14 @@ import java.awt.BorderLayout;
  *
  * @author andrea-sande
  */
-public class TelaJogador extends javax.swing.JFrame {
+public class TelaJogador1 extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaJogador.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaJogador1.class.getName());
 
     /**
      * Creates new form TelaInicial1
      */
-    public TelaJogador() {
+    public TelaJogador1() {
         initComponents();
        /* setLocationRelativeTo(null);
   /      PainelFundo fundo = new PainelFundo("/imagens/fundoInicial.jpg");
@@ -57,20 +57,20 @@ public class TelaJogador extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         pnlConteudo.setBorder(javax.swing.BorderFactory.createEmptyBorder(40, 40, 40, 40));
-        pnlConteudo.setLayout(new java.awt.GridLayout(7, 1, 0, 10));
+        pnlConteudo.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Serif", 0, 25)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Bem-vindo, investigador!");
-        pnlConteudo.add(jLabel1);
+        pnlConteudo.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 688, 113));
 
         jLabel3.setFont(new java.awt.Font("Serif", 0, 16)); // NOI18N
         jLabel3.setText("<html>Neste jogo vais resolver casos analisando pistas, consultando dados e usando lógica. </html> ");
-        pnlConteudo.add(jLabel3);
+        pnlConteudo.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 163, 688, 113));
 
         jLabel4.setFont(new java.awt.Font("Serif", 0, 16)); // NOI18N
         jLabel4.setText("Antes de começar, conta-nos sobre ti:");
-        pnlConteudo.add(jLabel4);
+        pnlConteudo.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 286, 688, 113));
 
         lblNome.setFont(new java.awt.Font("Serif", 0, 16)); // NOI18N
         lblNome.setText("Nome:");
@@ -98,7 +98,7 @@ public class TelaJogador extends javax.swing.JFrame {
                 .addContainerGap(51, Short.MAX_VALUE))
         );
 
-        pnlConteudo.add(pnlNome);
+        pnlConteudo.add(pnlNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 409, -1, -1));
 
         lblIdade.setFont(new java.awt.Font("Serif", 0, 16)); // NOI18N
         lblIdade.setText("Idade:");
@@ -127,12 +127,12 @@ public class TelaJogador extends javax.swing.JFrame {
                 .addContainerGap(57, Short.MAX_VALUE))
         );
 
-        pnlConteudo.add(pnlIdade);
+        pnlConteudo.add(pnlIdade, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 532, -1, -1));
 
         btnContinuar.setFont(new java.awt.Font("Serif", 0, 18)); // NOI18N
         btnContinuar.setText("Continuar");
         btnContinuar.addActionListener(this::btnContinuarActionPerformed);
-        pnlConteudo.add(btnContinuar);
+        pnlConteudo.add(btnContinuar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 655, 688, 113));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -141,14 +141,14 @@ public class TelaJogador extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(150, 150, 150)
                 .addComponent(pnlConteudo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(740, Short.MAX_VALUE))
+                .addContainerGap(780, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(97, 97, 97)
                 .addComponent(pnlConteudo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(113, Short.MAX_VALUE))
+                .addContainerGap(276, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
@@ -192,7 +192,7 @@ public class TelaJogador extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaJogador().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new TelaJogador1().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
