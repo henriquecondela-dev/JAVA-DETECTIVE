@@ -132,7 +132,7 @@ CREATE TABLE objetivo (
 
     descricao TEXT NOT NULL,
 
-    minimo_relacoes_codigo INT DEFAULT 4,
+    minimo_relacoes_codigo INT DEFAULT 1,
 
     concluido BOOLEAN DEFAULT FALSE,
 
