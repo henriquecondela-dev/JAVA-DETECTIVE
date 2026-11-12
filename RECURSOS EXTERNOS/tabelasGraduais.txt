@@ -1,1 +1,0 @@
-As tabelas que serão usadas gradualmente: jogador,objectivo, desafioDeProgramacao, progressoCaso, progresso_evidencia, acusacao, acusacao_evidencia, acusacao_suspeito, com excepção de objectivo e desafioDeProgramacao
