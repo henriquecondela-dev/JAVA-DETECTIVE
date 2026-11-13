@@ -38,11 +38,11 @@ Antonio, porém, não sabia disso. Convencido de que Belcio havia destruído a v
 Depois percebeu o que havia feito e tentou encobrir o crime, manipulando registros e construindo um álibi.', 1);
 
 insert into objetivo(etapa_id, descricao) values
-(1, 'Descobrir o que aconteceu naquela noite e determinar a janela provável do assassinato.'),
-(2, 'Investigar os depoimentos dos suspeitos e encontrar contradições.'),
-(3, 'Investigar o computador de Belcio e descobrir o que ele investigava antes de morrer.'),
-(4, 'Cruzar câmeras, cartões, localização, computadores e horários para descobrir quem teve oportunidade real de chegar ao escritório.'),
-(5, 'Descobrir o motivo do crime, reconstruir a sequência final e apresentar a acusação definitiva.');
+(1, 'Descobrir o que aconteceu naquela noite e determinar a janela provável do assassinato. Abra o editor de código para visualizar e resolver o desafio de programação.'),
+(2, 'Investigar os depoimentos dos suspeitos e encontrar contradições. Abra o editor de código para visualizar e resolver o desafio de programação.'),
+(3, 'Investigar o computador de Belcio e descobrir o que ele investigava antes de morrer. Abra o editor de código para visualizar e resolver o desafio de programação.'),
+(4, 'Cruzar câmeras, cartões, localização, computadores e horários para descobrir quem teve oportunidade real de chegar ao escritório. Abra o editor de código para visualizar e resolver o desafio de programação.'),
+(5, 'Descobrir o motivo do crime, reconstruir a sequência final e apresentar a acusação definitiva. Abra o editor de código para visualizar e resolver o desafio de programação.');
 
 insert into suspeito(pessoa_id,caso_id,motivo) values
 (2,1,'E responsável por uma fraude financeira através de empresas fictícias.'),
@@ -227,12 +227,12 @@ insert into etapa_mensagem (etapa_id, mensagem_id) values
 
 INSERT INTO desafioDeProgramacao (titulo, caso_id, descricao, etapa_id, classe_esperada, metodo_esperado)VALUES
 
-('Reconstrução da Noite',1,'O sistema de segurança registou diferentes horarios durante a noite do crime. A investigacao determinou que o assassinato ocorreu entre as 22h15 e as 22h30.Crie uma classe ReconstrucaoNoite com um metodo que receba uma hora e os minutos correspondentes. O metodo deve verificar se o horario recebido pertence ao intervalo entre 22h15 e 22h30, incluindo os limites.',1,'ReconstrucaoNoite','boolean estaNaJanelaDoCrime(int hora, int minuto)'),
+('Reconstrução da Noite',1,'O sistema de segurança registou diferentes horarios durante a noite do crime. A investigacao determinou que o assassinato ocorreu entre as 22h15 e as 22h30.Crie uma classe ReconstrucaoNoite com um metodo que boolean estaNaJanelaDoCrime(int hora, int minuto) receba uma hora e os minutos correspondentes. O metodo deve verificar se o horario recebido pertence ao intervalo entre 22h15 e 22h30, incluindo os limites.',1,'ReconstrucaoNoite','boolean estaNaJanelaDoCrime(int hora, int minuto)'),
 
-('Necessidade de organizacao dos depoimentos dos suspeitos',1,'. Crie uma classe AnaliseDepoimentos com os atributos nomeSuspeito, localDeclarado e horarioDeclarado. Implemente um metodo que receba o horario declarado por um suspeito e o horario registado pelas evidencias. O metodo deve verificar se os dois horarios sao diferentes, indicando uma possivel contradicao. A comparacao deve ignorar diferencas entre maiusculas e minusculas e espacos desnecessarios.',2,'AnaliseDepoimentos','boolean verificarContradicao(String horarioDeclarado, String horarioRegistado)'),
+('Necessidade de organizacao dos depoimentos dos suspeitos',1,'. Crie uma classe AnaliseDepoimentos com os atributos nomeSuspeito, localDeclarado e horarioDeclarado. Implemente um metodo boolean verificarContradicao(String horarioDeclarado, String horarioRegistado), que receba o horario declarado por um suspeito e o horario registado pelas evidencias. O metodo deve verificar se os dois horarios sao diferentes, indicando uma possivel contradicao. A comparacao deve ignorar diferencas entre maiusculas e minusculas e espacos desnecessarios.',2,'AnaliseDepoimentos','boolean verificarContradicao(String horarioDeclarado, String horarioRegistado)'),
 
-('As Transferências Suspeitas',1,'Foram encontradas varias transferencias financeiras suspeitas no computador de Belcio. Crie uma classe InvestigacaoFinanceira e implemente um metodo que receba um array de valores monetarios e calcule quantas transferencias possuem valor superior a 100.000.', 3,'InvestigacaoFinanceira','int contarTransferenciasSuspeitas(double[] transferencias)'),
+('As Transferências Suspeitas',1,'Foram encontradas varias transferencias financeiras suspeitas no computador de Belcio. Crie uma classe InvestigacaoFinanceira e implemente um metodo int contarTransferenciasSuspeitas(double[] transferencias), que receba um array de valores monetarios e calcule quantas transferencias possuem valor superior a 100.000.', 3,'InvestigacaoFinanceira','int contarTransferenciasSuspeitas(double[] transferencias)'),
 
-('O Acesso ao Escritorio',1,'O sistema de seguranca possui uma lista de horarios de acesso ao escritorio. Crie uma classe AnaliseAcessos que receba uma lista de horarios e permita verificar se determinado horario esta registado. Utilize ArrayList e implemente a pesquisa ignorando diferencas de formatacao entre horas com e sem zero inicial.',4, 'AnaliseAcessos','boolean existeRegisto(ArrayList<String> horarios, String horarioProcurado)'),
+('O Acesso ao Escritorio',1,'O sistema de seguranca possui uma lista de horarios de acesso ao escritorio. Crie uma classe AnaliseAcessos que receba uma lista de horarios e permita verificar se determinado horario esta registado.Implemente um método boolean existeRegisto(ArrayList<String> horarios, String horarioProcurado) Utilize ArrayList e implemente a pesquisa ignorando diferencas de formatacao entre horas com e sem zero inicial.',4, 'AnaliseAcessos','boolean existeRegisto(ArrayList<String> horarios, String horarioProcurado)'),
 
-('A Acusação Definitiva',1,'Crie uma classe AcusacaoFinal com um atributo privado para guardar o nome do suspeito acusado. Implemente um construtor para inicializar esse atributo e um metodo que verifique se o primeiro nome do suspeito orresponde ao nome do verdadeiro culpado, ignorando diferencas entre maiusculas e minusculas. ',5,'AcusacaoFinal','boolean verificarCulpado()');
+('A Acusação Definitiva',1,'Crie uma classe AcusacaoFinal com um atributo privado para guardar o nome do suspeito acusado. Implemente um construtor para inicializar esse atributo e um metodo boolean verificarCulpado(), que verifique se o primeiro nome do suspeito orresponde ao nome do verdadeiro culpado, ignorando diferencas entre maiusculas e minusculas. ',5,'AcusacaoFinal','boolean verificarCulpado()');
