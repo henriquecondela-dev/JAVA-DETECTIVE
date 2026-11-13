@@ -4,41 +4,103 @@
  */
 package recursos;
 
-import java.sql.*;
 import db.*;
+import java.sql.*;
 
 /**
  *
  * @author antonio-nuvunga
  */
 public class Acusacao {
-    public static int adicionarAcusacao(long jogador_id, long caso_id, long suspeito_acusado_id, boolean resultado) throws SQLException{
-        String sql = "Insert into acusacao (jogador_id, caso_id, suspeito_acusado_id, resultado) values(?, ?, ?, ?)";
-        
-        try(Connection conexao = ConexaoMySQL.getConnection();
-            PreparedStatement statement = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS))
-        {
-            statement.setLong(1, jogador_id);
-            statement.setLong(2, caso_id);
-            statement.setLong(3, suspeito_acusado_id);
+   
+public static long adicionarAcusacao(Connection conexao, long jogadorId, long casoId, long suspeitoId, boolean resultado) throws SQLException {
+
+        String sql = """
+                INSERT INTO acusacao
+                    (jogador_id, caso_id, suspeito_acusado_id, resultado)
+                VALUES (?, ?, ?, ?)
+                """;
+
+        try (PreparedStatement statement = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            statement.setLong(1, jogadorId);
+            statement.setLong(2, casoId);
+            statement.setLong(3, suspeitoId);
             statement.setBoolean(4, resultado);
-            
-            int linhasAfetadas = statement.executeUpdate();
-            if(linhasAfetadas!=1){
-                throw new SQLException("Erro: Nao foi possivel adicionar a acusacao!");
+
+            if (statement.executeUpdate() != 1) {
+                throw new SQLException("Não foi possível registar a acusação.");
             }
-            
-            try(ResultSet chaves = statement.getGeneratedKeys()){
-                if(chaves.next()){
-                    return chaves.getInt(1);
+
+            try (ResultSet chaves = statement.getGeneratedKeys()) {
+                if (chaves.next()) {
+                    return chaves.getLong(1);
                 }
-                
-                throw new SQLException(
-                        "O INSERT foi executado, mas não foi possível obter o ID."
-                );
+            }
+        }
+
+        throw new SQLException("Não foi possível obter o ID da acusação.");
+    }
+
+    public static boolean verificarAcusacao(Connection conexao, long suspeitoId, long casoId) throws SQLException {
+
+        String sql = """
+                SELECT pessoa.nome
+                FROM suspeito
+                INNER JOIN pessoa
+                    ON suspeito.pessoa_id = pessoa.id
+                WHERE suspeito.id = ?
+                AND suspeito.caso_id = ?
+                """;
+
+        try (PreparedStatement statement = conexao.prepareStatement(sql)) {
+
+            statement.setLong(1, suspeitoId);
+            statement.setLong(2, casoId);
+
+            try (ResultSet resposta = statement.executeQuery()) {
+
+                if (!resposta.next()) {
+                    throw new IllegalArgumentException(
+                            "Suspeito não encontrado neste caso."
+                    );
+                }
+
+                String nome = resposta.getString("nome");
+
+                if (nome == null || nome.isBlank()) {
+                    return false;
+                }
+
+                String primeiroNome = nome.trim().split("\\s+")[0];
+
+                return primeiroNome.equalsIgnoreCase("Antonio");
             }
         }
     }
+
+    public static boolean casoConcluidoPorAcusacao(Connection conexao, long jogadorId, long casoId) throws SQLException {
+
+        String sql = """
+                SELECT 1
+                FROM acusacao
+                WHERE jogador_id = ?
+                AND caso_id = ?
+                AND resultado = TRUE
+                LIMIT 1
+                """;
+
+        try (PreparedStatement statement = conexao.prepareStatement(sql)) {
+
+            statement.setLong(1, jogadorId);
+            statement.setLong(2, casoId);
+
+            try (ResultSet resposta = statement.executeQuery()) {
+                return resposta.next();
+            }
+        }
+    }
+
     
     public static void listarAcusacao() throws SQLException {
 
@@ -171,11 +233,11 @@ public class Acusacao {
         }
     }
     
-    public static boolean efectuarAcusacao(long jogador_id,long caso_id, long suspeito_acusado_id) throws SQLException {
+    public static boolean efectuarAcusacao(Connection conexao, long jogador_id,long caso_id, long suspeito_acusado_id) throws SQLException {
 
         boolean resultado = verificarAcusacao(suspeito_acusado_id);
 
-        adicionarAcusacao(jogador_id, caso_id, suspeito_acusado_id, resultado);
+        adicionarAcusacao(conexao, jogador_id, caso_id, suspeito_acusado_id, resultado);
 
         return resultado;
     }
