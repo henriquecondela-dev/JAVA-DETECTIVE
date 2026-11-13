@@ -61,14 +61,14 @@ public class GestorJogador {
         }
     }
 
-    public utils.Etapa obterEtapaCompletaAtual( long jogadorId,long casoId ) throws SQLException {
+    public utils.Etapa obterEtapaCompletaAtual(long jogadorId, long casoId) throws SQLException {
 
         utils.ProgressoCaso progresso
                 = continuarInvestigacao(jogadorId, casoId);
 
         try (Connection conexao = ConexaoMySQL.getConnection()) {
 
-            utils.Etapa etapa= recursos.Etapa.procurarEtapaCompletaPorId(conexao,progresso.getEtapaAtualId());
+            utils.Etapa etapa = recursos.Etapa.procurarEtapaCompletaPorId(conexao, progresso.getEtapaAtualId());
 
             if (etapa == null) {
                 throw new IllegalStateException(
@@ -78,6 +78,24 @@ public class GestorJogador {
 
             return etapa;
         }
+    }
+
+    public utils.SessaoInvestigacao carregarSessaoCompleta(long jogadorId, long casoId) throws SQLException {
+        utils.SessaoInvestigacao sessao = carregarSessao(jogadorId, casoId);
+
+        if (sessao == null) {
+            return null;
+        }
+        utils.Etapa etapaCompleta = obterEtapaCompletaAtual(jogadorId, casoId);
+
+        if (etapaCompleta == null) {
+            return null;
+        }
+        return new utils.SessaoInvestigacao(
+                sessao.getJogador(),
+                sessao.getProgresso(),
+                etapaCompleta
+        );
     }
 
     public utils.Jogador obterJogador(long jogadorId) throws SQLException {
@@ -131,22 +149,22 @@ public class GestorJogador {
                 if (progresso == null) {
                     throw new SQLException("Falha ao recuperar a investigação.");
                 }
-                
+
                 long progressoCasoId = progresso.getId();
                 List<Long> idsEvidencias = recursos.ProgressoEvidencia.buscarIdsEvidenciasPorEtapaId(conexao, primeiraEtapaId);
-                
-                for(long evidenciaId : idsEvidencias){
+
+                for (long evidenciaId : idsEvidencias) {
                     boolean criado = recursos.ProgressoEvidencia.criarProgressoEvidencia(conexao, progressoCasoId, evidenciaId, false);
-                    if(!criado){
+                    if (!criado) {
                         throw new SQLException("Erro ao inicializar progresso de evidencia.");
                     }
                 }
-                
+
                 List<Long> idsDesafios = recursos.ProgressoDesafio.buscarIdsDesafiosPorEtapaId(conexao, primeiraEtapaId);
-                for(long desafioId : idsDesafios){
+                for (long desafioId : idsDesafios) {
                     boolean criado = recursos.ProgressoDesafio.criarProgressoDesafio(conexao, progressoCasoId, desafioId, false);
-                    
-                    if(!criado){
+
+                    if (!criado) {
                         throw new SQLException("Erro ao inicializar progresso de desafio.");
                     }
                 }
@@ -231,12 +249,12 @@ public class GestorJogador {
             return recursos.Jogador.listarJogadores(conexao);
         }
     }
-    
-    public boolean podeAvancarEtapa(Connection conexao, long progressoId) throws SQLException{
-        try{
+
+    public boolean podeAvancarEtapa(Connection conexao, long progressoId) throws SQLException {
+        try {
             utils.ProgressoCaso progresso = ProgressoCaso.procurarProgressoPorId(conexao, progressoId);
 
-            if(progresso==null){
+            if (progresso == null) {
                 throw new IllegalArgumentException("Progresso nao encontrado!");
             }
 
@@ -245,7 +263,7 @@ public class GestorJogador {
 
             utils.Etapa etapa = recursos.Etapa.procurarEtapaPorId(conexao, etapaAtual);
 
-            if(etapa==null){
+            if (etapa == null) {
                 throw new IllegalArgumentException("Etapa nao encontrada!");
             }
 
@@ -253,13 +271,13 @@ public class GestorJogador {
             utils.ProgressoDesafio desafio = recursos.ProgressoDesafio.buscarProgressoDesafioPorEtapaId(conexao, etapaAtual, progressoId);
             boolean conclusao = desafio.estadoConclusao();
             boolean estadoGeral = false;
-            if(nrEvColectadas<minimoEvidencias || conclusao==false){
+            if (nrEvColectadas < minimoEvidencias || conclusao == false) {
                 estadoGeral = false;
-            }else{
+            } else {
                 estadoGeral = true;
             }
-            return estadoGeral;                
-        }catch(SQLException | RuntimeException erro ){
+            return estadoGeral;
+        } catch (SQLException | RuntimeException erro) {
             try {
                 conexao.rollback();
             } catch (SQLException falhaRollback) {
@@ -268,59 +286,67 @@ public class GestorJogador {
             throw erro;
         }
     }
-    
-    public TipoAvanco avancarEtapa(long progressoId) throws SQLException{
-        try(Connection conexao = ConexaoMySQL.getConnection()){
+
+    public TipoAvanco avancarEtapa(long progressoId) throws SQLException {
+        try (Connection conexao = ConexaoMySQL.getConnection()) {
             conexao.setAutoCommit(false);
-            if(podeAvancarEtapa(conexao, progressoId)){
-                try{
+            if (podeAvancarEtapa(conexao, progressoId)) {
+                try {
                     utils.ProgressoCaso progresso = ProgressoCaso.procurarProgressoPorId(conexao, progressoId);
-                    
-                    if(progresso==null) throw new IllegalArgumentException("Progresso nao encontrado!");
-                    
-                    int etapaAtualId = (int)progresso.getEtapaAtualId();
+
+                    if (progresso == null) {
+                        throw new IllegalArgumentException("Progresso nao encontrado!");
+                    }
+
+                    int etapaAtualId = (int) progresso.getEtapaAtualId();
 
                     utils.Etapa etapaAtual = recursos.Etapa.procurarEtapaPorId(conexao, etapaAtualId);
-                    
-                    if(etapaAtual == null) throw new IllegalArgumentException("Etapa atual nao encontrada!");
-                    
+
+                    if (etapaAtual == null) {
+                        throw new IllegalArgumentException("Etapa atual nao encontrada!");
+                    }
+
                     utils.Etapa seguinte = recursos.Etapa.identificarEtapaSeguinte(conexao, progresso.getCasoId(), etapaAtual.getNumero());
-                    
-                    boolean existeEtapaSeguinte = (seguinte==null)? false: true;
-                    
-                    if(existeEtapaSeguinte){
+
+                    boolean existeEtapaSeguinte = (seguinte == null) ? false : true;
+
+                    if (existeEtapaSeguinte) {
                         recursos.ProgressoCaso.atualizarEtapaAtual(conexao, progresso.getId(), seguinte.getId());
 
-                        List <utils.Evidencia> evidencias = recursos.ProgressoEvidencia.buscarEvidenciasPorEtapa(conexao, seguinte.getId());
+                        List<utils.Evidencia> evidencias = recursos.ProgressoEvidencia.buscarEvidenciasPorEtapa(conexao, seguinte.getId());
 
-                        for(utils.Evidencia evidencia : evidencias){
+                        for (utils.Evidencia evidencia : evidencias) {
                             boolean criado = recursos.ProgressoEvidencia.criarProgressoEvidencia(conexao, progressoId, evidencia.getId(), false);
-                            if(!criado) throw new SQLException("Erro ao inicializar prohresso de evidencia!");
-                      }
+                            if (!criado) {
+                                throw new SQLException("Erro ao inicializar prohresso de evidencia!");
+                            }
+                        }
 
-                        List <utils.DesafioDeProgramacao> desafios = recursos.ProgressoDesafio.buscarDesafiosPorEtapaId(conexao, seguinte.getId());
+                        List<utils.DesafioDeProgramacao> desafios = recursos.ProgressoDesafio.buscarDesafiosPorEtapaId(conexao, seguinte.getId());
 
-                        for(utils.DesafioDeProgramacao desafio : desafios){
+                        for (utils.DesafioDeProgramacao desafio : desafios) {
                             boolean criado = recursos.ProgressoDesafio.criarProgressoDesafio(conexao, progressoId, desafio.getId(), false);
-                            if(!criado) throw new SQLException("Erro ao inicializar prohresso de desafio!");
-                        }   
+                            if (!criado) {
+                                throw new SQLException("Erro ao inicializar prohresso de desafio!");
+                            }
+                        }
                         //Avanço que ser
                         conexao.commit();
                         return TipoAvanco.AVANCO;
-                    }else{
+                    } else {
                         //Estado que representa a conclusao do caso
                         conexao.rollback();
                         return TipoAvanco.CONCLUIDO;
                     }
-                }catch(SQLException | RuntimeException erro){
+                } catch (SQLException | RuntimeException erro) {
                     try {
-                            conexao.rollback();
-                        } catch (SQLException falhaRollback) {
-                            erro.addSuppressed(falhaRollback);
-                        }
+                        conexao.rollback();
+                    } catch (SQLException falhaRollback) {
+                        erro.addSuppressed(falhaRollback);
+                    }
                     throw erro;
                 }
-            }else{
+            } else {
                 //Representaçá~o de requisits não cumpridosã
                 conexao.rollback();
                 return TipoAvanco.REQUISITOS_NAO_CUMPRIDOS;

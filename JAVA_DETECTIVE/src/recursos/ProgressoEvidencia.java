@@ -23,9 +23,8 @@ public class ProgressoEvidencia {
     
     public static boolean criarProgressoEvidencia(Connection conexao, long progressoCasoId, long evidenciaId, boolean coletada) throws SQLException {
 
-        // 1. Verificar se o progresso já existe
         String sqlVerificar = """
-                        SELECT id
+                        SELECT 1
                         FROM progresso_evidencia
                         WHERE progresso_caso_id = ?
                           AND evidencia_id = ?

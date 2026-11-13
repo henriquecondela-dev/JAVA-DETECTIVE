@@ -21,18 +21,34 @@ import java.awt.Insets;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-
 /**
  *
  * @author andrea-sande
  */
 public class TelaPrincipal extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaPrincipal.class.getName());
+    private utils.SessaoInvestigacao sessao;
 
     /**
      * Cria new form TelaPrincipal
      */
+    public TelaPrincipal(utils.SessaoInvestigacao sessao) {
+        this();
+        if (sessao == null) {
+            throw new IllegalArgumentException(
+                    "A sessão de investigação não pode ser nula."
+            );
+        }
+
+        this.sessao = sessao;
+
+        lblPessoa.setText(sessao.getJogador().getNome());
+        preencherDadosEtapa();
+        configurarSelecaoEvidencias();
+        btnCenario.addActionListener(e -> mostrarCenario());
+    }
+
     public TelaPrincipal() {
         initComponents();
         setExtendedState(MAXIMIZED_BOTH);
@@ -43,13 +59,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
         modelo.addElement("Cena do crime");
         modelo.addElement("Relatório preliminar da morte");
         lstEvidencias.setModel(modelo);
-       
+
         PainelFundo fundo = new PainelFundo("/imagens/fundoPrincipal.jpg");
         fundo.setLayout(new BorderLayout(0, 0));
 
         fundo.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
-//        topo
         pnlTopo.setLayout(new BorderLayout(20, 0));
 
         lblPessoa.setFont(new Font("Serif", Font.BOLD, 18));
@@ -71,55 +86,54 @@ public class TelaPrincipal extends javax.swing.JFrame {
         pnlTopo.add(lblCaso, BorderLayout.CENTER);
         pnlTopo.add(topoDireita, BorderLayout.EAST);
 
-                // menu
-         pnlMenu.setOpaque(false);
-         pnlMenu.removeAll();
-         pnlMenu.setLayout(new BoxLayout(pnlMenu, BoxLayout.Y_AXIS));
-         pnlMenu.setMinimumSize(new Dimension(380, 0));
-         pnlMenu.setMaximumSize(new Dimension(380, Integer.MAX_VALUE));
-         pnlMenu.setPreferredSize(new Dimension(380, 0));
+        // menu
+        pnlMenu.setOpaque(false);
+        pnlMenu.removeAll();
+        pnlMenu.setLayout(new BoxLayout(pnlMenu, BoxLayout.Y_AXIS));
+        pnlMenu.setMinimumSize(new Dimension(380, 0));
+        pnlMenu.setMaximumSize(new Dimension(380, Integer.MAX_VALUE));
+        pnlMenu.setPreferredSize(new Dimension(380, 0));
 
-         Dimension tam = new Dimension(380, 104);   // l a
-         ImageIcon fundoBtn = new ImageIcon(
-                 new ImageIcon(getClass().getResource("/imagens/fundoBotao.jpg"))
-                         .getImage().getScaledInstance(tam.width, tam.height, Image.SCALE_SMOOTH));
+        Dimension tam = new Dimension(380, 104);   // l a
+        ImageIcon fundoBtn = new ImageIcon(
+                new ImageIcon(getClass().getResource("/imagens/fundoBotao.jpg"))
+                        .getImage().getScaledInstance(tam.width, tam.height, Image.SCALE_SMOOTH));
 
-         JButton[] botoes = {btnCenario, btnEvidencia, btnBD, btnEditorCodigo, btnObjectivos};
-         String[] textos = {"Cenário", "Evidências", "Base de Dados", "Editor de Código", "Objectivos"};
-//voltar mais uma vez
+        JButton[] botoes = {btnCenario, btnEvidencia, btnBD, btnEditorCodigo, btnObjectivos};
+        String[] textos = {"Cenário", "Evidências", "Base de Dados", "Editor de Código", "Objectivos"};
 
         pnlMenu.add(Box.createVerticalGlue());
-         for (int i = 0; i < botoes.length; i++) {
-             JButton b = botoes[i];
-             b.setText(textos[i]);
-             b.setIcon(fundoBtn);
-             b.setHorizontalTextPosition(SwingConstants.CENTER); 
-             b.setVerticalTextPosition(SwingConstants.CENTER);
-             b.setFont(new Font("Serif", Font.BOLD, 20));
-             b.setForeground(new Color(36, 23, 14));
-             b.setBorderPainted(false);
-             b.setContentAreaFilled(false);
-             b.setFocusPainted(false);
-             b.setMargin(new Insets(0, 0, 0, 0));
-             b.setPreferredSize(tam);
-             b.setMinimumSize(tam);
-             b.setMaximumSize(tam);
-             b.setAlignmentX(Component.CENTER_ALIGNMENT);
-             pnlMenu.add(b);
-             pnlMenu.add(Box.createVerticalStrut(12));
-         }
-         pnlMenu.add(Box.createVerticalGlue());
+        for (int i = 0; i < botoes.length; i++) {
+            JButton b = botoes[i];
+            b.setText(textos[i]);
+            b.setIcon(fundoBtn);
+            b.setHorizontalTextPosition(SwingConstants.CENTER);
+            b.setVerticalTextPosition(SwingConstants.CENTER);
+            b.setFont(new Font("Serif", Font.BOLD, 20));
+            b.setForeground(new Color(36, 23, 14));
+            b.setBorderPainted(false);
+            b.setContentAreaFilled(false);
+            b.setFocusPainted(false);
+            b.setMargin(new Insets(0, 0, 0, 0));
+            b.setPreferredSize(tam);
+            b.setMinimumSize(tam);
+            b.setMaximumSize(tam);
+            b.setAlignmentX(Component.CENTER_ALIGNMENT);
+            pnlMenu.add(b);
+            pnlMenu.add(Box.createVerticalStrut(12));
+        }
+        pnlMenu.add(Box.createVerticalGlue());
 
-                 // centro 
+        // centro 
         pnlCentro.setOpaque(false);
-        pnlCentro.setLayout(new BorderLayout(0, 0));                     
+        pnlCentro.setLayout(new BorderLayout(0, 0));
         lblCenario.setHorizontalAlignment(SwingConstants.CENTER);
         jScrollPane2.setPreferredSize(new Dimension(0, 110));
         pnlCentro.add(lblCenario, BorderLayout.CENTER);
         pnlCentro.add(jScrollPane2, BorderLayout.SOUTH);
 
         //  direita 
-      /*  pnlDireita.setOpaque(false);
+        /*  pnlDireita.setOpaque(false);
         pnlDireita.removeAll();
         pnlDireita.setLayout(new BorderLayout(0, 15));
         pnlDireita.setPreferredSize(new Dimension(420, 0));
@@ -143,10 +157,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
         evidencias.add(jScrollPane3, BorderLayout.CENTER);   
         pnlDireita.add(objetivo, BorderLayout.NORTH);
         pnlDireita.add(evidencias, BorderLayout.CENTER);
-*/
-      
-              //  direita
-       /* Color dourado      = new Color(216, 189, 145);
+         */
+        //  direita
+        /* Color dourado      = new Color(216, 189, 145);
         Color textoClaro   = new Color(240, 220, 180);
         Color caixa        = new Color(42, 29, 18);
         Color bordaDourada = new Color(140, 106, 58);
@@ -203,12 +216,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         pnlDireita.add(objetivo, BorderLayout.NORTH);
         pnlDireita.add(evidencias, BorderLayout.CENTER);*/
-       
-       
-               //  direita
-        Color dourado    = new Color(216, 189, 145);
+        //  direita
+        Color dourado = new Color(216, 189, 145);
         Color textoClaro = new Color(240, 220, 180);
-        Color bordaLeve  = new Color(140, 106, 58, 90);   // dourado com transparência (mais leve)
+        Color bordaLeve = new Color(140, 106, 58, 90);   // dourado com transparência (mais leve)
 
         pnlDireita.setOpaque(false);
         pnlDireita.setBackground(new Color(20, 14, 9));
@@ -219,7 +230,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         // caixa com imagem de fundo (se a imagem não existir, usa castanho semitransparente)
         class CaixaImagem extends JPanel {
+
             private final Image img;
+
             CaixaImagem(String caminho) {
                 super(new BorderLayout(0, 8));
                 java.net.URL url = getClass().getResource(caminho);
@@ -229,15 +242,20 @@ public class TelaPrincipal extends javax.swing.JFrame {
                         BorderFactory.createLineBorder(bordaLeve, 1),
                         BorderFactory.createEmptyBorder(12, 15, 12, 15)));
             }
-            @Override protected void paintComponent(java.awt.Graphics g) {
+
+            @Override
+            protected void paintComponent(java.awt.Graphics g) {
                 if (img != null) {
                     g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
                     g.setColor(new Color(0, 0, 0, 90));          // escurece para o texto ler bem
                 } else {
                     g.setColor(new Color(42, 29, 18, 200));
                 }
-                if (img != null) g.fillRect(0, 0, getWidth(), getHeight());
-                else g.fillRect(0, 0, getWidth(), getHeight());
+                if (img != null) {
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                } else {
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                }
                 super.paintComponent(g);
             }
         }
@@ -265,7 +283,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
         lstEvidencias.setCellRenderer(new javax.swing.ListCellRenderer<String>() {
             private final java.util.Map<String, javax.swing.Icon> cache = new java.util.HashMap<>();
 
-            // procura /imagens/evidencia_<nome sem espaços>.png; se não existir, usa um quadrado vazio
             private javax.swing.Icon icone(String nome) {
                 return cache.computeIfAbsent(nome, n -> {
                     String chave = n.toLowerCase().replaceAll("[^a-z0-9]", "");
@@ -281,8 +298,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
                             g.setColor(bordaLeve);
                             g.drawRoundRect(x, y, 63, 63, 8, 8);
                         }
-                        public int getIconWidth()  { return 64; }
-                        public int getIconHeight() { return 64; }
+
+                        public int getIconWidth() {
+                            return 64;
+                        }
+
+                        public int getIconHeight() {
+                            return 64;
+                        }
                     };
                 });
             }
@@ -317,8 +340,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         pnlDireita.add(objetivo, BorderLayout.NORTH);
         pnlDireita.add(evidencias, BorderLayout.CENTER);
-       
-       
+
         //  junção
         fundo.add(pnlTopo, BorderLayout.NORTH);
         fundo.add(pnlMenu, BorderLayout.WEST);
@@ -326,11 +348,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         fundo.add(pnlDireita, BorderLayout.EAST);
         setContentPane(fundo);
 
-       
     }
-    public TelaPrincipal(String nome, String idade){
+
+    public TelaPrincipal(String nome, String idade) {
         this();
-        lblPessoa.setText(nome +"| Idade: "+idade);
+        lblPessoa.setText(nome + "| Idade: " + idade);
     }
 
     /**
@@ -512,6 +534,161 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private void btnBDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBDActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnBDActionPerformed
+    private void preencherDadosEtapa() {
+
+        utils.Etapa etapa = sessao.getEtapaAtual();
+
+        if (etapa == null) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Não foi possível carregar a etapa da investigação."
+            );
+            return;
+        }
+
+//        lblCenario.setText(etapa.getTitulo());
+//        txtDescricao.setText(
+//                etapa.getDescricao() != null
+//                ? etapa.getDescricao()
+//                : "Não existe descrição disponível para esta etapa."
+//        );
+        mostrarCenario();
+        StringBuilder textoObjetivos = new StringBuilder("<html><body style='width:320px'>");
+
+        if (etapa.getObjetivos() != null && !etapa.getObjetivos().isEmpty()) {
+
+            for (utils.Objetivo objetivo : etapa.getObjetivos()) {
+
+                textoObjetivos.append("• ")
+                        .append(objetivo.getDescricao())
+                        .append("<br><br>");
+            }
+
+        } else {
+            textoObjetivos.append("Não existem objectivos registados para esta etapa.");
+        }
+
+        textoObjetivos.append("</body></html>");
+
+        lblObjectivo.setText(textoObjetivos.toString());
+
+        javax.swing.DefaultListModel<String> modelo
+                = new javax.swing.DefaultListModel<>();
+
+        if (etapa.getEvidencias() != null) {
+
+            for (utils.Evidencia evidencia : etapa.getEvidencias()) {
+
+                modelo.addElement(evidencia.getTitulo());
+            }
+        }
+
+        lstEvidencias.setModel(modelo);
+
+        lblEvidenciasTitulo.setText(
+                "Evidências da Etapa (" + modelo.getSize() + ")"
+        );
+
+        int numeroEtapa = etapa.getNumero();
+
+        barraProgresso.setMinimum(0);
+        barraProgresso.setMaximum(5);
+        barraProgresso.setValue(numeroEtapa);
+        barraProgresso.setStringPainted(true);
+        barraProgresso.setString("Etapa " + numeroEtapa + " de 5");
+    }
+
+    private void mostrarCenario() {
+
+        utils.Etapa etapa = sessao.getEtapaAtual();
+
+        if (etapa == null) {
+            return;
+        }
+
+        lblCenario.setText(etapa.getTitulo());
+
+        utils.Mensagem mensagem = etapa.getMensagem();
+
+        if (mensagem != null
+                && mensagem.getConteudo() != null
+                && !mensagem.getConteudo().isBlank()) {
+
+            txtDescricao.setText(mensagem.getConteudo());
+
+        } else if (etapa.getDescricao() != null
+                && !etapa.getDescricao().isBlank()) {
+
+            txtDescricao.setText(etapa.getDescricao());
+
+        } else {
+
+            txtDescricao.setText(
+                    "Não existe narrativa disponível para esta etapa."
+            );
+        }
+
+        txtDescricao.setCaretPosition(0);
+    }
+
+    private void configurarSelecaoEvidencias() {
+
+        lstEvidencias.addListSelectionListener(e -> {
+
+            if (!e.getValueIsAdjusting()) {
+
+                int indice = lstEvidencias.getSelectedIndex();
+
+                if (indice < 0) {
+                    return;
+                }
+
+                java.util.List<utils.Evidencia> evidencias
+                        = sessao.getEtapaAtual().getEvidencias();
+
+                if (evidencias == null || indice >= evidencias.size()) {
+                    return;
+                }
+
+                utils.Evidencia evidencia = evidencias.get(indice);
+
+                mostrarDetalhesEvidencia(evidencia);
+            }
+        });
+    }
+
+    private void mostrarDetalhesEvidencia(utils.Evidencia evidencia) {
+
+        StringBuilder detalhes = new StringBuilder();
+
+        detalhes.append("DESCRIÇÃO:\n");
+        detalhes.append(evidencia.getDescricao() != null
+                ? evidencia.getDescricao()
+                : "Sem descrição disponível.");
+
+        detalhes.append("\n\nDOCUMENTO ASSOCIADO:\n");
+
+        if (evidencia.getDocumento() != null) {
+
+            detalhes.append("Existe um documento associado a esta evidência.");
+
+        } else if (evidencia.getDocumentoId() != null) {
+
+            detalhes.append("Existe uma referência a um documento, "
+                    + "mas este não foi carregado.");
+
+        } else {
+
+            detalhes.append("Esta evidência não possui documento associado.");
+        }
+
+        javax.swing.JOptionPane.showMessageDialog(
+                this,
+                detalhes.toString(),
+                evidencia.getTitulo(),
+                javax.swing.JOptionPane.INFORMATION_MESSAGE
+        );
+    }
 
     /**
      * @param args the command line arguments
