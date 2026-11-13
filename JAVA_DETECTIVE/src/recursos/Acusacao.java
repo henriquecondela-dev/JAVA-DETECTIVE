@@ -12,7 +12,7 @@ import db.*;
  * @author antonio-nuvunga
  */
 public class Acusacao {
-    public static int adicionarAcusacao(long jogador_id, long caso_id, Long suspeito_acusado_id, boolean resultado) throws SQLException{
+    public static int adicionarAcusacao(long jogador_id, long caso_id, long suspeito_acusado_id, boolean resultado) throws SQLException{
         String sql = "Insert into acusacao (jogador_id, caso_id, suspeito_acusado_id, resultado) values(?, ?, ?, ?)";
         
         try(Connection conexao = ConexaoMySQL.getConnection();
@@ -135,6 +135,49 @@ public class Acusacao {
                 + resposta.getInt("resultado")+" | "
                 + resposta.getString("data_acusacao")
         );
+    }
+    
+    public static boolean verificarAcusacao(long suspeito_id) throws SQLException {
+
+        String sql = """
+                SELECT pessoa.nome
+                FROM suspeito
+                INNER JOIN pessoa ON suspeito.pessoa_id = pessoa.id
+                WHERE suspeito.id = ?
+                """;
+
+        try (
+            Connection conexao = ConexaoMySQL.getConnection();
+            PreparedStatement statement = conexao.prepareStatement(sql)
+        ) {
+            statement.setLong(1, suspeito_id);
+
+            try (ResultSet resposta = statement.executeQuery()) {
+
+                if (resposta.next()) {
+                    String nome = resposta.getString("nome");
+                    
+                    if (nome != null) {
+                        String primeiroNome = nome.trim().split("\\s+")[0];
+
+                        return primeiroNome.equalsIgnoreCase("Antonio");
+                    }
+
+                    return false;
+                }
+
+                return false;
+            }
+        }
+    }
+    
+    public static boolean efectuarAcusacao(long jogador_id,long caso_id, long suspeito_acusado_id) throws SQLException {
+
+        boolean resultado = verificarAcusacao(suspeito_acusado_id);
+
+        adicionarAcusacao(jogador_id, caso_id, suspeito_acusado_id, resultado);
+
+        return resultado;
     }
     
 }

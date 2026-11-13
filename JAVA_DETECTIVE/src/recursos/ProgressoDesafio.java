@@ -13,7 +13,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import static recursos.Evidencia.obterImportancia;
 
 /**
  *
@@ -24,7 +23,7 @@ public class ProgressoDesafio {
     
     public static boolean criarProgressoDesafio(Connection conexao, long progressoCasoId, long desafioId, boolean concluido) throws SQLException{
         // 1. Verificar se o progresso já existe
-        String sqlVerificar ="select id from progresso_desafio where progresso_caso_id = ? and desafio_id = ?";
+        String sqlVerificar ="SELECT progresso_caso_id FROM progresso_desafio WHERE progresso_caso_id = ? AND desafio_id = ?";
 
         try (PreparedStatement stmt = conexao.prepareStatement(sqlVerificar)) {
 
@@ -111,7 +110,7 @@ public class ProgressoDesafio {
             try (ResultSet resposta = statement.executeQuery()) {
                 List<utils.DesafioDeProgramacao> desafioDeProgramacao = new ArrayList<>();
                 while (resposta.next()) {
-                    utils.DesafioDeProgramacao desafio = new utils.DesafioDeProgramacao(resposta.getLong("Desafio de Programacao ID"), resposta.getLong("Caso ID"), resposta.getLong("Etapa ID") , resposta.getString("Titulo do desafio de programacao"), resposta.getString("'Descricao do desafio de programacao"), resposta.getString("Classe Esperada"), resposta.getString("Metodo Esperado"));
+                    utils.DesafioDeProgramacao desafio = new utils.DesafioDeProgramacao(resposta.getLong("Desafio de Programacao ID"), resposta.getLong("Caso ID"), resposta.getLong("Etapa ID") , resposta.getString("Titulo do desafio de programacao"), resposta.getString("Descricao do desafio de programacao"), resposta.getString("Classe Esperada"), resposta.getString("Metodo Esperado"));
                     desafioDeProgramacao.add(desafio);
                 }
                 return desafioDeProgramacao;
@@ -154,6 +153,7 @@ public class ProgressoDesafio {
                 """;
         try (PreparedStatement statement = conexao.prepareStatement(sql)) {
             statement.setLong(1, etapaId);
+            statement.setLong(2, progressoId);
             try (ResultSet resposta = statement.executeQuery()) {
                 if (resposta.next()) {
                     Timestamp ts = resposta.getTimestamp("data_conclusao");
@@ -205,5 +205,34 @@ public class ProgressoDesafio {
                 return num;
             }            
         }
-    }    
+    }   
+    
+    public static double calcularPontuacaoDesafio(
+        Connection conexao, long etapaId, long progressoCasoId) throws SQLException {
+
+        String sql = """
+                SELECT COUNT(*) AS total
+                FROM desafioDeProgramacao d
+                INNER JOIN progresso_desafio pd
+                    ON pd.desafio_id = d.id
+                WHERE d.etapa_id = ?
+                  AND pd.progresso_caso_id = ?
+                  AND pd.concluido = TRUE
+                """;
+
+        try (PreparedStatement statement = conexao.prepareStatement(sql)) {
+
+            statement.setLong(1, etapaId);
+            statement.setLong(2, progressoCasoId);
+
+            try (ResultSet resultado = statement.executeQuery()) {
+
+                if (resultado.next()) {
+                    return resultado.getInt("total") > 0 ? 5.0 : 0.0;
+                }
+            }
+        }
+
+        return 0.0;
+    }
 }

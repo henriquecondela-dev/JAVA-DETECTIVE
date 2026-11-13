@@ -126,4 +126,31 @@ public class ProgressoCaso {
         }
     }
     
+    public static boolean atualizarPontuacao(Connection conexao, long progressoId, int pontuacao) throws SQLException {
+
+        if (progressoId <= 0) {
+            throw new IllegalArgumentException("ID do progresso inválido.");
+        }
+
+        if (pontuacao < 0 || pontuacao > 100) {
+            throw new IllegalArgumentException(
+                    "A pontuação deve estar entre 0 e 100."
+            );
+        }
+
+        String sql = """
+                UPDATE progressoCaso
+                SET pontuacao = ?
+                WHERE id = ?
+                """;
+
+        try (PreparedStatement statement = conexao.prepareStatement(sql)) {
+
+            statement.setInt(1, pontuacao);
+            statement.setLong(2, progressoId);
+
+            return statement.executeUpdate() > 0;
+        }
+    }
+    
 }
