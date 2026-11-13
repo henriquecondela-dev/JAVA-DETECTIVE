@@ -9,12 +9,14 @@ package utils;
  * @author antonio-nuvunga
  */
 public class Evidencia {
+
     private long id;
     private String titulo;
     private String descricao;
     private Long documento_id;
     private Importancia importancia;
-    
+    private Documento documento;
+
     // Construtor vazio
     public Evidencia() {
     }
@@ -29,20 +31,29 @@ public class Evidencia {
         this.descricao = descricao;
         this.documento_id = documento_id;
         this.importancia = importancia;
+        this.documento = null;
     }
-    
+
     public Evidencia(String titulo, String descricao, Long documento_id, Importancia importancia) {
-        if(titulo==null || titulo.isBlank()){
-          throw new IllegalArgumentException("Título de etapa obrigatório!");
+        if (titulo == null || titulo.isBlank()) {
+            throw new IllegalArgumentException("Título de etapa obrigatório!");
         }
         this.titulo = titulo;
         this.descricao = descricao;
         this.documento_id = documento_id;
         this.importancia = importancia;
+        this.documento = null;
+    }
+
+    public Documento getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(Documento documento) {
+        this.documento = documento;
     }
 
     // Getters e Setters
-
     public long getId() {
         return id;
     }
@@ -56,8 +67,8 @@ public class Evidencia {
     }
 
     public void setTitulo(String titulo) {
-        if(titulo==null || titulo.isBlank()){
-          throw new IllegalArgumentException("Título de etapa obrigatório!");
+        if (titulo == null || titulo.isBlank()) {
+            throw new IllegalArgumentException("Título de etapa obrigatório!");
         }
         this.titulo = titulo;
     }

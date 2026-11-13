@@ -5,34 +5,66 @@
 package interfaces;
 
 import java.awt.BorderLayout;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author andrea-sande
  */
 public class TelaInicial2 extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaInicial2.class.getName());
 
     /**
      * Creates new form TelaInicial2
      */
+//    public TelaInicial2() {
+//        initComponents();
+//
+//    
+//
+//    PainelFundo fundo = new PainelFundo("/imagens/fundoInicial.jpg");
+//    fundo.setLayout(new BorderLayout());
+//
+//    fundo.add(lblTitulo, BorderLayout.NORTH);
+//    fundo.add(jPanel2, BorderLayout.SOUTH);
+//
+//    jPanel1.setOpaque(false);
+//    jPanel2.setOpaque(false);
+//
+//    setContentPane(fundo);
+//
+//    }
     public TelaInicial2() {
         initComponents();
 
-    
+        jPanel1.setPreferredSize(new java.awt.Dimension(400, 450));
 
-    PainelFundo fundo = new PainelFundo("/imagens/fundoInicial.jpg");
-    fundo.setLayout(new BorderLayout());
+        jPanel1.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(1, 20, 80, 1)
+        );
 
-    fundo.add(lblTitulo, BorderLayout.NORTH);
-    fundo.add(jPanel2, BorderLayout.SOUTH);
+        jPanel1.setLayout(new java.awt.GridLayout(4, 1, 0, 12));
 
-    jPanel1.setOpaque(false);
-    jPanel2.setOpaque(false);
+        btnIniciar.setFont(new java.awt.Font("Serif", 0, 24));
+        btnTutorial.setFont(new java.awt.Font("Serif", 0, 24));
+        btnContinuar.setFont(new java.awt.Font("Serif", 0, 24));
+        btnSair.setFont(new java.awt.Font("Serif", 0, 24));
 
-    setContentPane(fundo);
+        PainelFundo fundo = new PainelFundo("/imagens/fundoInicial.jpg");
+        fundo.setLayout(new BorderLayout());
 
+        fundo.add(lblTitulo, BorderLayout.NORTH);
+        fundo.add(jPanel2, BorderLayout.SOUTH);
+
+        jPanel1.setOpaque(false);
+        jPanel2.setOpaque(false);
+
+        setContentPane(fundo);
+
+        setTitle("Java Detective  O Caso Moreau");
+        pack();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -55,19 +87,20 @@ public class TelaInicial2 extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         lblTitulo.setFont(new java.awt.Font("Serif", 1, 65)); // NOI18N
-        lblTitulo.setForeground(new java.awt.Color(238, 213, 189));
+        lblTitulo.setForeground(new java.awt.Color(245, 208, 118));
         lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTitulo.setText("DATABASE DETECTIVE");
+        lblTitulo.setText("JAVA DETECTIVE");
         lblTitulo.setBorder(javax.swing.BorderFactory.createEmptyBorder(40, 1, 1, 1));
         getContentPane().add(lblTitulo, java.awt.BorderLayout.PAGE_START);
 
         jPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jPanel1.setPreferredSize(new java.awt.Dimension(400, 350));
+        jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 150, 1));
+        jPanel1.setPreferredSize(new java.awt.Dimension(500, 600));
         jPanel1.setLayout(new java.awt.GridLayout(4, 1, 0, 25));
 
-        btnIniciar.setFont(new java.awt.Font("Serif", 0, 22)); // NOI18N
-        btnIniciar.setForeground(new java.awt.Color(30, 25, 20));
+        btnIniciar.setFont(new java.awt.Font("Serif", 0, 28)); // NOI18N
+        btnIniciar.setForeground(new java.awt.Color(45, 25, 12));
         btnIniciar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/fundoBotao3.jpg"))); // NOI18N
         btnIniciar.setText("Iniciar");
         btnIniciar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -75,8 +108,8 @@ public class TelaInicial2 extends javax.swing.JFrame {
         btnIniciar.addActionListener(this::btnIniciarActionPerformed);
         jPanel1.add(btnIniciar);
 
-        btnTutorial.setFont(new java.awt.Font("Serif", 0, 22)); // NOI18N
-        btnTutorial.setForeground(new java.awt.Color(30, 25, 20));
+        btnTutorial.setFont(new java.awt.Font("Serif", 0, 28)); // NOI18N
+        btnTutorial.setForeground(new java.awt.Color(45, 25, 12));
         btnTutorial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/fundoBotao3.jpg"))); // NOI18N
         btnTutorial.setText("Tutorial");
         btnTutorial.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -84,8 +117,8 @@ public class TelaInicial2 extends javax.swing.JFrame {
         btnTutorial.addActionListener(this::btnTutorialActionPerformed);
         jPanel1.add(btnTutorial);
 
-        btnContinuar.setFont(new java.awt.Font("Serif", 0, 22)); // NOI18N
-        btnContinuar.setForeground(new java.awt.Color(30, 25, 20));
+        btnContinuar.setFont(new java.awt.Font("Serif", 0, 28)); // NOI18N
+        btnContinuar.setForeground(new java.awt.Color(45, 25, 12));
         btnContinuar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/fundoBotao3.jpg"))); // NOI18N
         btnContinuar.setText("Continuar");
         btnContinuar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -93,8 +126,8 @@ public class TelaInicial2 extends javax.swing.JFrame {
         btnContinuar.addActionListener(this::btnContinuarActionPerformed);
         jPanel1.add(btnContinuar);
 
-        btnSair.setFont(new java.awt.Font("Serif", 0, 22)); // NOI18N
-        btnSair.setForeground(new java.awt.Color(30, 25, 20));
+        btnSair.setFont(new java.awt.Font("Serif", 0, 28)); // NOI18N
+        btnSair.setForeground(new java.awt.Color(45, 25, 12));
         btnSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/fundoBotao3.jpg"))); // NOI18N
         btnSair.setText("Sair");
         btnSair.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -111,19 +144,146 @@ public class TelaInicial2 extends javax.swing.JFrame {
 
     private void btnTutorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTutorialActionPerformed
         // TODO add your handling code here:
+        String tutorial = """
+    BEM-VINDO AO JAVA DETECTIVE!
+
+    És o investigador responsável por resolver
+    um caso criminal.
+
+    COMO JOGAR:
+
+    1. Analisa a narrativa de cada etapa.
+
+    2. Investiga as evidências disponíveis.
+
+    3. Consulta os documentos associados
+       às evidências.
+
+    4. Analisa os dados e estabelece relações.
+
+    5. Resolve os desafios de programação.
+
+    6. Cumpre os requisitos para avançar
+       para a próxima etapa.
+
+    OBJECTIVO:
+
+    Descobrir quem cometeu o crime,
+    como aconteceu e qual foi o motivo.
+
+    Boa investigação!
+    """;
+
+        javax.swing.JOptionPane.showMessageDialog(
+                this,
+                tutorial,
+                "Tutorial  Java Detective",
+                javax.swing.JOptionPane.INFORMATION_MESSAGE
+        );
     }//GEN-LAST:event_btnTutorialActionPerformed
 
     private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed
         // TODO add your handling code here:
+        try {
+
+            jogo.GestorJogador gestor = new jogo.GestorJogador();
+
+            java.util.List<utils.Jogador> jogadores = gestor.listarJogadores();
+
+            if (jogadores.isEmpty()) {
+
+                javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        "Ainda não existem jogadores registados.",
+                        "Continuar investigação",
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE
+                );
+
+                return;
+            }
+
+            String[] nomesJogadores = new String[jogadores.size()];
+
+            for (int i = 0; i < jogadores.size(); i++) {
+
+                utils.Jogador jogador = jogadores.get(i);
+
+                nomesJogadores[i]
+                        = jogador.getNome()
+                        + " (ID: " + jogador.getJogadorId() + ")";
+            }
+
+            String selecionado = (String) javax.swing.JOptionPane.showInputDialog(
+                    this,
+                    "Selecciona o jogador cuja investigação desejas continuar:",
+                    "Continuar investigação",
+                    javax.swing.JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    nomesJogadores,
+                    nomesJogadores[0]
+            );
+
+            if (selecionado == null) {
+                return;
+            }
+
+            int indice = java.util.Arrays.asList(nomesJogadores).indexOf(selecionado);
+
+            utils.Jogador jogadorSelecionado = jogadores.get(indice);
+
+            long jogadorId = jogadorSelecionado.getJogadorId();
+
+            long casoId = 1L;
+            utils.ProgressoCaso progresso = gestor.continuarInvestigacao(jogadorId, casoId);
+            if (progresso == null) {
+                javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        "Este jogador ainda não possui uma investigação iniciada.",
+                        "Investigação não encontrada",
+                        javax.swing.JOptionPane.WARNING_MESSAGE
+                );
+
+                return;
+            }
+
+            utils.SessaoInvestigacao sessao = gestor.carregarSessaoCompleta(jogadorId, casoId);
+
+            if (sessao == null || sessao.getEtapaAtual() == null) {
+                JOptionPane.showMessageDialog(this,
+                        "Não foi possível carregar a investigação.",
+                        "Erro",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            utils.Etapa etapaCompleta = sessao.getEtapaAtual();
+
+//            JOptionPane.showMessageDialog(this,
+//                    "Investigação carregada!\n"
+//                    + "Jogador: " + sessao.getJogador().getNome()
+//                    + "\nEtapa: " + etapaCompleta.getTitulo());
+            TelaPrincipal tela = new TelaPrincipal(sessao);
+            tela.setVisible(true);
+
+            this.dispose();
+        } catch (java.sql.SQLException e) {
+
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Erro ao consultar os jogadores:\n" + e.getMessage(),
+                    "Erro",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+            );
+        }
     }//GEN-LAST:event_btnContinuarActionPerformed
 
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
-         new TelaJogador().setVisible(true);
-        this.dispose(); 
+        new TelaJogador().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnIniciarActionPerformed
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
-         System.exit(0);
+        System.exit(0);
     }//GEN-LAST:event_btnSairActionPerformed
 
     /**

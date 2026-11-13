@@ -50,7 +50,39 @@ public class Etapa {
             }
         }
     }
-    
+
+    public static utils.Etapa procurarEtapaCompletaPorId(Connection conexao,long etapaId) throws SQLException {
+
+        utils.Etapa etapa = procurarEtapaPorId(conexao, etapaId);
+
+        if (etapa == null) {
+            return null;
+        }
+
+        List<utils.Evidencia> evidencias = recursos.Evidencia.listarEvidenciasPorEtapa(conexao, etapaId);
+
+        List<utils.DesafioDeProgramacao> desafios = recursos.DesafioDeProgramacao.buscarDesafiosPorEtapa(etapaId);
+        List<utils.Objetivo> objetivos = recursos.Objetivos.listarObjetivosPorEtapa(conexao, etapaId);
+        List<utils.Documento> documentos = recursos.Documento.listarDocumentosPorEtapa(conexao, etapaId);
+
+        utils.Mensagem mensagem = Mensagem.procurarMensagemPorEtapa(conexao, etapaId);
+        utils.Etapa etapaCompleta = new utils.Etapa(
+                etapa.getId(),
+                etapa.getCasoId(),
+                etapa.getNumero(),
+                etapa.getMinimoEvidencias(),
+                etapa.getTitulo(),
+                etapa.getDescricao(),
+                evidencias,
+                desafios,
+                objetivos
+        );
+        etapaCompleta.setDocumentos(documentos);
+        etapaCompleta.setMensagem(mensagem);
+
+        return etapaCompleta;
+    }
+
     public List<utils.Etapa> listarEtapas() throws SQLException {
 
         String sql = """
@@ -59,21 +91,18 @@ public class Etapa {
                 ORDER BY id
                 """;
 
-        try (Connection conexao = ConexaoMySQL.getConnection();
-            PreparedStatement statement = conexao.prepareStatement(sql);
-            ResultSet resposta = statement.executeQuery()) {
+        try (Connection conexao = ConexaoMySQL.getConnection(); PreparedStatement statement = conexao.prepareStatement(sql); ResultSet resposta = statement.executeQuery()) {
             List<utils.Etapa> etapas = new ArrayList<>();
-            while (resposta.next()) {                
+            while (resposta.next()) {
                 utils.Etapa etapa = new utils.Etapa(resposta.getLong("id"), resposta.getLong("caso_id"), resposta.getInt("numero"), resposta.getInt("minimo_evidencias"), resposta.getString("titulo"), resposta.getString("descricao"));
-                 etapas.add(etapa);
+                etapas.add(etapa);
                 //imprimirEtapa(resposta);
             }
             return etapas;
         }
     }
-    
-    
-    public static utils.Etapa buscarPorId(long id)throws SQLException {
+
+    public static utils.Etapa buscarPorId(long id) throws SQLException {
         String sql = """
                 SELECT id, caso_id, numero , titulo, descricao, desbloqueada, concluida, minimo_evidencias
                 FROM etapa
@@ -125,7 +154,9 @@ public class Etapa {
         try (Connection conexao = ConexaoMySQL.getConnection(); PreparedStatement statement = conexao.prepareStatement(sql)) {
             statement.setLong(1, id);
             int linhasAfetadas = statement.executeUpdate();
-            if(linhasAfetadas==1) eliminado= true;
+            if (linhasAfetadas == 1) {
+                eliminado = true;
+            }
         } catch (SQLException e) {
             throw new SQLException("Erro: " + e.getMessage());
         }
@@ -172,7 +203,7 @@ public class Etapa {
         throw new SQLException("O caso não possui etapas.");
     }
 
-    public static utils.Etapa procurarEtapaPorId( Connection conexao,long etapaId) throws SQLException {
+    public static utils.Etapa procurarEtapaPorId(Connection conexao, long etapaId) throws SQLException {
         String sql = """
             SELECT
                 id,
@@ -187,7 +218,7 @@ public class Etapa {
             WHERE id = ?
             """;
 
-        try (PreparedStatement stmt= conexao.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
             stmt.setLong(1, etapaId);
 

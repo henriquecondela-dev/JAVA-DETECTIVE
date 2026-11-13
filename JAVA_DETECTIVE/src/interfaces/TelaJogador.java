@@ -1,212 +1,311 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package interfaces;
 
-import java.awt.BorderLayout;
+import java.awt.*;
+import javax.swing.*;
 
-/**
- *
- * @author andrea-sande
- */
-public class TelaJogador extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaJogador.class.getName());
+public class TelaJogador extends JFrame {
 
-    /**
-     * Creates new form TelaInicial1
-     */
+    private JTextField txtNome;
+    private JTextField txtIdade;
+
+    private JRadioButton rbMasculino;
+    private JRadioButton rbFeminino;
+
+    private final Color castanho = new Color(75, 48, 29);
+    private final Color creme = new Color(239, 222, 191);
+
     public TelaJogador() {
-        initComponents();
-       /* setLocationRelativeTo(null);
-  /      PainelFundo fundo = new PainelFundo("/imagens/fundoInicial.jpg");
-    fundo.setLayout(new BorderLayout());
 
-    fundo.add(lblTitulo, BorderLayout.NORTH);
-    fundo.add(jPanel2, BorderLayout.SOUTH);
+        setTitle("Identificação do Jogador");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setUndecorated(true);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-    jPanel1.setOpaque(false);
-    jPanel2.setOpaque(false);
+        PainelFundo1 fundo = new PainelFundo1(
+                "/imagens/fundoPapel.jpg"
+        );
 
-    setContentPane(fundo);*/
+        fundo.setLayout(new GridBagLayout());
+        setContentPane(fundo);
+
+        JPanel painel = new JPanel();
+        painel.setOpaque(false);
+        painel.setLayout(
+                new BoxLayout(painel, BoxLayout.Y_AXIS)
+        );
+
+        JLabel titulo = new JLabel(
+                "Bem-vindo, Investigador!"
+        );
+
+        titulo.setFont(
+                new Font("Serif", Font.BOLD, 44)
+        );
+
+        titulo.setForeground(castanho);
+        titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel descricao = new JLabel(
+                "<html><div style='text-align:center;width:850px;'>"
+                + "Neste jogo vais resolver casos analisando pistas, "
+                + "consultando dados e usando lógica."
+                + "</div></html>"
+        );
+
+        descricao.setFont(
+                new Font("Serif", Font.PLAIN, 23)
+        );
+
+        descricao.setForeground(castanho);
+        descricao.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel subtitulo = new JLabel(
+                "Antes de começar, conta-me sobre ti:"
+        );
+
+        subtitulo.setFont(
+                new Font("Serif", Font.PLAIN, 26)
+        );
+
+        subtitulo.setForeground(castanho);
+        subtitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        painel.add(titulo);
+        painel.add(Box.createVerticalStrut(20));
+        painel.add(descricao);
+        painel.add(Box.createVerticalStrut(35));
+        painel.add(subtitulo);
+        painel.add(Box.createVerticalStrut(45));
+
+        txtNome = criarCampo();
+
+        painel.add(criarLinha("O teu nome:", txtNome));
+        painel.add(Box.createVerticalStrut(25));
+
+        txtIdade = criarCampo();
+
+        painel.add(criarLinha("Idade:", txtIdade));
+        painel.add(Box.createVerticalStrut(25));
+
+        rbMasculino = criarRadio("Masculino");
+        rbFeminino = criarRadio("Feminino");
+
+        ButtonGroup grupo = new ButtonGroup();
+        grupo.add(rbMasculino);
+        grupo.add(rbFeminino);
+
+        JPanel generos = new JPanel(
+                new FlowLayout(FlowLayout.LEFT, 25, 0)
+        );
+
+        generos.setOpaque(false);
+        generos.add(rbMasculino);
+        generos.add(rbFeminino);
+
+        painel.add(criarLinha("Género:", generos));
+        painel.add(Box.createVerticalStrut(45));
+
+        JButton btnContinuar = new JButton("CONTINUAR");
+
+        btnContinuar.setFont(
+                new Font("Serif", Font.BOLD, 25)
+        );
+
+        btnContinuar.setBackground(castanho);
+        btnContinuar.setForeground(Color.WHITE);
+        btnContinuar.setFocusPainted(false);
+
+        btnContinuar.setCursor(
+                new Cursor(Cursor.HAND_CURSOR)
+        );
+
+        btnContinuar.setAlignmentX(
+                Component.CENTER_ALIGNMENT
+        );
+
+        btnContinuar.setPreferredSize(
+                new Dimension(280, 65)
+        );
+
+        btnContinuar.setMaximumSize(
+                new Dimension(280, 65)
+        );
+
+        painel.add(btnContinuar);
+        btnContinuar.addActionListener(e -> iniciarInvestigacao());
+
+        fundo.add(painel);
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        jPanel1 = new javax.swing.JPanel();
-        pnlConteudo = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        pnlNome = new javax.swing.JPanel();
-        lblNome = new javax.swing.JLabel();
-        txtNome = new javax.swing.JTextField();
-        pnlIdade = new javax.swing.JPanel();
-        lblIdade = new javax.swing.JLabel();
-        txtIdade = new javax.swing.JTextField();
-        btnContinuar = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        pnlConteudo.setBorder(javax.swing.BorderFactory.createEmptyBorder(40, 40, 40, 40));
-        pnlConteudo.setLayout(new java.awt.GridLayout(7, 1, 0, 10));
-
-        jLabel1.setFont(new java.awt.Font("Serif", 0, 25)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Bem-vindo, investigador!");
-        pnlConteudo.add(jLabel1);
-
-        jLabel3.setFont(new java.awt.Font("Serif", 0, 16)); // NOI18N
-        jLabel3.setText("<html>Neste jogo vais resolver casos analisando pistas, consultando dados e usando lógica. </html> ");
-        pnlConteudo.add(jLabel3);
-
-        jLabel4.setFont(new java.awt.Font("Serif", 0, 16)); // NOI18N
-        jLabel4.setText("Antes de começar, conta-nos sobre ti:");
-        pnlConteudo.add(jLabel4);
-
-        lblNome.setFont(new java.awt.Font("Serif", 0, 16)); // NOI18N
-        lblNome.setText("Nome:");
-
-        txtNome.setFont(new java.awt.Font("Serif", 0, 16)); // NOI18N
-
-        javax.swing.GroupLayout pnlNomeLayout = new javax.swing.GroupLayout(pnlNome);
-        pnlNome.setLayout(pnlNomeLayout);
-        pnlNomeLayout.setHorizontalGroup(
-            pnlNomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlNomeLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblNome)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
-                .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(119, 119, 119))
-        );
-        pnlNomeLayout.setVerticalGroup(
-            pnlNomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlNomeLayout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addGroup(pnlNomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblNome))
-                .addContainerGap(51, Short.MAX_VALUE))
-        );
-
-        pnlConteudo.add(pnlNome);
-
-        lblIdade.setFont(new java.awt.Font("Serif", 0, 16)); // NOI18N
-        lblIdade.setText("Idade:");
-
-        txtIdade.setFont(new java.awt.Font("Serif", 0, 16)); // NOI18N
-        txtIdade.addActionListener(this::txtIdadeActionPerformed);
-
-        javax.swing.GroupLayout pnlIdadeLayout = new javax.swing.GroupLayout(pnlIdade);
-        pnlIdade.setLayout(pnlIdadeLayout);
-        pnlIdadeLayout.setHorizontalGroup(
-            pnlIdadeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlIdadeLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblIdade)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
-                .addComponent(txtIdade, javax.swing.GroupLayout.PREFERRED_SIZE, 462, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(110, 110, 110))
-        );
-        pnlIdadeLayout.setVerticalGroup(
-            pnlIdadeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlIdadeLayout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addGroup(pnlIdadeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblIdade)
-                    .addComponent(txtIdade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(57, Short.MAX_VALUE))
-        );
-
-        pnlConteudo.add(pnlIdade);
-
-        btnContinuar.setFont(new java.awt.Font("Serif", 0, 18)); // NOI18N
-        btnContinuar.setText("Continuar");
-        btnContinuar.addActionListener(this::btnContinuarActionPerformed);
-        pnlConteudo.add(btnContinuar);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(150, 150, 150)
-                .addComponent(pnlConteudo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(740, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(97, 97, 97)
-                .addComponent(pnlConteudo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(113, Short.MAX_VALUE))
-        );
-
-        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
-
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed
-      //  new TelaPrincipal().setVisible(true);
-      if(txtNome.getText().trim().isEmpty()||txtIdade.getText().trim().isEmpty()){
-        javax.swing.JOptionPane.showMessageDialog(this,"Preenche o nome e a idade.");
-        return;
-      }
-       new TelaPrincipal(txtNome.getText(),txtIdade.getText()).setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_btnContinuarActionPerformed
-
-    private void txtIdadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdadeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtIdadeActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
+    private void iniciarInvestigacao() {
+        String nome = txtNome.getText().trim();
+        String textoIdade = txtIdade.getText().trim();
+        if (nome.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Por favor, introduz o teu nome.",
+                    "Dados incompletos",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            txtNome.requestFocus();
+            return;
         }
-        //</editor-fold>
+        int idade;
+        try {
+            idade = Integer.parseInt(textoIdade);
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaJogador().setVisible(true));
+            if (idade <= 0 || idade > 120) {
+                throw new NumberFormatException();
+            }
+
+        } catch (NumberFormatException erro) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Introduz uma idade válida.",
+                    "Idade inválida",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            txtIdade.requestFocus();
+            return;
+        }
+        utils.Genero genero;
+        if (rbMasculino.isSelected()) {
+            genero = utils.Genero.M;
+
+        } else if (rbFeminino.isSelected()) {
+            genero = utils.Genero.F;
+
+        } else {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Selecciona o teu género.",
+                    "Dados incompletos",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+        try {
+            jogo.GestorJogador gestor = new jogo.GestorJogador();
+            long casoId = 1L;
+            utils.SessaoInvestigacao sessaoInicial= gestor.criarNovaInvestigacao(
+                            nome,
+                            idade,
+                            genero,
+                            casoId
+                    );
+
+            if (sessaoInicial == null) {
+                throw new IllegalStateException(
+                        "Não foi possível iniciar a investigação."
+                );
+            }
+
+            long jogadorId = sessaoInicial.getJogador().getJogadorId();
+            utils.SessaoInvestigacao sessao= gestor.carregarSessaoCompleta(jogadorId, casoId);
+
+            if (sessao == null || sessao.getEtapaAtual() == null) {
+                throw new IllegalStateException(
+                        "Não foi possível carregar a etapa inicial."
+                );
+            }
+            TelaPrincipal tela = new TelaPrincipal(sessao);
+            tela.setVisible(true);
+            this.dispose();
+        } catch (java.sql.SQLException | IllegalStateException erro) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Ocorreu um erro ao iniciar a investigação:\n"
+                    + erro.getMessage(),
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            erro.printStackTrace();
+        }
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnContinuar;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel lblIdade;
-    private javax.swing.JLabel lblNome;
-    private javax.swing.JPanel pnlConteudo;
-    private javax.swing.JPanel pnlIdade;
-    private javax.swing.JPanel pnlNome;
-    private javax.swing.JTextField txtIdade;
-    private javax.swing.JTextField txtNome;
-    // End of variables declaration//GEN-END:variables
+    private JTextField criarCampo() {
+
+        JTextField campo = new JTextField();
+
+        campo.setFont(
+                new Font("Serif", Font.PLAIN, 23)
+        );
+
+        campo.setBackground(creme);
+        campo.setForeground(castanho);
+
+        campo.setBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(130, 94, 58), 2
+                        ),
+                        BorderFactory.createEmptyBorder(
+                                5, 12, 5, 12
+                        )
+                )
+        );
+
+        campo.setPreferredSize(
+                new Dimension(420, 52)
+        );
+
+        return campo;
+    }
+
+    private JRadioButton criarRadio(String texto) {
+
+        JRadioButton radio = new JRadioButton(texto);
+
+        radio.setFont(
+                new Font("Serif", Font.PLAIN, 22)
+        );
+
+        radio.setForeground(castanho);
+        radio.setOpaque(false);
+
+        return radio;
+    }
+
+    private JPanel criarLinha(
+            String texto,
+            JComponent componente
+    ) {
+
+        JPanel linha = new JPanel(
+                new BorderLayout(20, 0)
+        );
+
+        linha.setOpaque(false);
+
+        linha.setMaximumSize(
+                new Dimension(650, 60)
+        );
+
+        JLabel label = new JLabel(texto);
+
+        label.setFont(
+                new Font("Serif", Font.BOLD, 23)
+        );
+
+        label.setForeground(castanho);
+
+        label.setPreferredSize(
+                new Dimension(160, 55)
+        );
+
+        linha.add(label, BorderLayout.WEST);
+        linha.add(componente, BorderLayout.CENTER);
+
+        return linha;
+    }
+
+    public static void main(String[] args) {
+
+        SwingUtilities.invokeLater(() -> {
+
+            TelaJogador tela = new TelaJogador();
+            tela.setVisible(true);
+
+        });
+    }
 }
