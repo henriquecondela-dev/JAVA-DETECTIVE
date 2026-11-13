@@ -1,14 +1,12 @@
 package jogo;
 
 import db.ConexaoMySQL;
-import recursos.Pessoa;
-import recursos.Jogador;
-import recursos.ProgressoCaso;
-import recursos.Etapa;
 import java.sql.*;
-import utils.Genero;
 import java.util.List;
-import java.util.ArrayList;
+import recursos.Jogador;
+import recursos.Pessoa;
+import recursos.ProgressoCaso;
+import utils.Genero;
 
 public class GestorJogador {
 
@@ -477,5 +475,97 @@ public class GestorJogador {
             );
         }
     }
+
+    public boolean podeAcusar(long progressoId) throws SQLException {
+
+        if (progressoId <= 0) {
+            throw new IllegalArgumentException("Identificador da investigacao invalido.");
+        }
+
+        try (Connection conexao = ConexaoMySQL.getConnection()) {
+
+            utils.ProgressoCaso progresso =
+                    ProgressoCaso.procurarProgressoPorId(
+                            conexao,
+                            progressoId
+                    );
+
+            if (progresso == null) {
+                throw new IllegalArgumentException("Investigacao nao encontrada.");
+            }
+
+            if (progresso.getEtapaAtualId() != 4 && progresso.getEtapaAtualId()!=5) {
+                return false;
+            }
+
+            return !recursos.Acusacao.casoConcluidoPorAcusacao(conexao,progresso.getJogadorId(),progresso.getCasoId());
+        }
+    }
+
+
+    public boolean realizarAcusacao(long progressoId,long suspeitoId) throws SQLException {
+
+        if (progressoId <= 0 || suspeitoId <= 0) {
+            throw new IllegalArgumentException("Identificadores inválidos.");
+        }
+
+        try (Connection conexao = ConexaoMySQL.getConnection()) {
+
+            conexao.setAutoCommit(false);
+
+            try {
+
+                utils.ProgressoCaso progresso =ProgressoCaso.procurarProgressoPorId(conexao,progressoId);
+
+                if (progresso == null) {
+                    throw new IllegalArgumentException("Investigação não encontrada.");
+                }
+
+                if (progresso.getEtapaAtualId() != 4) {
+                    throw new IllegalStateException("A acusação só está disponível a partir da quarta etapa.");
+                }
+
+                boolean casoConcluido =
+                        recursos.Acusacao.casoConcluidoPorAcusacao(conexao,progresso.getJogadorId(),progresso.getCasoId());
+
+                if (casoConcluido) {
+                    throw new IllegalStateException("Este jogador já concluiu o caso.");
+                }
+
+                boolean resultado =
+                        recursos.Acusacao.verificarAcusacao(conexao,suspeitoId,progresso.getCasoId());
+
+                recursos.Acusacao.adicionarAcusacao(conexao,progresso.getJogadorId(),progresso.getCasoId(),suspeitoId,resultado);
+
+                if (!resultado) {
+
+                    int pontuacaoAtual = progresso.getPontuacao();
+
+                    int novaPontuacao = Math.max(0,pontuacaoAtual - 10);
+
+                    boolean atualizada =
+                            ProgressoCaso.atualizarPontuacao(conexao,progressoId,novaPontuacao);
+
+                    if (!atualizada) {
+                        throw new SQLException("Não foi possível actualizar a pontuação.");
+                    }
+                }
+
+                conexao.commit();
+
+                return resultado;
+            } catch (SQLException | RuntimeException erro) {
+
+                try {
+                    conexao.rollback();
+                } catch (SQLException falhaRollback) {
+                    erro.addSuppressed(falhaRollback);
+                }
+
+                throw erro;
+            }
+        }
+    }
+
 
 }
