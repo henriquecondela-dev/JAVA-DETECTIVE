@@ -268,4 +268,106 @@ public class ProgressoEvidencia {
             }
         }
     }
+    
+    public static double calcularPontuacaoEvidencias(
+        Connection conexao, long etapaId, long progressoCasoId) throws SQLException {
+
+        String sql = """
+                SELECT
+                    SUM(CASE
+                        WHEN e.importancia = 1 THEN 1
+                        WHEN e.importancia = 2 THEN 2
+                        WHEN e.importancia = 3 THEN 3
+                        ELSE 0
+                    END) AS peso_total,
+
+                    SUM(CASE
+                        WHEN pe.coletada = TRUE THEN
+                            CASE
+                                WHEN e.importancia = 1 THEN 1
+                                WHEN e.importancia = 2 THEN 2
+                                WHEN e.importancia = 3 THEN 3
+                                ELSE 0
+                            END
+                        ELSE 0
+                    END) AS peso_coletado
+
+                FROM etapa_evidencia ee
+                INNER JOIN evidencia e
+                    ON e.id = ee.evidencia_id
+                LEFT JOIN progresso_evidencia pe
+                    ON pe.evidencia_id = e.id
+                    AND pe.progresso_caso_id = ?
+
+                WHERE ee.etapa_id = ?
+                """;
+
+        try (PreparedStatement statement = conexao.prepareStatement(sql)) {
+
+            statement.setLong(1, progressoCasoId);
+            statement.setLong(2, etapaId);
+
+            try (ResultSet resultado = statement.executeQuery()) {
+
+                if (resultado.next()) {
+
+                    double pesoTotal = resultado.getDouble("peso_total");
+                    double pesoColetado = resultado.getDouble("peso_coletado");
+
+                    if (pesoTotal == 0) {
+                        return 0;
+                    }
+
+                    return 15.0 * pesoColetado / pesoTotal;
+                }
+            }
+        }
+
+        return 0;
+    }
+    
+    public static List<utils.Evidencia> buscarArquivoEvidencias(Connection conexao, long progressoCasoId) throws SQLException {
+
+        String sql = """
+                SELECT
+                    e.id,
+                    e.titulo,
+                    e.descricao,
+                    e.documento_id,
+                    e.importancia
+                FROM progresso_evidencia pe
+                INNER JOIN evidencia e
+                    ON e.id = pe.evidencia_id
+                WHERE pe.progresso_caso_id = ?
+                  AND pe.coletada = TRUE
+                ORDER BY pe.data_coleta ASC
+                """;
+
+        List<utils.Evidencia> evidencias = new ArrayList<>();
+
+        try (PreparedStatement statement = conexao.prepareStatement(sql)) {
+
+            statement.setLong(1, progressoCasoId);
+
+            try (ResultSet resultado = statement.executeQuery()) {
+
+                while (resultado.next()) {
+
+                    int importancia = resultado.getInt("importancia");
+
+                    utils.Evidencia evidencia = new utils.Evidencia(
+                            resultado.getLong("id"),
+                            resultado.getString("titulo"),
+                            resultado.getString("descricao"),
+                            resultado.getObject("documento_id", Long.class),
+                            obterImportancia(importancia)
+                    );
+
+                    evidencias.add(evidencia);
+                }
+            }
+        }
+
+        return evidencias;
+    }
 }

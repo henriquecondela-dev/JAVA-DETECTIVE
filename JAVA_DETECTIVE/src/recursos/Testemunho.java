@@ -112,7 +112,7 @@ public class Testemunho {
     public static boolean atualizarTestemunho(long id, long testemunha_id, String descricao, String data_hora) throws SQLException {
         String sql = """
                 UPDATE testemunho
-                SET id = ?, testemunha_id = ?, descricao = ?, data_hota = ?
+                SET testemunha_id = ?, descricao = ?, data_hota = ?
                 WHERE id = ?
                 """;
         try (
@@ -123,6 +123,7 @@ public class Testemunho {
             statement.setLong(2, testemunha_id);
             statement.setString(3, descricao);
             statement.setString(4, data_hora);
+            statement.setLong(5, id);
 
             return statement.executeUpdate() > 0;
         }

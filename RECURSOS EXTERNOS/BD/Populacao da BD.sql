@@ -224,3 +224,15 @@ insert into etapa_mensagem (etapa_id, mensagem_id) values
 (5, 5);
 
 
+
+INSERT INTO desafioDeProgramacao (titulo, caso_id, descricao, etapa_id, classe_esperada, metodo_esperado)VALUES
+
+('Reconstrução da Noite',1,'O sistema de segurança registou diferentes horarios durante a noite do crime. A investigacao determinou que o assassinato ocorreu entre as 22h15 e as 22h30.Crie uma classe ReconstrucaoNoite com um metodo que receba uma hora e os minutos correspondentes. O metodo deve verificar se o horario recebido pertence ao intervalo entre 22h15 e 22h30, incluindo os limites.',1,'ReconstrucaoNoite','boolean estaNaJanelaDoCrime(int hora, int minuto)'),
+
+('Necessidade de organizacao dos depoimentos dos suspeitos',1,'. Crie uma classe AnaliseDepoimentos com os atributos nomeSuspeito, localDeclarado e horarioDeclarado. Implemente um metodo que receba o horario declarado por um suspeito e o horario registado pelas evidencias. O metodo deve verificar se os dois horarios sao diferentes, indicando uma possivel contradicao. A comparacao deve ignorar diferencas entre maiusculas e minusculas e espacos desnecessarios.',2,'AnaliseDepoimentos','boolean verificarContradicao(String horarioDeclarado, String horarioRegistado)'),
+
+('As Transferências Suspeitas',1,'Foram encontradas varias transferencias financeiras suspeitas no computador de Belcio. Crie uma classe InvestigacaoFinanceira e implemente um metodo que receba um array de valores monetarios e calcule quantas transferencias possuem valor superior a 100.000.', 3,'InvestigacaoFinanceira','int contarTransferenciasSuspeitas(double[] transferencias)'),
+
+('O Acesso ao Escritorio',1,'O sistema de seguranca possui uma lista de horarios de acesso ao escritorio. Crie uma classe AnaliseAcessos que receba uma lista de horarios e permita verificar se determinado horario esta registado. Utilize ArrayList e implemente a pesquisa ignorando diferencas de formatacao entre horas com e sem zero inicial.',4, 'AnaliseAcessos','boolean existeRegisto(ArrayList<String> horarios, String horarioProcurado)'),
+
+('A Acusação Definitiva',1,'Crie uma classe AcusacaoFinal com um atributo privado para guardar o nome do suspeito acusado. Implemente um construtor para inicializar esse atributo e um metodo que verifique se o primeiro nome do suspeito orresponde ao nome do verdadeiro culpado, ignorando diferencas entre maiusculas e minusculas. ',5,'AcusacaoFinal','boolean verificarCulpado()');

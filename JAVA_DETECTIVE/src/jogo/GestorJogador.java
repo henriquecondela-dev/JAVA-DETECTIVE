@@ -286,6 +286,105 @@ public class GestorJogador {
             throw erro;
         }
     }
+    
+    public TipoAvanco avancarEtapa(long progressoId) throws SQLException {
+
+        try (Connection conexao = ConexaoMySQL.getConnection()) {
+
+            conexao.setAutoCommit(false);
+
+            try {
+                utils.ProgressoCaso progresso = recursos.ProgressoCaso.procurarProgressoPorId(conexao, progressoId);
+
+                if (progresso == null) {
+                    throw new IllegalArgumentException("Progresso não encontrado!");
+                }
+
+                if (!podeAvancarEtapa(conexao, progressoId)) {
+                    conexao.rollback();
+                    return TipoAvanco.REQUISITOS_NAO_CUMPRIDOS;
+                }
+
+                long etapaAtualId = progresso.getEtapaAtualId();
+
+                double pontosEvidencias = recursos.ProgressoEvidencia.calcularPontuacaoEvidencias(conexao, etapaAtualId, progressoId);
+
+                double pontosDesafio = recursos.ProgressoDesafio.calcularPontuacaoDesafio(conexao, etapaAtualId, progressoId);
+
+                int pontosEtapa = (int) Math.round(pontosEvidencias + pontosDesafio);
+
+                int pontuacaoAtual = progresso.getPontuacao();
+                int novaPontuacao = Math.min(100, pontuacaoAtual + pontosEtapa);
+
+                utils.Etapa etapaAtual = recursos.Etapa.procurarEtapaPorId(conexao, etapaAtualId);
+
+                if (etapaAtual == null) {
+                    throw new IllegalArgumentException("Etapa actual não encontrada!");
+                }
+
+                utils.Etapa seguinte =
+                        recursos.Etapa.identificarEtapaSeguinte(conexao,progresso.getCasoId(),etapaAtual.getNumero());
+
+                // Guardar a pontuação da etapa actual.
+                boolean pontuacaoAtualizada =recursos.ProgressoCaso.atualizarPontuacao(conexao, progressoId, novaPontuacao);
+
+                if (!pontuacaoAtualizada) {
+                    throw new SQLException("Não foi possível actualizar a pontuação.");
+                }
+
+                // Se não existir etapa seguinte, o caso terminou.
+                if (seguinte == null) {
+                    conexao.commit();
+                    return TipoAvanco.CONCLUIDO;
+                }
+
+                // Actualizar a etapa actual do jogador.
+                recursos.ProgressoCaso.atualizarEtapaAtual(conexao, progressoId, seguinte.getId());
+
+                // Inicializar progresso das evidências da próxima etapa.
+                List<utils.Evidencia> evidencias = recursos.ProgressoEvidencia.buscarEvidenciasPorEtapa(conexao, seguinte.getId());
+
+                for (utils.Evidencia evidencia : evidencias) {
+                    boolean criado = recursos.ProgressoEvidencia.criarProgressoEvidencia(conexao,progressoId,evidencia.getId(),false);
+
+                    if (!criado) {
+                        throw new SQLException(
+                                "Erro ao inicializar progresso de evidência."
+                        );
+                    }
+                }
+
+                // Inicializar progresso dos desafios da próxima etapa.
+                List<utils.DesafioDeProgramacao> desafios = recursos.ProgressoDesafio.buscarDesafiosPorEtapaId(conexao, seguinte.getId());
+
+                for (utils.DesafioDeProgramacao desafio : desafios) {
+                    boolean criado =
+                            recursos.ProgressoDesafio.criarProgressoDesafio(
+                                    conexao,
+                                    progressoId,
+                                    desafio.getId(),
+                                    false
+                            );
+
+                    if (!criado) {
+                        throw new SQLException(
+                                "Erro ao inicializar progresso do desafio."
+                        );
+                    }
+                }
+
+                conexao.commit();
+                return TipoAvanco.AVANCO;
+
+            } catch (SQLException | RuntimeException erro) {
+
+                try {
+                    conexao.rollback();
+                } catch (SQLException falhaRollback) {
+                    erro.addSuppressed(falhaRollback);
+                }
+
+                throw erro;
 
     public boolean recolherEvidencia(long progressoCasoId, long evidenciaId)
             throws SQLException {

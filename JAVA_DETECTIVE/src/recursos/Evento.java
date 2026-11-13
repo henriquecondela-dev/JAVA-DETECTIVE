@@ -72,8 +72,8 @@ public class Evento {
     public static boolean buscarPorId(long id)
             throws SQLException {
         String sql = """
-                SELECT id, titulo, descricao, data_hora,local_id
-                FROM evidencia
+                SELECT id, descricao, data_hora,local_id
+                FROM evento
                 WHERE id = ?
                 """;
       
@@ -100,7 +100,7 @@ public class Evento {
      public static boolean atualizarEvento(long id,String descricao,String data_hora,Long local_id) throws SQLException {
 
         String sql = """
-                UPDATE evidencia
+                UPDATE evento
                 SET descricao=?, data_hora=?, local_id=?
                 WHERE id = ?
                 """;
