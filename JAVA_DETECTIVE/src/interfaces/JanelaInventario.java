@@ -1,18 +1,16 @@
-
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import java.awt.*;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 class Evidencia {
 
-    private final int id;
-    private final String nome;
-    private final String descricao;
-    private final String caminhoImagem;
+    private int id;
+    private String nome;
+    private String descricao;
+    private String caminhoImagem;
 
     public Evidencia(int id, String nome, String descricao, String caminhoImagem) {
         this.id = id;
@@ -39,68 +37,59 @@ class Evidencia {
 }
 
 interface OuvinteEvidencias {
-
     void evidenciaSelecionada(Evidencia evidencia);
 }
 
 class PainelInventario extends JPanel {
 
-    private static final int TOTAL_SLOTS = 8;
+    private int totalSlots = 8;
 
-    private static final Color FUNDO = new Color(30, 25, 20);
-    private static final Color SLOT_CHEIO = new Color(70, 52, 36);
-    private static final Color SLOT_VAZIO = new Color(20, 15, 10);
-    private static final Color BORDA = new Color(60, 50, 40);
-    private static final Color DESTAQUE = new Color(230, 190, 120);
+    private Color fundo = new Color(35, 23, 17);
+    private Color painel = new Color(48, 32, 24);
+    private Color borda = new Color(105, 76, 55);
+    private Color texto = new Color(235, 218, 195);
+    private Color selecionado = new Color(130, 91, 60);
 
-    private final List<Evidencia> evidencias = new ArrayList<>();
-
-    private Evidencia selecionada;
-    private OuvinteEvidencias ouvinte;
+    private List<Evidencia> evidencias;
+    private Evidencia evidenciaSelecionada;
 
     private JPanel grade;
-    private JLabel lblNomeItem;
-    private JTextArea txtDetalhes;
+    private JLabel lblNome;
+    private JTextArea txtDescricao;
+
+    private OuvinteEvidencias ouvinte;
 
     public PainelInventario() {
 
-        setLayout(new BorderLayout(15, 15));
-        setBackground(FUNDO);
-        setBorder(new EmptyBorder(15, 15, 15, 15));
+        evidencias = new ArrayList<>();
 
-        add(criarTopo(), BorderLayout.NORTH);
-        add(criarGrade(), BorderLayout.CENTER);
-        add(criarDescricao(), BorderLayout.EAST);
+        setLayout(new BorderLayout(15, 15));
+        setBackground(fundo);
+        setBorder(new EmptyBorder(20, 20, 20, 20));
+
+        adicionarTopo();
+        adicionarGrade();
+        adicionarDescricao();
 
         atualizarGrade();
-        mostrarDetalhes(null);
     }
 
-    private JPanel criarTopo() {
+    private void adicionarTopo() {
 
         JPanel topo = new JPanel(new BorderLayout());
+        topo.setBackground(fundo);
 
-        topo.setBackground(new Color(45, 32, 23));
-        topo.setBorder(new EmptyBorder(12, 15, 12, 15));
-        topo.setPreferredSize(new Dimension(0, 55));
+        JLabel titulo = new JLabel("INVENTARIO DE EVIDENCIAS");
+        titulo.setForeground(texto);
+        titulo.setFont(new Font("Georgia", Font.BOLD, 24));
 
-        JLabel titulo = new JLabel("INVENTÁRIO / EVIDÊNCIAS");
+        JButton sair = new JButton("X");
+        sair.setForeground(texto);
+        sair.setBackground(painel);
+        sair.setFocusPainted(false);
+        sair.setBorder(new LineBorder(borda));
 
-        titulo.setFont(new Font("Serif", Font.BOLD, 20));
-        titulo.setForeground(new Color(230, 190, 120));
-
-        JButton btnSair = new JButton("✕");
-
-        btnSair.setFont(new Font("Arial", Font.BOLD, 18));
-        btnSair.setForeground(Color.WHITE);
-        btnSair.setBackground(new Color(45, 32, 23));
-        btnSair.setFocusPainted(false);
-        btnSair.setBorderPainted(false);
-        btnSair.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnSair.setPreferredSize(new Dimension(40, 35));
-
-        btnSair.addActionListener(e -> {
-
+        sair.addActionListener(e -> {
             Window janela = SwingUtilities.getWindowAncestor(this);
 
             if (janela != null) {
@@ -109,91 +98,92 @@ class PainelInventario extends JPanel {
         });
 
         topo.add(titulo, BorderLayout.WEST);
-        topo.add(btnSair, BorderLayout.EAST);
+        topo.add(sair, BorderLayout.EAST);
 
-        return topo;
+        add(topo, BorderLayout.NORTH);
     }
 
-    private JPanel criarGrade() {
+    private void adicionarGrade() {
 
-        grade = new JPanel(new GridLayout(2, 4, 10, 10));
+        grade = new JPanel(new GridLayout(2, 4, 12, 12));
+        grade.setBackground(fundo);
 
-        grade.setOpaque(false);
-
-        grade.setBorder(BorderFactory.createLineBorder(BORDA));
-
-        return grade;
+        add(grade, BorderLayout.CENTER);
     }
 
-    private JPanel criarDescricao() {
+    private void adicionarDescricao() {
 
-        JPanel painel = new JPanel(new BorderLayout(0, 10)) {
+        JPanel painelDescricao = new JPanel(new BorderLayout(10, 10)) {
 
-            private Image imagemFundo;
+            Image imagem = null;
 
             {
-                URL url = getClass().getResource("/imagens/fundo.jpeg");
+                java.net.URL caminho = getClass().getResource("/imagens/fundo.jpeg");
 
-                if (url != null) {
-                    imagemFundo = new ImageIcon(url).getImage();
+                if (caminho != null) {
+                    imagem = new ImageIcon(caminho).getImage();
                 }
             }
 
             @Override
             protected void paintComponent(Graphics g) {
-
                 super.paintComponent(g);
 
-                if (imagemFundo != null) {
-                    g.drawImage(imagemFundo, 0, 0,
-                            getWidth(), getHeight(), this);
+                if (imagem != null) {
+                    g.drawImage(imagem, 0, 0, getWidth(), getHeight(), this);
                 }
             }
         };
 
-        painel.setOpaque(false);
-        painel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        painel.setPreferredSize(new Dimension(280, 0));
+        painelDescricao.setOpaque(false);
+        painelDescricao.setBorder(new EmptyBorder(15, 15, 15, 15));
+        painelDescricao.setPreferredSize(new Dimension(250, 0));
 
-        lblNomeItem = new JLabel(" ");
+        JLabel titulo = new JLabel("DETALHES");
+        titulo.setForeground(texto);
+        titulo.setFont(new Font("Georgia", Font.BOLD, 19));
 
-        lblNomeItem.setFont(new Font("Serif", Font.BOLD, 18));
-        lblNomeItem.setForeground(Color.BLACK);
+        lblNome = new JLabel("Nenhuma evidencia selecionada");
+        lblNome.setForeground(texto);
+        lblNome.setFont(new Font("Georgia", Font.BOLD, 16));
 
-        txtDetalhes = new JTextArea();
+        txtDescricao = new JTextArea();
+        txtDescricao.setText("Selecione uma evidencia para consultar os seus detalhes.");
+        txtDescricao.setFont(new Font("Georgia", Font.PLAIN, 15));
+        txtDescricao.setForeground(texto);
+        txtDescricao.setBackground(new Color(35, 23, 17, 180));
+        txtDescricao.setOpaque(false);
+        txtDescricao.setLineWrap(true);
+        txtDescricao.setWrapStyleWord(true);
+        txtDescricao.setEditable(false);
 
-        txtDetalhes.setFont(new Font("Serif", Font.ITALIC, 14));
-        txtDetalhes.setOpaque(false);
-        txtDetalhes.setEditable(false);
-        txtDetalhes.setForeground(Color.BLACK);
-        txtDetalhes.setLineWrap(true);
-        txtDetalhes.setWrapStyleWord(true);
-
-        JScrollPane scroll = new JScrollPane(txtDetalhes);
-
+        JScrollPane scroll = new JScrollPane(txtDescricao);
         scroll.setOpaque(false);
         scroll.getViewport().setOpaque(false);
         scroll.setBorder(null);
 
-        painel.add(lblNomeItem, BorderLayout.NORTH);
-        painel.add(scroll, BorderLayout.CENTER);
+        JPanel informacoes = new JPanel(new BorderLayout(10, 10));
+        informacoes.setOpaque(false);
 
-        return painel;
+        informacoes.add(lblNome, BorderLayout.NORTH);
+        informacoes.add(scroll, BorderLayout.CENTER);
+
+        painelDescricao.add(titulo, BorderLayout.NORTH);
+        painelDescricao.add(informacoes, BorderLayout.CENTER);
+
+        add(painelDescricao, BorderLayout.EAST);
     }
 
     private void atualizarGrade() {
 
         grade.removeAll();
 
-        for (int i = 0; i < TOTAL_SLOTS; i++) {
+        for (int i = 0; i < totalSlots; i++) {
 
             if (i < evidencias.size()) {
-
-                grade.add(criarSlotCheio(evidencias.get(i)));
-
+                adicionarEvidencia(evidencias.get(i));
             } else {
-
-                grade.add(criarSlotVazio());
+                adicionarEspacoVazio();
             }
         }
 
@@ -201,183 +191,155 @@ class PainelInventario extends JPanel {
         grade.repaint();
     }
 
-    private JButton criarSlotCheio(final Evidencia e) {
+    private void adicionarEvidencia(Evidencia evidencia) {
 
-        JButton slot = new JButton(e.getNome());
+        JButton botao = new JButton(evidencia.getNome());
 
-        slot.setBackground(SLOT_CHEIO);
-        slot.setForeground(Color.WHITE);
-        slot.setFocusPainted(false);
-        slot.setOpaque(true);
-        slot.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        botao.setBackground(painel);
+        botao.setForeground(texto);
+        botao.setFont(new Font("Georgia", Font.PLAIN, 15));
+        botao.setFocusPainted(false);
 
-        ImageIcon icone = carregarIcone(e.getCaminhoImagem());
+        botao.setVerticalTextPosition(SwingConstants.BOTTOM);
+        botao.setHorizontalTextPosition(SwingConstants.CENTER);
 
-        if (icone != null) {
+        String caminho = evidencia.getCaminhoImagem();
 
-            slot.setIcon(icone);
+        if (caminho != null) {
 
-            slot.setVerticalTextPosition(SwingConstants.BOTTOM);
-            slot.setHorizontalTextPosition(SwingConstants.CENTER);
+            java.net.URL imagem = getClass().getResource(caminho);
+
+            if (imagem != null) {
+
+                ImageIcon icone = new ImageIcon(imagem);
+
+                Image imagemRedimensionada = icone.getImage().getScaledInstance(
+                        65, 65, Image.SCALE_SMOOTH
+                );
+
+                botao.setIcon(new ImageIcon(imagemRedimensionada));
+            }
         }
 
-        boolean ehSelecionada = selecionada != null
-                && selecionada.getId() == e.getId();
-
-        slot.setBorder(new LineBorder(
-                ehSelecionada ? DESTAQUE : BORDA, 2
-        ));
-
-        slot.addActionListener(ev -> selecionar(e));
-
-        return slot;
-    }
-
-    private JButton criarSlotVazio() {
-
-        JButton slot = new JButton();
-
-        slot.setEnabled(false);
-        slot.setBackground(SLOT_VAZIO);
-        slot.setBorder(new LineBorder(BORDA, 1));
-        slot.setOpaque(true);
-
-        return slot;
-    }
-
-    private ImageIcon carregarIcone(String caminho) {
-
-        if (caminho == null) {
-            return null;
+        if (evidencia == evidenciaSelecionada) {
+            botao.setBorder(new LineBorder(selecionado, 3));
+        } else {
+            botao.setBorder(new LineBorder(borda, 1));
         }
 
-        URL url = getClass().getResource(caminho);
+        botao.addActionListener(e -> selecionarEvidencia(evidencia));
 
-        if (url == null) {
-            return null;
-        }
-
-        Image img = new ImageIcon(url).getImage()
-                .getScaledInstance(56, 56, Image.SCALE_SMOOTH);
-
-        return new ImageIcon(img);
+        grade.add(botao);
     }
 
-    private void selecionar(Evidencia e) {
+    private void adicionarEspacoVazio() {
 
-        selecionada = e;
+        JButton botao = new JButton("+");
 
-        mostrarDetalhes(e);
+        botao.setBackground(painel);
+        botao.setForeground(borda);
+        botao.setFont(new Font("Georgia", Font.BOLD, 30));
+        botao.setBorder(new LineBorder(borda, 1));
+        botao.setFocusPainted(false);
+        botao.setEnabled(false);
+
+        grade.add(botao);
+    }
+
+    private void selecionarEvidencia(Evidencia evidencia) {
+
+        evidenciaSelecionada = evidencia;
+
+        lblNome.setText(evidencia.getNome());
+        txtDescricao.setText(evidencia.getDescricao());
+
         atualizarGrade();
 
         if (ouvinte != null) {
-            ouvinte.evidenciaSelecionada(e);
+            ouvinte.evidenciaSelecionada(evidencia);
         }
     }
 
-    private void mostrarDetalhes(Evidencia e) {
+    public void adicionar(Evidencia evidencia) {
 
-        if (e == null) {
+        if (evidencias.size() < totalSlots) {
 
-            lblNomeItem.setText(evidencias.isEmpty()
-                    ? "Sem evidências"
-                    : "Seleciona uma evidência");
-
-            txtDetalhes.setText(evidencias.isEmpty()
-                    ? "Ainda não recolheste nenhuma evidência."
-                    : "Clica num item para ver os detalhes.");
-
-        } else {
-
-            lblNomeItem.setText(e.getNome());
-
-            txtDetalhes.setText(e.getDescricao());
-
-            txtDetalhes.setCaretPosition(0);
+            evidencias.add(evidencia);
+            atualizarGrade();
         }
     }
 
-    private void naInterface(Runnable tarefa) {
+    public void definirEvidencias(List<Evidencia> lista) {
 
-        if (SwingUtilities.isEventDispatchThread()) {
-            tarefa.run();
-        } else {
-            SwingUtilities.invokeLater(tarefa);
+        evidencias.clear();
+
+        for (int i = 0; i < lista.size() && i < totalSlots; i++) {
+            evidencias.add(lista.get(i));
         }
+
+        evidenciaSelecionada = null;
+
+        lblNome.setText("Nenhuma evidencia selecionada");
+        txtDescricao.setText("Selecione uma evidencia para consultar os seus detalhes.");
+
+        atualizarGrade();
+    }
+
+    public void limpar() {
+
+        evidencias.clear();
+        evidenciaSelecionada = null;
+
+        lblNome.setText("Nenhuma evidencia selecionada");
+        txtDescricao.setText("Selecione uma evidencia para consultar os seus detalhes.");
+
+        atualizarGrade();
     }
 
     public void setOuvinte(OuvinteEvidencias ouvinte) {
         this.ouvinte = ouvinte;
     }
-
-    public void adicionar(final Evidencia nova) {
-
-        naInterface(() -> {
-
-            for (Evidencia e : evidencias) {
-
-                if (e.getId() == nova.getId()) {
-                    return;
-                }
-            }
-
-            if (evidencias.size() >= TOTAL_SLOTS) {
-                return;
-            }
-
-            evidencias.add(nova);
-
-            atualizarGrade();
-
-            if (selecionada == null) {
-                mostrarDetalhes(null);
-            }
-        });
-    }
-
-    public void definirEvidencias(final List<Evidencia> lista) {
-
-        naInterface(() -> {
-
-            evidencias.clear();
-            selecionada = null;
-
-            for (Evidencia e : lista) {
-
-                if (evidencias.size() < TOTAL_SLOTS) {
-                    evidencias.add(e);
-                }
-            }
-
-            atualizarGrade();
-            mostrarDetalhes(null);
-        });
-    }
-
-    public void limpar() {
-
-        definirEvidencias(new ArrayList<>());
-    }
 }
 
-public class JanelaInventario {
+public class JanelaInventario extends JFrame {
+
+    public JanelaInventario() {
+
+        setTitle("Inventario de Evidencias");
+        setSize(900, 550);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        PainelInventario inventario = new PainelInventario();
+
+        inventario.adicionar(new Evidencia(
+                1,
+                "Documento",
+                "Documento encontrado durante a investigacao.",
+                "/imagens/documento.png"
+        ));
+
+        inventario.adicionar(new Evidencia(
+                2,
+                "Fotografia",
+                "Fotografia encontrada na cena do crime.",
+                "/imagens/fotografia.png"
+        ));
+
+        inventario.adicionar(new Evidencia(
+                3,
+                "Chave",
+                "Uma chave encontrada perto do local.",
+                "/imagens/chave.png"
+        ));
+
+        add(inventario);
+    }
 
     public static void main(String[] args) {
 
         SwingUtilities.invokeLater(() -> {
-
-            JFrame janela = new JFrame("Database Detective - Inventário");
-
-            janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-            janela.setSize(900, 550);
-
-            janela.setLocationRelativeTo(null);
-
-            PainelInventario painel = new PainelInventario();
-
-            janela.add(painel);
-
+            JanelaInventario janela = new JanelaInventario();
             janela.setVisible(true);
         });
     }
