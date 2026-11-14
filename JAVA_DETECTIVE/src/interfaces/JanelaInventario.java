@@ -1,3 +1,4 @@
+package interfaces;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -9,7 +10,7 @@ import java.util.List;
 
 class Evidencia {
 
-    private final int id;
+    private final long id;
     private final String nome;
     private final String descricao;
     private final String caminhoImagem;
@@ -21,7 +22,7 @@ class Evidencia {
         this.caminhoImagem = caminhoImagem;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -353,6 +354,7 @@ class PainelInventario extends JPanel {
             mostrarDetalhes(null);
         });
     }
+    
 
     public void limpar() {
 
@@ -361,7 +363,7 @@ class PainelInventario extends JPanel {
 }
 
 public class JanelaInventario {
-
+    
     public static void main(String[] args) {
 
         SwingUtilities.invokeLater(() -> {

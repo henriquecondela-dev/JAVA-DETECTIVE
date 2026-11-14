@@ -287,6 +287,90 @@ public class GestorJogador {
         }
     }
 
+    public boolean recolherEvidencia(long progressoCasoId, long evidenciaId)
+            throws SQLException {
+
+        if (progressoCasoId <= 0 || evidenciaId <= 0) {
+            throw new IllegalArgumentException(
+                    "Identificadores inválidos."
+            );
+        }
+
+        try (Connection conexao = ConexaoMySQL.getConnection()) {
+
+            utils.ProgressoCaso progresso
+                    = ProgressoCaso.procurarProgressoPorId(
+                            conexao,
+                            progressoCasoId
+                    );
+
+            if (progresso == null) {
+                throw new IllegalArgumentException(
+                        "Investigação não encontrada."
+                );
+            }
+
+            List<Long> idsEvidencias
+                    = recursos.ProgressoEvidencia.buscarIdsEvidenciasPorEtapaId(
+                            conexao,
+                            progresso.getEtapaAtualId()
+                    );
+
+            if (!idsEvidencias.contains(evidenciaId)) {
+                throw new IllegalArgumentException(
+                        "Esta evidência não pertence à etapa actual."
+                );
+            }
+        }
+
+        boolean jaColetada
+                = recursos.ProgressoEvidencia.verificarColecta(
+                        progressoCasoId,
+                        evidenciaId
+                );
+
+        if (jaColetada) {
+            return false;
+        }
+
+        return recursos.ProgressoEvidencia.colectarEvidencia(
+                progressoCasoId,
+                evidenciaId
+        );
+    }
+
+    public java.util.List<utils.Evidencia> listarEvidenciasInventario(
+            long progressoCasoId
+    ) throws SQLException {
+
+        try (Connection conexao = ConexaoMySQL.getConnection()) {
+
+            return recursos.ProgressoEvidencia.listarEvidenciasColectadas(
+                    conexao,
+                    progressoCasoId
+            );
+        }
+    }
+
+    public List<utils.Evidencia> listarEvidenciasColectadas(
+            long progressoCasoId
+    ) throws SQLException {
+
+        if (progressoCasoId <= 0) {
+            throw new IllegalArgumentException(
+                    "Identificador da investigação inválido."
+            );
+        }
+
+        try (Connection conexao = ConexaoMySQL.getConnection()) {
+
+            return recursos.ProgressoEvidencia.listarEvidenciasColectadas(
+                    conexao,
+                    progressoCasoId
+            );
+        }
+    }
+
     public TipoAvanco avancarEtapa(long progressoId) throws SQLException {
         try (Connection conexao = ConexaoMySQL.getConnection()) {
             conexao.setAutoCommit(false);
