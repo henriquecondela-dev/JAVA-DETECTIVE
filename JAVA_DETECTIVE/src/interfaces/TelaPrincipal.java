@@ -17,6 +17,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaPrincipal.class.getName());
     private utils.SessaoInvestigacao sessao;
     private final java.util.List<utils.Evidencia> evidenciasExibidas = new java.util.ArrayList<>();
+    private CardLayout layoutCartoes;
+    private JPanel painelCartoes;
+    private JPanel painelJogo;
+
+    private EditorJava editorAtual;
 
     /**
      * Cria a tela principal do jogo
@@ -95,14 +100,23 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 BorderFactory.createLineBorder(new Color(140, 106, 58))
         );
         btnMenu.setPreferredSize(new Dimension(130, 42));
+//        JPopupMenu menu = new JPopupMenu();
+//        JMenuItem sair = new JMenuItem("Sair do jogo");
         JPopupMenu menu = new JPopupMenu();
-        JMenuItem sair = new JMenuItem("Sair do jogo");
-        sair.addActionListener(e -> {
-            System.exit(0);
-        });
-        menu.add(sair);
-        btnMenu.addActionListener(e -> menu.show(btnMenu, 0, btnMenu.getHeight()));
 
+        JMenuItem avancar = new JMenuItem("Avançar etapa");
+        avancar.addActionListener(e -> avancarEtapa());
+        menu.add(avancar);
+
+        menu.addSeparator();
+
+        JMenuItem sair = new JMenuItem("Sair do jogo");
+        sair.addActionListener(e -> System.exit(0));
+        menu.add(sair);
+
+        btnMenu.addActionListener(e
+                -> menu.show(btnMenu, 0, btnMenu.getHeight())
+        );
         JPanel topoDireita = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 5));
         topoDireita.setOpaque(false);
         topoDireita.add(barraProgresso);
@@ -148,18 +162,16 @@ public class TelaPrincipal extends javax.swing.JFrame {
         pnlCentro.setOpaque(false);
         pnlCentro.setLayout(new BorderLayout(0, 0));
         lblCenario.setHorizontalAlignment(SwingConstants.CENTER);
-        jScrollPane2.setPreferredSize(new Dimension(0, 110));
+        jScrollPane2.setPreferredSize(new Dimension(0, 250));
         pnlCentro.setOpaque(false);
         pnlCentro.setLayout(new BorderLayout(0, 0));
         lblCenario.setHorizontalAlignment(SwingConstants.CENTER);
-        jScrollPane2.setPreferredSize(new Dimension(0, 110));
+        jScrollPane2.setPreferredSize(new Dimension(0, 250));
 
-// Usa o jLabel1 que já existe como título
         jLabel1.setText("Descrição:");
         jLabel1.setFont(new Font("Serif", Font.BOLD, 18));
         jLabel1.setForeground(Color.WHITE);
 
-// Painel que junta Label + Scroll
         JPanel painelDescricao = new JPanel(new BorderLayout(0, 5));
         painelDescricao.setOpaque(false);
         painelDescricao.add(jLabel1, BorderLayout.NORTH);
@@ -168,17 +180,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
         Color corTopo = new Color(42, 29, 18, 200);
         Color corTexto = new Color(240, 220, 180);
 
-// Painel de baixo com a mesma cor do topo
         painelDescricao.setOpaque(false);
         painelDescricao.setBackground(corTopo);
 
-// Scroll também com a mesma cor
         jScrollPane2.setOpaque(false);
         jScrollPane2.setBackground(corTopo);
         jScrollPane2.getViewport().setBackground(corTopo);
         jScrollPane2.setBorder(BorderFactory.createEmptyBorder());
 
-// TextArea com a mesma cor do topo e letra clara
         txtDescricao.setBackground(corTopo);
         txtDescricao.setForeground(corTexto);
         txtDescricao.setCaretColor(corTexto);
@@ -277,7 +286,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                     String value, int index, boolean selecionado, boolean foco) {
                 javax.swing.JLabel l = new javax.swing.JLabel(
                         "<html><div style='text-align:center;width:84px'>" + value + "</div></html>",
-                        iconeUnico, SwingConstants.CENTER); // <-- AQUI, sempre o mesmo
+                        iconeUnico, SwingConstants.CENTER);
                 l.setVerticalTextPosition(SwingConstants.BOTTOM);
                 l.setHorizontalTextPosition(SwingConstants.CENTER);
                 l.setIconTextGap(6);
@@ -302,11 +311,27 @@ public class TelaPrincipal extends javax.swing.JFrame {
         pnlDireita.add(objetivo, BorderLayout.NORTH);
         pnlDireita.add(evidencias, BorderLayout.CENTER);
 
+//        fundo.add(pnlTopo, BorderLayout.NORTH);
+//        fundo.add(pnlMenu, BorderLayout.WEST);
+//        fundo.add(pnlCentro, BorderLayout.CENTER);
+//        fundo.add(pnlDireita, BorderLayout.EAST);
+//        setContentPane(fundo);
         fundo.add(pnlTopo, BorderLayout.NORTH);
         fundo.add(pnlMenu, BorderLayout.WEST);
         fundo.add(pnlCentro, BorderLayout.CENTER);
         fundo.add(pnlDireita, BorderLayout.EAST);
-        setContentPane(fundo);
+
+        painelJogo = fundo;
+
+        layoutCartoes = new CardLayout();
+
+        painelCartoes = new JPanel(layoutCartoes);
+
+        painelCartoes.add(painelJogo, "JOGO");
+
+        setContentPane(painelCartoes);
+
+        layoutCartoes.show(painelCartoes, "JOGO");
 
     }
 
@@ -489,11 +514,232 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void btnEditorCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditorCodigoActionPerformed
         // TODO add your handling code here:
+        abrirEditorCodigo();
     }//GEN-LAST:event_btnEditorCodigoActionPerformed
 
     private void btnBDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBDActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnBDActionPerformed
+//    private void abrirEditorCodigo() {
+//
+//        if (sessao == null || sessao.getEtapaAtual() == null) {
+//            JOptionPane.showMessageDialog(
+//                    this,
+//                    "Não existe uma sessão de investigação activa.",
+//                    "Editor de Código",
+//                    JOptionPane.WARNING_MESSAGE
+//            );
+//            return;
+//        }
+//
+//        java.util.List<utils.DesafioDeProgramacao> desafios
+//                = sessao.getEtapaAtual().getDesafios();
+//
+//        if (desafios == null || desafios.isEmpty()) {
+//            JOptionPane.showMessageDialog(
+//                    this,
+//                    "Não existem desafios de programação nesta etapa.",
+//                    "Editor de Código",
+//                    JOptionPane.INFORMATION_MESSAGE
+//            );
+//            return;
+//        }
+//
+//        utils.DesafioDeProgramacao desafioSelecionado;
+//
+//        if (desafios.size() == 1) {
+//            desafioSelecionado = desafios.get(0);
+//        } else {
+//            Object escolha = JOptionPane.showInputDialog(
+//                    this,
+//                    "Selecciona o desafio que pretendes resolver:",
+//                    "Desafios disponíveis",
+//                    JOptionPane.QUESTION_MESSAGE,
+//                    null,
+//                    desafios.toArray(),
+//                    desafios.get(0)
+//            );
+//
+//            if (escolha == null) {
+//                return;
+//            }
+//
+//            desafioSelecionado = (utils.DesafioDeProgramacao) escolha;
+//        }
+//
+//        EditorJava editor = new EditorJava(desafioSelecionado, () -> {
+//            // Acção para regressar ao jogo
+//        });
+//
+//        editor.setVisible(true);
+//    }
+
+    private void avancarEtapa() {
+
+        if (sessao == null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Não existe uma investigação activa.",
+                    "Avançar etapa",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        int confirmacao = JOptionPane.showConfirmDialog(
+                this,
+                "Tens a certeza de que pretendes avançar para a próxima etapa?",
+                "Confirmar avanço",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (confirmacao != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        try {
+            jogo.GestorJogador gestor = new jogo.GestorJogador();
+
+            jogo.TipoAvanco resultado = gestor.avancarEtapa(
+                    sessao.getProgresso().getId()
+            );
+
+            switch (resultado) {
+
+                case REQUISITOS_NAO_CUMPRIDOS:
+
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Ainda não podes avançar!\n\n"
+                            + "Precisas de recolher o número mínimo de evidências "
+                            + "e concluir o desafio de programação desta etapa.",
+                            "Requisitos não cumpridos",
+                            JOptionPane.WARNING_MESSAGE
+                    );
+                    break;
+
+                case AVANCO:
+
+                    sessao = gestor.carregarSessaoCompleta(
+                            sessao.getJogador().getJogadorId(),
+                            sessao.getProgresso().getCasoId()
+                    );
+
+                    preencherDadosEtapa();
+
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Parabéns! Avançaste para a próxima etapa.",
+                            "Etapa concluída",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+
+                    break;
+
+                case CONCLUIDO:
+
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Parabéns! Concluíste todas as etapas da investigação!",
+                            "Investigação concluída",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+
+                    break;
+            }
+
+        } catch (Exception erro) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Ocorreu um erro ao tentar avançar de etapa:\n"
+                    + erro.getMessage(),
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE
+            );
+
+            erro.printStackTrace();
+        }
+    }
+
+    private void abrirEditorCodigo() {
+
+        if (sessao == null || sessao.getEtapaAtual() == null) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Não existe uma sessão de investigação activa.",
+                    "Editor de Código",
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            return;
+        }
+
+        java.util.List<utils.DesafioDeProgramacao> desafios
+                = sessao.getEtapaAtual().getDesafios();
+
+        if (desafios == null || desafios.isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Não existem desafios de programação nesta etapa.",
+                    "Editor de Código",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+            return;
+        }
+
+        utils.DesafioDeProgramacao desafioSelecionado;
+
+        if (desafios.size() == 1) {
+
+            desafioSelecionado = desafios.get(0);
+
+        } else {
+
+            Object escolha = JOptionPane.showInputDialog(
+                    this,
+                    "Selecciona o desafio que pretendes resolver:",
+                    "Desafios disponíveis",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    desafios.toArray(),
+                    desafios.get(0)
+            );
+
+            if (escolha == null) {
+                return;
+            }
+
+            desafioSelecionado
+                    = (utils.DesafioDeProgramacao) escolha;
+        }
+
+        if (editorAtual != null) {
+            painelCartoes.remove(editorAtual);
+        }
+
+        editorAtual = new EditorJava(
+                desafioSelecionado,
+                sessao.getProgresso().getId(),
+                () -> {
+                    layoutCartoes.show(painelCartoes, "JOGO");
+                }
+        );
+
+        painelCartoes.add(editorAtual, "EDITOR");
+
+        layoutCartoes.show(
+                painelCartoes,
+                "EDITOR"
+        );
+
+        painelCartoes.revalidate();
+        painelCartoes.repaint();
+    }
 
     private void preencherDadosEtapa() {
 
