@@ -20,7 +20,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private CardLayout layoutCartoes;
     private JPanel painelCartoes;
     private JPanel painelJogo;
-
+    private final JButton btnAcusar = new JButton("ACUSAR");
     private EditorJava editorAtual;
 
     /**
@@ -121,6 +121,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
         topoDireita.setOpaque(false);
         topoDireita.add(barraProgresso);
         topoDireita.add(btnMenu);
+        btnAcusar.setFont(new Font("Serif", Font.BOLD, 16));
+        btnAcusar.setForeground(new Color(240, 220, 180));
+        btnAcusar.setBackground(new Color(110, 35, 25));
+        btnAcusar.setFocusPainted(false);
+        btnAcusar.setVisible(false);
+
+        btnAcusar.addActionListener(e -> abrirDialogoAcusacao());
+
+        topoDireita.add(btnAcusar);
         pnlTopo.add(lblPessoa, BorderLayout.WEST);
         pnlTopo.add(lblCaso, BorderLayout.CENTER);
         pnlTopo.add(topoDireita, BorderLayout.EAST);
@@ -133,8 +142,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
         pnlMenu.setPreferredSize(new Dimension(380, 0));
         Dimension tam = new Dimension(380, 104);   // l a
         ImageIcon fundoBtn = new ImageIcon(new ImageIcon(getClass().getResource("/imagens/fundoBotao.jpg")).getImage().getScaledInstance(tam.width, tam.height, Image.SCALE_SMOOTH));
-        JButton[] botoes = {btnCenario, btnEvidencia, btnBD, btnEditorCodigo, btnObjectivos};
-        String[] textos = {"Cenário", "Evidências", "Base de Dados", "Editor de Código", "Objectivos"};
+        JButton[] botoes = { btnEvidencia, btnEditorCodigo};
+        String[] textos = { "Evidências Coletadas",  "Editor de Código(Desafio)"};
 
         pnlMenu.add(Box.createVerticalGlue());
         for (int i = 0; i < botoes.length; i++) {
@@ -205,7 +214,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         pnlDireita.removeAll();
         pnlDireita.setLayout(new BorderLayout(0, 15));
         pnlDireita.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        pnlDireita.setPreferredSize(new Dimension(420, 0));
+        pnlDireita.setPreferredSize(new Dimension(500, 0));
 
         class CaixaImagem extends JPanel {
 
@@ -473,7 +482,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         lblEvidenciasTitulo.setBackground(new java.awt.Color(36, 23, 14));
         lblEvidenciasTitulo.setFont(new java.awt.Font("Serif", 0, 18)); // NOI18N
         lblEvidenciasTitulo.setForeground(new java.awt.Color(216, 189, 145));
-        lblEvidenciasTitulo.setText("Evidências Coletadas");
+        lblEvidenciasTitulo.setText("Coletar Evidencias");
         lblEvidenciasTitulo.setPreferredSize(new java.awt.Dimension(80, 26));
         lblEvidenciasTitulo.setVerifyInputWhenFocusTarget(false);
         pnlDireita.add(lblEvidenciasTitulo);
@@ -809,6 +818,144 @@ public class TelaPrincipal extends javax.swing.JFrame {
         barraProgresso.setValue(numeroEtapa);
         barraProgresso.setStringPainted(true);
         barraProgresso.setString("Etapa " + numeroEtapa + " de 5");
+        actualizarDisponibilidadeAcusacao();
+    }
+
+    private void abrirDialogoAcusacao() {
+
+        if (sessao == null) {
+            return;
+        }
+
+        try {
+            jogo.GestorJogador gestor = new jogo.GestorJogador();
+
+            if (!gestor.podeAcusar(sessao.getProgresso().getId())) {
+                actualizarDisponibilidadeAcusacao();
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "A acusação não está disponível nesta etapa.",
+                        "Acusação",
+                        JOptionPane.WARNING_MESSAGE
+                );
+
+                return;
+            }
+
+            java.util.Map<Long, String> suspeitos
+                    = recursos.Suspeitos.listarSuspeitosPorCaso(
+                            sessao.getProgresso().getCasoId()
+                    );
+
+            if (suspeitos.isEmpty()) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Não existem suspeitos registados para este caso.",
+                        "Acusação",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+                return;
+            }
+
+            java.util.List<Long> ids = new java.util.ArrayList<>();
+            javax.swing.DefaultComboBoxModel<String> modelo
+                    = new javax.swing.DefaultComboBoxModel<>();
+
+            for (java.util.Map.Entry<Long, String> entrada : suspeitos.entrySet()) {
+                ids.add(entrada.getKey());
+                modelo.addElement(entrada.getValue());
+            }
+
+            JComboBox<String> comboSuspeitos = new JComboBox<>(modelo);
+
+            JPanel painel = new JPanel(new GridLayout(0, 1, 5, 8));
+
+            painel.add(new JLabel(
+                    "Quem consideras responsável pelo crime?"
+            ));
+
+            painel.add(comboSuspeitos);
+
+            painel.add(new JLabel(
+                    "Atenção: uma acusação incorrecta retira 10 pontos."
+            ));
+
+            int escolha = JOptionPane.showConfirmDialog(
+                    this,
+                    painel,
+                    "ACUSAÇÃO FINAL",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            if (escolha != JOptionPane.OK_OPTION) {
+                return;
+            }
+
+            int indice = comboSuspeitos.getSelectedIndex();
+
+            if (indice < 0) {
+                return;
+            }
+
+            String suspeitoEscolhido
+                    = comboSuspeitos.getSelectedItem().toString();
+
+            int confirmar = JOptionPane.showConfirmDialog(
+                    this,
+                    "Tens a certeza de que pretendes acusar:\n\n"
+                    + suspeitoEscolhido + "?\n\n"
+                    + "Esta decisão pode afectar a tua pontuação.",
+                    "Confirmar acusação",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            if (confirmar != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            boolean resultado = gestor.realizarAcusacao(
+                    sessao.getProgresso().getId(),
+                    ids.get(indice)
+            );
+
+            if (resultado) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "ACUSAÇÃO CORRECTA!\n\n"
+                        + "Conseguiste identificar o responsável pelo crime.",
+                        "Investigação concluída",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+
+            } else {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "ACUSAÇÃO INCORRECTA!\n\n"
+                        + "Perdeste 10 pontos. A investigação continua.",
+                        "Acusação errada",
+                        JOptionPane.WARNING_MESSAGE
+                );
+            }
+
+            actualizarDisponibilidadeAcusacao();
+
+        } catch (Exception erro) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Não foi possível efectuar a acusação:\n"
+                    + erro.getMessage(),
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE
+            );
+
+            erro.printStackTrace();
+        }
     }
 
     private void mostrarCenario() {
@@ -842,6 +989,29 @@ public class TelaPrincipal extends javax.swing.JFrame {
         }
 
         txtDescricao.setCaretPosition(0);
+    }
+
+    private void actualizarDisponibilidadeAcusacao() {
+
+        if (sessao == null || sessao.getEtapaAtual() == null) {
+            btnAcusar.setVisible(false);
+            return;
+        }
+
+        try {
+            jogo.GestorJogador gestor = new jogo.GestorJogador();
+
+            boolean disponivel = gestor.podeAcusar(
+                    sessao.getProgresso().getId()
+            );
+
+            btnAcusar.setVisible(disponivel);
+
+        } catch (Exception erro) {
+
+            btnAcusar.setVisible(false);
+            erro.printStackTrace();
+        }
     }
 
     private void configurarSelecaoEvidencias() {

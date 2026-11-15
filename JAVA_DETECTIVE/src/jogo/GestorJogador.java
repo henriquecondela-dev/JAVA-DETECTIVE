@@ -484,8 +484,8 @@ public class GestorJogador {
 
         try (Connection conexao = ConexaoMySQL.getConnection()) {
 
-            utils.ProgressoCaso progresso =
-                    ProgressoCaso.procurarProgressoPorId(
+            utils.ProgressoCaso progresso
+                    = ProgressoCaso.procurarProgressoPorId(
                             conexao,
                             progressoId
                     );
@@ -494,16 +494,20 @@ public class GestorJogador {
                 throw new IllegalArgumentException("Investigacao nao encontrada.");
             }
 
-            if (progresso.getEtapaAtualId() != 4 && progresso.getEtapaAtualId()!=5) {
+            utils.Etapa etapa = recursos.Etapa.procurarEtapaPorId(
+                    conexao,
+                    progresso.getEtapaAtualId()
+            );
+
+            if (etapa == null || (etapa.getNumero() != 4 && etapa.getNumero() != 5)) {
                 return false;
             }
 
-            return !recursos.Acusacao.casoConcluidoPorAcusacao(conexao,progresso.getJogadorId(),progresso.getCasoId());
+            return !recursos.Acusacao.casoConcluidoPorAcusacao(conexao, progresso.getJogadorId(), progresso.getCasoId());
         }
     }
 
-
-    public boolean realizarAcusacao(long progressoId,long suspeitoId) throws SQLException {
+    public boolean realizarAcusacao(long progressoId, long suspeitoId) throws SQLException {
 
         if (progressoId <= 0 || suspeitoId <= 0) {
             throw new IllegalArgumentException("Identificadores inválidos.");
@@ -515,36 +519,43 @@ public class GestorJogador {
 
             try {
 
-                utils.ProgressoCaso progresso =ProgressoCaso.procurarProgressoPorId(conexao,progressoId);
+                utils.ProgressoCaso progresso = ProgressoCaso.procurarProgressoPorId(conexao, progressoId);
 
                 if (progresso == null) {
                     throw new IllegalArgumentException("Investigação não encontrada.");
                 }
 
-                if (progresso.getEtapaAtualId() != 4) {
-                    throw new IllegalStateException("A acusação só está disponível a partir da quarta etapa.");
+                utils.Etapa etapa = recursos.Etapa.procurarEtapaPorId(
+                        conexao,
+                        progresso.getEtapaAtualId()
+                );
+
+                if (etapa == null || (etapa.getNumero() != 4 && etapa.getNumero() != 5)) {
+                    throw new IllegalStateException(
+                            "A acusação só está disponível na quarta ou quinta etapa."
+                    );
                 }
 
-                boolean casoConcluido =
-                        recursos.Acusacao.casoConcluidoPorAcusacao(conexao,progresso.getJogadorId(),progresso.getCasoId());
+                boolean casoConcluido
+                        = recursos.Acusacao.casoConcluidoPorAcusacao(conexao, progresso.getJogadorId(), progresso.getCasoId());
 
                 if (casoConcluido) {
                     throw new IllegalStateException("Este jogador já concluiu o caso.");
                 }
 
-                boolean resultado =
-                        recursos.Acusacao.verificarAcusacao(conexao,suspeitoId,progresso.getCasoId());
+                boolean resultado
+                        = recursos.Acusacao.verificarAcusacao(conexao, suspeitoId, progresso.getCasoId());
 
-                recursos.Acusacao.adicionarAcusacao(conexao,progresso.getJogadorId(),progresso.getCasoId(),suspeitoId,resultado);
+                recursos.Acusacao.adicionarAcusacao(conexao, progresso.getJogadorId(), progresso.getCasoId(), suspeitoId, resultado);
 
                 if (!resultado) {
 
                     int pontuacaoAtual = progresso.getPontuacao();
 
-                    int novaPontuacao = Math.max(0,pontuacaoAtual - 10);
+                    int novaPontuacao = Math.max(0, pontuacaoAtual - 10);
 
-                    boolean atualizada =
-                            ProgressoCaso.atualizarPontuacao(conexao,progressoId,novaPontuacao);
+                    boolean atualizada
+                            = ProgressoCaso.atualizarPontuacao(conexao, progressoId, novaPontuacao);
 
                     if (!atualizada) {
                         throw new SQLException("Não foi possível actualizar a pontuação.");
@@ -566,6 +577,5 @@ public class GestorJogador {
             }
         }
     }
-
 
 }

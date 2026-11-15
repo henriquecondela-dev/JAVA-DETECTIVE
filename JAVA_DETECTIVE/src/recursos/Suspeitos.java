@@ -2,11 +2,13 @@ package recursos;
 
 import db.ConexaoMySQL;
 import java.sql.*;
+import java.util.Map;
+import java.util.LinkedHashMap;
 
 public class Suspeitos {
 
     // esse e o um create
-    public static long criarSuspeito(long pessoaId, long casoId,String motivo
+    public static long criarSuspeito(long pessoaId, long casoId, String motivo
     ) throws SQLException {
 
         String sql = """
@@ -14,10 +16,8 @@ public class Suspeitos {
                 VALUES (?, ?, ?)
                 """;
 
-        try (Connection conexao = ConexaoMySQL.getConnection();
-            PreparedStatement statement = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS
-            )
-        ) {
+        try (Connection conexao = ConexaoMySQL.getConnection(); PreparedStatement statement = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS
+        )) {
             statement.setLong(1, pessoaId);
             statement.setLong(2, casoId);
             statement.setString(3, motivo);
@@ -27,7 +27,7 @@ public class Suspeitos {
             if (linhasAfetadas != 1) {
                 throw new SQLException("Não foi possível criar o suspeito.");
             }
-            
+
             try (ResultSet chaves = statement.getGeneratedKeys()) {
                 if (chaves.next()) {
                     return chaves.getLong(1);
@@ -40,6 +40,45 @@ public class Suspeitos {
         }
     }
 
+    public static Map<Long, String> listarSuspeitosPorCaso(long casoId)
+            throws SQLException {
+
+        Map<Long, String> suspeitos = new LinkedHashMap<>();
+
+        String sql = """
+            SELECT s.id, p.nome, s.motivo
+            FROM suspeito s
+            INNER JOIN pessoa p ON s.pessoa_id = p.id
+            WHERE s.caso_id = ?
+            ORDER BY p.nome
+            """;
+
+        try (
+                Connection conexao = ConexaoMySQL.getConnection(); PreparedStatement statement = conexao.prepareStatement(sql)) {
+            statement.setLong(1, casoId);
+
+            try (ResultSet resultado = statement.executeQuery()) {
+
+                while (resultado.next()) {
+
+                    long id = resultado.getLong("id");
+                    String nome = resultado.getString("nome");
+                    String motivo = resultado.getString("motivo");
+
+                    String identificacao = nome;
+
+                    if (motivo != null && !motivo.isBlank()) {
+                        identificacao += " — " + motivo;
+                    }
+
+                    suspeitos.put(id, identificacao);
+                }
+            }
+        }
+
+        return suspeitos;
+    }
+
     // READ — lista todos os suspeitos, ......
     public static void listarSuspeitos() throws SQLException {
 
@@ -50,10 +89,7 @@ public class Suspeitos {
                 """;
 
         try (
-            Connection conexao = ConexaoMySQL.getConnection();
-            PreparedStatement statement = conexao.prepareStatement(sql);
-            ResultSet resposta = statement.executeQuery()
-        ) {
+                Connection conexao = ConexaoMySQL.getConnection(); PreparedStatement statement = conexao.prepareStatement(sql); ResultSet resposta = statement.executeQuery()) {
             boolean encontrou = false;
 
             while (resposta.next()) {
@@ -77,9 +113,7 @@ public class Suspeitos {
                 """;
 
         try (
-            Connection conexao = ConexaoMySQL.getConnection();
-            PreparedStatement statement = conexao.prepareStatement(sql)
-        ) {
+                Connection conexao = ConexaoMySQL.getConnection(); PreparedStatement statement = conexao.prepareStatement(sql)) {
             statement.setLong(1, id);
 
             try (ResultSet resposta = statement.executeQuery()) {
@@ -108,9 +142,7 @@ public class Suspeitos {
                 """;
 
         try (
-            Connection conexao = ConexaoMySQL.getConnection();
-            PreparedStatement statement = conexao.prepareStatement(sql)
-        ) {
+                Connection conexao = ConexaoMySQL.getConnection(); PreparedStatement statement = conexao.prepareStatement(sql)) {
             statement.setLong(1, pessoaId);
             statement.setLong(2, casoId);
             statement.setString(3, motivo);
@@ -127,9 +159,7 @@ public class Suspeitos {
         String sql = "DELETE FROM suspeito WHERE id = ?";
 
         try (
-            Connection conexao = ConexaoMySQL.getConnection();
-            PreparedStatement statement = conexao.prepareStatement(sql)
-        ) {
+                Connection conexao = ConexaoMySQL.getConnection(); PreparedStatement statement = conexao.prepareStatement(sql)) {
             statement.setLong(1, id);
 
             return statement.executeUpdate() > 0;
